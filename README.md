@@ -1,4 +1,4 @@
-# Panther
+# Bonobo
 
 Panther is a structural grammar research engine evolving toward production-grade tooling.
 
