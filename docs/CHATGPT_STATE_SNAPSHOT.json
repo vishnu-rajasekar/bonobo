@@ -1,0 +1,206 @@
+{
+  "project": {
+    "name": "bonobo",
+    "generated_utc": "2026-03-08",
+    "summary": "Structural grammar + evaluator research engine with deterministic experiment harness and COMPAS-based diagnostic visualization."
+  },
+  "structure": {
+    "core_package": "morph_engine/morph_engine",
+    "visual_package": "bonobo/visual",
+    "scripts": "scripts",
+    "tests": "morph_engine/tests",
+    "experiments": "experiments/configs + experiments/runs",
+    "rhino_integration": "morph-rhino-mcp"
+  },
+  "implemented": {
+    "model": [
+      {
+        "file": "morph_engine/morph_engine/model/structural_graph.py",
+        "status": "implemented",
+        "key_symbols": [
+          "StructuralGraph",
+          "add_node",
+          "add_edge",
+          "add_load",
+          "get_loads",
+          "set_temp_force",
+          "get_temp_force",
+          "to_json",
+          "from_json"
+        ],
+        "notes": "Canonical COMPAS Network-backed state with supports, loadcases, temp_force, and JSON roundtrip."
+      }
+    ],
+    "grammar": [
+      {
+        "file": "morph_engine/morph_engine/grammar/base.py",
+        "status": "implemented",
+        "key_symbols": ["Candidate"]
+      },
+      {
+        "file": "morph_engine/morph_engine/grammar/grammar_engine.py",
+        "status": "implemented",
+        "key_symbols": ["GrammarEngine", "propose", "apply"]
+      },
+      {
+        "file": "morph_engine/morph_engine/grammar/rules/extend_node.py",
+        "status": "implemented",
+        "key_symbols": ["ExtendNode", "propose", "apply"]
+      },
+      {
+        "file": "morph_engine/morph_engine/grammar/rules/connect_nodes.py",
+        "status": "implemented",
+        "key_symbols": ["ConnectNodes", "propose", "apply"]
+      },
+      {
+        "file": "morph_engine/morph_engine/grammar/rules/split_edge.py",
+        "status": "implemented",
+        "key_symbols": ["SplitEdge", "propose", "apply"]
+      },
+      {
+        "file": "morph_engine/morph_engine/grammar/rules/resolve_temp_force_v1.py",
+        "status": "implemented",
+        "key_symbols": ["ResolveTempForceV1", "propose", "apply"],
+        "notes": "Force-driven growth rule propagating temp_force along new members."
+      }
+    ],
+    "evaluator": [
+      {
+        "file": "morph_engine/morph_engine/evaluator/evaluator.py",
+        "status": "implemented",
+        "key_symbols": ["Evaluator", "evaluate"],
+        "notes": "Ordered channel pipeline with shared context and overall validity aggregation."
+      },
+      {
+        "file": "morph_engine/morph_engine/evaluator/channels/maxwell_v1.py",
+        "status": "implemented",
+        "key_symbols": ["MaxwellCountChannel"]
+      },
+      {
+        "file": "morph_engine/morph_engine/evaluator/channels/geometry_planar_v1.py",
+        "status": "implemented",
+        "key_symbols": ["GeometryPlanarChannel"],
+        "notes": "Minimal placeholder channel."
+      },
+      {
+        "file": "morph_engine/morph_engine/evaluator/channels/unbalanced_force_v1.py",
+        "status": "implemented",
+        "key_symbols": ["UnbalancedForceChannel"]
+      },
+      {
+        "file": "morph_engine/morph_engine/evaluator/channels/reaction_absorption_v1.py",
+        "status": "implemented",
+        "key_symbols": ["ReactionAbsorptionChannel"],
+        "notes": "Mutates temp_force by absorbing constrained DOF components."
+      },
+      {
+        "file": "morph_engine/morph_engine/evaluator/channels/global_equilibrium_v1.py",
+        "status": "implemented",
+        "key_symbols": ["GlobalEquilibriumChannel"]
+      },
+      {
+        "file": "morph_engine/morph_engine/evaluator/channels/structural_redundancy_v1.py",
+        "status": "implemented",
+        "key_symbols": ["StructuralRedundancyChannel"]
+      }
+    ],
+    "experiments": [
+      {
+        "file": "morph_engine/morph_engine/experiments/logger_v1.py",
+        "status": "implemented",
+        "key_symbols": ["ExperimentLogger", "create_run_dir", "save_config", "save_graph", "save_trace", "save_metrics"]
+      },
+      {
+        "file": "morph_engine/morph_engine/experiments/runner_v1.py",
+        "status": "implemented",
+        "key_symbols": ["ExperimentRunner", "initialize_graph", "run"],
+        "notes": "Deterministic runner with seed, first-candidate selection, and run artifact logging."
+      }
+    ],
+    "visualization": [
+      {
+        "file": "bonobo/visual/symbols.py",
+        "status": "implemented",
+        "key_symbols": ["add_force_arrow", "add_support_symbol"],
+        "notes": "Central symbol geometry. Uses compas Arrow when available, fallback to line+head; load/reaction colors fixed; head-at-node compression semantics."
+      },
+      {
+        "file": "morph_engine/morph_engine/visual/style_registry.py",
+        "status": "implemented",
+        "key_symbols": ["MemberStyleResolver", "classify_member", "has_temp_forces", "is_graph_globally_equilibrated"],
+        "notes": "Member-only semantic styling/classification; no node pointshape logic."
+      },
+      {
+        "file": "scripts/view_last_run.py",
+        "status": "implemented",
+        "key_symbols": ["main"],
+        "notes": "Loads latest run, renders support symbols, load/reaction arrows, member lines, and equilibrium label."
+      },
+      {
+        "file": "morph_engine/morph_engine/visual/debug_compas_viewer.py",
+        "status": "implemented",
+        "key_symbols": ["view_graph_from_json"],
+        "notes": "Older direct-view helper still present; not the new centralized-symbol path."
+      }
+    ],
+    "rhino_mcp": [
+      {
+        "file": "morph-rhino-mcp/mcp_server.py",
+        "status": "implemented",
+        "key_symbols": ["MCPHandler", "start_server"]
+      },
+      {
+        "file": "morph-rhino-mcp/tools/draw.py",
+        "status": "implemented",
+        "key_symbols": ["draw_network"]
+      }
+    ]
+  },
+  "empty_or_placeholder": [
+    {
+      "file": "morph_engine/morph_engine/app.py",
+      "status": "empty"
+    },
+    {
+      "file": "morph_engine/morph_engine/grammar/actions.py",
+      "status": "empty"
+    },
+    {
+      "file": "morph_engine/morph_engine/io/json_codec.py",
+      "status": "empty"
+    },
+    {
+      "file": "morph-rhino-mcp/tools/clear.py",
+      "status": "empty"
+    }
+  ],
+  "tests": {
+    "count_files": 16,
+    "covered_areas": [
+      "structural graph schema/roundtrip",
+      "temp_force and load API",
+      "grammar rules and engine",
+      "evaluator channels and pipeline",
+      "experiment logger and runner"
+    ],
+    "special_note": "test_handshake.py depends on local MCP server availability."
+  },
+  "runtime_semantics": {
+    "active_runner_channels": [
+      "reaction_absorption_v1",
+      "unbalanced_force_v1",
+      "global_equilibrium_v1"
+    ],
+    "loadcases_meaning": "External loads applied to nodes.",
+    "temp_force_meaning": "Unresolved imbalance vector used during growth.",
+    "reactions_meaning": "Absorbed constrained temp_force components at fixed DOF.",
+    "member_force_storage": "Explicit axial member force/sign storage not implemented yet.",
+    "equilibrium_observation": "Recent runs still often report global equilibrium false with residual around 10.0 for baseline config."
+  },
+  "key_configs_and_scripts": {
+    "config": "experiments/configs/basic_growth.json",
+    "experiment_runner": "scripts/run_experiment.py",
+    "force_growth_demo": "scripts/run_force_growth.py",
+    "visual_latest_run": "scripts/view_last_run.py"
+  }
+}

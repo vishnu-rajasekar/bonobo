@@ -1,0 +1,14 @@
+compas<2.16,>=2.14
+compas_viewer
+numpy
+scipy
+networkx
+
+[dev]
+pytest
+
+[experimental-viewers]
+compas_view2
+qtpy
+PySide6
+compas_robots

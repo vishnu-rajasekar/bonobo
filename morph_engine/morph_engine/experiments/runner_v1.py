@@ -8,7 +8,8 @@ from morph_engine.experiments.logger_v1 import ExperimentLogger
 from morph_engine.grammar.grammar_engine import GrammarEngine
 from morph_engine.grammar.rules.extend_node import ExtendNode
 from morph_engine.model.structural_graph import StructuralGraph
-
+from morph_engine.grammar.rules.resolve_temp_force_v1 import ResolveTempForceV1
+from morph_engine.grammar.rules.connect_nodes import ConnectNodes
 
 class ExperimentRunner:
     def __init__(self, config):
@@ -29,7 +30,16 @@ class ExperimentRunner:
     def run(self):
         graph = self.initialize_graph()
         trace = []
-        grammar_engine = GrammarEngine([ExtendNode()])
+
+        # grammar_engine = GrammarEngine([ExtendNode()])
+
+        # grammar_engine = GrammarEngine([
+        #     ResolveTempForceV1(step_length=2.0),
+        # ])
+        grammar_engine = GrammarEngine([
+            ResolveTempForceV1(step_length=2.0),
+            ConnectNodes(),
+        ])
         evaluator = Evaluator(
             [
                 ReactionAbsorptionChannel(),
@@ -45,7 +55,7 @@ class ExperimentRunner:
             if not candidates:
                 break
 
-            chosen = candidates[0]
+            chosen = random.choice(candidates)
             graph = grammar_engine.apply(graph, chosen)
             trace.append(
                 {

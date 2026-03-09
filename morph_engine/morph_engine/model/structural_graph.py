@@ -51,12 +51,14 @@ class StructuralGraph:
         temp_force = attributes.pop("temp_force", [0, 0, 0])
         if len(temp_force) != 3:
             raise ValueError("temp_force must be length 3: [fx, fy, fz]")
+        forces = attributes.pop("forces", [])
 
         self.network.add_node(
             key,
             xyz=[float(x) for x in xyz],
             fixed=list(fixed),
             temp_force=[float(x) for x in temp_force],
+            forces=list(forces),
             attributes=dict(attributes)
         )
 
@@ -97,6 +99,14 @@ class StructuralGraph:
         if temp_force is None:
             return [0.0, 0.0, 0.0]
         return [float(x) for x in temp_force]
+
+    def add_force_to_node(self, node_key, force):
+        forces = self.network.node_attribute(node_key, "forces") or []
+        forces.append(force)
+        self.network.node_attribute(node_key, "forces", forces)
+
+    def get_node_forces(self, node_key):
+        return list(self.network.node_attribute(node_key, "forces") or [])
 
 
 

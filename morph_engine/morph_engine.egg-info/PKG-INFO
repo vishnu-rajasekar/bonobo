@@ -1,6 +1,17 @@
 Metadata-Version: 2.4
 Name: morph-engine
 Version: 0.1.0
-Summary: Structural morphology engine (COMPAS-based)
-Author: Vishnu
-Requires-Python: >=3.9
+Summary: Bonobo structural grammar engine
+Requires-Python: <3.11,>=3.10
+Requires-Dist: compas<2.16,>=2.14
+Requires-Dist: compas_viewer
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: networkx
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Provides-Extra: experimental-viewers
+Requires-Dist: compas_view2; extra == "experimental-viewers"
+Requires-Dist: qtpy; extra == "experimental-viewers"
+Requires-Dist: PySide6; extra == "experimental-viewers"
+Requires-Dist: compas_robots; extra == "experimental-viewers"

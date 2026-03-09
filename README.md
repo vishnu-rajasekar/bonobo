@@ -1,6 +1,6 @@
 # Bonobo
 
-Panther is a structural grammar research engine evolving toward production-grade tooling.
+Bonobo is a structural grammar research engine evolving toward production-grade tooling.
 
 ## Repository Map
 - `morph_engine/`: core package and unit tests
@@ -17,3 +17,9 @@ Run unit tests from repository root:
 ```bash
 pytest
 ```
+
+## Conda env
+conda env remove -n morph-engine
+conda env create -f environment.yml
+conda activate morph-engine
+pip install -e ./morph_engine
