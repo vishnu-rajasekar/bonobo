@@ -1,0 +1,602 @@
+[
+  {
+    "step": 1,
+    "state_before": "GrammarState.START",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '2', 'theta': 0.5418280395373651}"
+  },
+  {
+    "step": 2,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '3', 'theta': 0.35750322656680006}"
+  },
+  {
+    "step": 3,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '4', 'theta': 0.4169632214446468}"
+  },
+  {
+    "step": 4,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '5', 'theta': 0.6176538703114536}"
+  },
+  {
+    "step": 5,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '6', 'theta': 0.415591392441081}"
+  },
+  {
+    "step": 6,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '7', 'theta': 0.513482444180965}"
+  },
+  {
+    "step": 7,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '8', 'theta': 0.559441818496468}"
+  },
+  {
+    "step": 8,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '9', 'theta': 0.604248309904238}"
+  },
+  {
+    "step": 9,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '10', 'theta': 0.5988213992758985}"
+  },
+  {
+    "step": 10,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '11', 'theta': 0.41983726590830905}"
+  },
+  {
+    "step": 11,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '12', 'theta': 0.5327393017000964}"
+  },
+  {
+    "step": 12,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '13', 'theta': 0.41871442158923133}"
+  },
+  {
+    "step": 13,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '14', 'theta': 0.4294640499494157}"
+  },
+  {
+    "step": 14,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '15', 'theta': 0.5382338125109271}"
+  },
+  {
+    "step": 15,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '16', 'theta': 0.5422885395739424}"
+  },
+  {
+    "step": 16,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '17', 'theta': 0.5787532400225454}"
+  },
+  {
+    "step": 17,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '18', 'theta': 0.37076375554051505}"
+  },
+  {
+    "step": 18,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '19', 'theta': 0.5052727523106773}"
+  },
+  {
+    "step": 19,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '20', 'theta': 0.5213129279975853}"
+  },
+  {
+    "step": 20,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '21', 'theta': 0.47656449195032125}"
+  },
+  {
+    "step": 21,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '22', 'theta': 0.4295609174516456}"
+  },
+  {
+    "step": 22,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '23', 'theta': 0.4057474882942169}"
+  },
+  {
+    "step": 23,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '24', 'theta': 0.48748565678557587}"
+  },
+  {
+    "step": 24,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '25', 'theta': 0.38211079331282527}"
+  },
+  {
+    "step": 25,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '26', 'theta': 0.621178571467968}"
+  },
+  {
+    "step": 26,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '27', 'theta': 0.5709693415265247}"
+  },
+  {
+    "step": 27,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '28', 'theta': 0.5108647197436166}"
+  },
+  {
+    "step": 28,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '29', 'theta': 0.4441746935175079}"
+  },
+  {
+    "step": 29,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '30', 'theta': 0.3754386610175365}"
+  },
+  {
+    "step": 30,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '31', 'theta': 0.36506551554219224}"
+  },
+  {
+    "step": 31,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '32', 'theta': 0.3915122184548467}"
+  },
+  {
+    "step": 32,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '33', 'theta': 0.4712950007412911}"
+  },
+  {
+    "step": 33,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '34', 'theta': 0.3561140051960997}"
+  },
+  {
+    "step": 34,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '35', 'theta': 0.4611712628654169}"
+  },
+  {
+    "step": 35,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '36', 'theta': 0.6140959939274677}"
+  },
+  {
+    "step": 36,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '37', 'theta': 0.6429821068649171}"
+  },
+  {
+    "step": 37,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '38', 'theta': 0.5872222489530259}"
+  },
+  {
+    "step": 38,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '39', 'theta': 0.3714229510567442}"
+  },
+  {
+    "step": 39,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '40', 'theta': 0.6073199283201058}"
+  },
+  {
+    "step": 40,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '41', 'theta': 0.5996429521306704}"
+  },
+  {
+    "step": 41,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '42', 'theta': 0.5934226707694631}"
+  },
+  {
+    "step": 42,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '43', 'theta': 0.48310356549851174}"
+  },
+  {
+    "step": 43,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '44', 'theta': 0.5474689447786042}"
+  },
+  {
+    "step": 44,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '45', 'theta': 0.6388679878606633}"
+  },
+  {
+    "step": 45,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '46', 'theta': 0.4744653582310421}"
+  },
+  {
+    "step": 46,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '47', 'theta': 0.5869953992704262}"
+  },
+  {
+    "step": 47,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '48', 'theta': 0.4185480723093753}"
+  },
+  {
+    "step": 48,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '49', 'theta': 0.4302343175462332}"
+  },
+  {
+    "step": 49,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '50', 'theta': 0.4027084405627527}"
+  },
+  {
+    "step": 50,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '51', 'theta': 0.4982351075052166}"
+  },
+  {
+    "step": 51,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '52', 'theta': 0.4726308191741961}"
+  },
+  {
+    "step": 52,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '53', 'theta': 0.46301596124675737}"
+  },
+  {
+    "step": 53,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '54', 'theta': 0.4624738020253303}"
+  },
+  {
+    "step": 54,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '55', 'theta': 0.4534407479490174}"
+  },
+  {
+    "step": 55,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '56', 'theta': 0.53078648831918}"
+  },
+  {
+    "step": 56,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '57', 'theta': 0.6036563656924099}"
+  },
+  {
+    "step": 57,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '58', 'theta': 0.4408473818326628}"
+  },
+  {
+    "step": 58,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '59', 'theta': 0.4994796626179726}"
+  },
+  {
+    "step": 59,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '60', 'theta': 0.5626219419306313}"
+  },
+  {
+    "step": 60,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '61', 'theta': 0.41218333845639205}"
+  },
+  {
+    "step": 61,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '62', 'theta': 0.4690983722834899}"
+  },
+  {
+    "step": 62,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '63', 'theta': 0.39595566940675375}"
+  },
+  {
+    "step": 63,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '64', 'theta': 0.511790079175658}"
+  },
+  {
+    "step": 64,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '65', 'theta': 0.4748973900264334}"
+  },
+  {
+    "step": 65,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '66', 'theta': 0.5237428778112201}"
+  },
+  {
+    "step": 66,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '67', 'theta': 0.6043601306094607}"
+  },
+  {
+    "step": 67,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '68', 'theta': 0.5355847670779663}"
+  },
+  {
+    "step": 68,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '69', 'theta': 0.4973021938676307}"
+  },
+  {
+    "step": 69,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '70', 'theta': 0.38482080138769237}"
+  },
+  {
+    "step": 70,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '71', 'theta': 0.5406504926175906}"
+  },
+  {
+    "step": 71,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '72', 'theta': 0.430202919883424}"
+  },
+  {
+    "step": 72,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '73', 'theta': 0.3996575237478031}"
+  },
+  {
+    "step": 73,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '74', 'theta': 0.6301773205022647}"
+  },
+  {
+    "step": 74,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '75', 'theta': 0.522173691557617}"
+  },
+  {
+    "step": 75,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '76', 'theta': 0.39005415507528707}"
+  },
+  {
+    "step": 76,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '77', 'theta': 0.35884468790008744}"
+  },
+  {
+    "step": 77,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '78', 'theta': 0.41043931500564235}"
+  },
+  {
+    "step": 78,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '79', 'theta': 0.39879695352454647}"
+  },
+  {
+    "step": 79,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '80', 'theta': 0.564291709739108}"
+  },
+  {
+    "step": 80,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '81', 'theta': 0.577847988567877}"
+  },
+  {
+    "step": 81,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '82', 'theta': 0.6177121393042798}"
+  },
+  {
+    "step": 82,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '83', 'theta': 0.5343439216175185}"
+  },
+  {
+    "step": 83,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '84', 'theta': 0.4123081952814845}"
+  },
+  {
+    "step": 84,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '85', 'theta': 0.5528886705072323}"
+  },
+  {
+    "step": 85,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '86', 'theta': 0.6305924842494959}"
+  },
+  {
+    "step": 86,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '87', 'theta': 0.35388957130239146}"
+  },
+  {
+    "step": 87,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '88', 'theta': 0.551100537842917}"
+  },
+  {
+    "step": 88,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '89', 'theta': 0.49615712304012455}"
+  },
+  {
+    "step": 89,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '90', 'theta': 0.5064118712400651}"
+  },
+  {
+    "step": 90,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '91', 'theta': 0.6190906858542595}"
+  },
+  {
+    "step": 91,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '92', 'theta': 0.5298544738677469}"
+  },
+  {
+    "step": 92,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '93', 'theta': 0.49770211331126357}"
+  },
+  {
+    "step": 93,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '94', 'theta': 0.4002726606441601}"
+  },
+  {
+    "step": 94,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '95', 'theta': 0.4635074180824885}"
+  },
+  {
+    "step": 95,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '96', 'theta': 0.5433724689943755}"
+  },
+  {
+    "step": 96,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '97', 'theta': 0.5747583073932118}"
+  },
+  {
+    "step": 97,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '98', 'theta': 0.5014188038336105}"
+  },
+  {
+    "step": 98,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '99', 'theta': 0.4500708903892327}"
+  },
+  {
+    "step": 99,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '100', 'theta': 0.4240351522584759}"
+  },
+  {
+    "step": 100,
+    "state_before": "GrammarState.GROW",
+    "state_after": "GrammarState.GROW",
+    "action": "split_node_rule:{'node': '101', 'theta': 0.3646756399829089}"
+  }
+]

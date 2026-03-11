@@ -1,0 +1,10 @@
+{
+  "candidate_geometry_count": 266,
+  "explored_segments_count": 344,
+  "explored_points_count": 234,
+  "rule_candidate_counts": {
+    "split_node_rule": 78,
+    "extend_node_rule": 78,
+    "triangle_closure_rule": 110
+  }
+}

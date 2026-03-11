@@ -1,0 +1,121 @@
+{
+  "valid": false,
+  "channels": {
+    "reaction_absorption_v1": {
+      "valid": true,
+      "metrics": {
+        "reaction_count": 0,
+        "total_reaction": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "absorbed_magnitude": 0.0
+      },
+      "signals": {
+        "reactions_by_node": {}
+      }
+    },
+    "unbalanced_force_v1": {
+      "valid": true,
+      "metrics": {
+        "global_imbalance": 130.0,
+        "max_node_imbalance": 10.0
+      },
+      "signals": {
+        "node_imbalance": {
+          "0": 0.0,
+          "1": 0.0,
+          "2": 0.0,
+          "3": 0.0,
+          "4": 0.0,
+          "5": 0.0,
+          "6": 0.0,
+          "7": 0.0,
+          "8": 0.0,
+          "9": 0.0,
+          "10": 0.0,
+          "11": 0.0,
+          "12": 0.0,
+          "13": 0.0,
+          "14": 10.0,
+          "15": 10.0,
+          "16": 10.0,
+          "17": 10.0,
+          "18": 10.0,
+          "19": 10.0,
+          "20": 10.0,
+          "21": 10.0,
+          "22": 10.0,
+          "23": 10.0,
+          "24": 10.0,
+          "25": 10.0,
+          "26": 10.0
+        },
+        "done": false
+      }
+    },
+    "global_equilibrium_v1": {
+      "valid": false,
+      "metrics": {
+        "residual_vector": [
+          0.0,
+          -10.0,
+          0.0
+        ],
+        "residual_magnitude": 10.0
+      },
+      "signals": {}
+    }
+  },
+  "metrics": {
+    "reaction_count": 0,
+    "total_reaction": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "absorbed_magnitude": 0.0,
+    "global_imbalance": 130.0,
+    "max_node_imbalance": 10.0,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0
+  },
+  "signals": {
+    "reactions_by_node": {},
+    "node_imbalance": {
+      "0": 0.0,
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.0,
+      "4": 0.0,
+      "5": 0.0,
+      "6": 0.0,
+      "7": 0.0,
+      "8": 0.0,
+      "9": 0.0,
+      "10": 0.0,
+      "11": 0.0,
+      "12": 0.0,
+      "13": 0.0,
+      "14": 10.0,
+      "15": 10.0,
+      "16": 10.0,
+      "17": 10.0,
+      "18": 10.0,
+      "19": 10.0,
+      "20": 10.0,
+      "21": 10.0,
+      "22": 10.0,
+      "23": 10.0,
+      "24": 10.0,
+      "25": 10.0,
+      "26": 10.0
+    },
+    "done": false
+  }
+}

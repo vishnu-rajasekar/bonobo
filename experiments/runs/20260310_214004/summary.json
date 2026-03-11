@@ -1,0 +1,58 @@
+{
+  "scenario_name": "mitchell_planar_benchmark_v1",
+  "seed": 42,
+  "iterations_executed": 12,
+  "final_node_count": 27,
+  "final_edge_count": 26,
+  "final_temp_force_count": 13,
+  "final_residual_magnitude": 10.0,
+  "global_equilibrium_valid": false,
+  "residual_history": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+  ],
+  "rule_sequence": [
+    "split_node_rule",
+    "split_node_rule",
+    "split_node_rule",
+    "split_node_rule",
+    "split_node_rule",
+    "split_node_rule",
+    "split_node_rule",
+    "split_node_rule",
+    "split_node_rule",
+    "split_node_rule",
+    "split_node_rule",
+    "split_node_rule"
+  ],
+  "rule_counts": {
+    "split_node_rule": 12
+  },
+  "duplicate_node_count": 0,
+  "duplicate_edge_count": 0,
+  "overlapping_edge_count": 0,
+  "crossing_edge_count": 12,
+  "artifact_paths": {
+    "scenario": "experiments/runs/20260310_214004/scenario.json",
+    "config": "experiments/runs/20260310_214004/config.json",
+    "final_graph": "experiments/runs/20260310_214004/final_graph.json",
+    "trace": "experiments/runs/20260310_214004/trace.json",
+    "metrics": "experiments/runs/20260310_214004/metrics.json",
+    "structural_dna": "experiments/runs/20260310_214004/structural_dna.json",
+    "graph_descriptors": "experiments/runs/20260310_214004/graph_descriptors.json",
+    "accepted_graph_digest": "experiments/runs/20260310_214004/accepted_graph_digest.json",
+    "explored_geometry_digest": "experiments/runs/20260310_214004/explored_geometry_digest.json",
+    "ml_export": "experiments/runs/20260310_214004/ml_export.json"
+  }
+}

@@ -29,15 +29,23 @@ class ExperimentLogger:
         path = os.path.join(run_dir, filename)
         with open(path, "w", encoding="utf-8") as handle:
             json.dump(data, handle, indent=2)
+        return path
+
+    def save_json(self, filename, data):
+        return self._write_json(filename, data)
+
+    def artifact_path(self, filename):
+        run_dir = self.create_run_dir()
+        return os.path.join(run_dir, filename)
 
     def save_config(self, config):
-        self._write_json("config.json", config)
+        return self._write_json("config.json", config)
 
     def save_graph(self, graph):
-        self._write_json("final_graph.json", graph.to_json())
+        return self._write_json("final_graph.json", graph.to_json())
 
     def save_trace(self, trace):
-        self._write_json("trace.json", trace)
+        return self._write_json("trace.json", trace)
 
     def save_metrics(self, metrics):
-        self._write_json("metrics.json", metrics)
+        return self._write_json("metrics.json", metrics)
