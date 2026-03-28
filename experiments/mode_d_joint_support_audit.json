@@ -1,0 +1,247 @@
+{
+  "mode_d_run_dir": "/Users/apple/Desktop/DEV/bonobo/experiments/runs/20260328_172424_3",
+  "part_a_support_path_check": {
+    "nodes": [
+      {
+        "id": "0",
+        "xyz": [
+          -5.0,
+          0.0,
+          0.0
+        ],
+        "fixed": [
+          1,
+          1,
+          1
+        ],
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "id": "1",
+        "xyz": [
+          -5.0,
+          4.0,
+          0.0
+        ],
+        "fixed": [
+          1,
+          1,
+          1
+        ],
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "id": "2",
+        "xyz": [
+          5.0,
+          2.0,
+          0.0
+        ],
+        "fixed": [
+          0,
+          0,
+          0
+        ],
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "id": "3",
+        "xyz": [
+          5.0,
+          0.36057320154211636,
+          0.0
+        ],
+        "fixed": [
+          0,
+          0,
+          0
+        ],
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "id": "4",
+        "xyz": [
+          -5.0,
+          0.36057320154211636,
+          0.0
+        ],
+        "fixed": [
+          0,
+          0,
+          0
+        ],
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "u": "2",
+        "v": "3",
+        "u_xyz": [
+          5.0,
+          2.0,
+          0.0
+        ],
+        "v_xyz": [
+          5.0,
+          0.36057320154211636,
+          0.0
+        ]
+      },
+      {
+        "u": "3",
+        "v": "4",
+        "u_xyz": [
+          5.0,
+          0.36057320154211636,
+          0.0
+        ],
+        "v_xyz": [
+          -5.0,
+          0.36057320154211636,
+          0.0
+        ]
+      },
+      {
+        "u": "4",
+        "v": "0",
+        "u_xyz": [
+          -5.0,
+          0.36057320154211636,
+          0.0
+        ],
+        "v_xyz": [
+          -5.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "support_nodes": [
+      {
+        "id": "0",
+        "xyz": [
+          -5.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "id": "1",
+        "xyz": [
+          -5.0,
+          4.0,
+          0.0
+        ]
+      }
+    ],
+    "load_nodes": [
+      {
+        "id": "2",
+        "xyz": [
+          5.0,
+          2.0,
+          0.0
+        ]
+      }
+    ],
+    "support_path_exists": true,
+    "support_path": [
+      "2",
+      "3",
+      "4",
+      "0"
+    ],
+    "support_path_note": "Path is graph adjacency through actual edges, not support metadata."
+  },
+  "part_b_suspicious_joint_check": {
+    "node_id": "3",
+    "coordinate": [
+      5.0,
+      0.36057320154211636,
+      0.0
+    ],
+    "incident_edges": [
+      [
+        "3",
+        "2"
+      ],
+      [
+        "3",
+        "4"
+      ]
+    ],
+    "load_applied_here": false,
+    "support_applied_here": false,
+    "temp_force": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "reaction": null,
+    "member_vectors": [
+      {
+        "neighbor": "2",
+        "vector": [
+          0.0,
+          1.6394267984578836,
+          0.0
+        ]
+      },
+      {
+        "neighbor": "4",
+        "vector": [
+          -10.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "pairwise_collinearity": [
+      {
+        "neighbors": [
+          "2",
+          "4"
+        ],
+        "abs_alignment": 0.0,
+        "collinear": false
+      }
+    ],
+    "apparent_unbalanced_perpendicular_component": true,
+    "plausibly_equilibrated_under_pin_jointed_axial_reading": false,
+    "apparent_issue": "two_non_collinear_members_without_external_balance"
+  },
+  "part_c_verdict": {
+    "support_path_exists": true,
+    "support_path": [
+      "2",
+      "3",
+      "4",
+      "0"
+    ],
+    "suspicious_joint_id": "3",
+    "suspicious_joint_plausibly_equilibrated": false,
+    "equilibrium_flag_trustworthy_for_mode_d": false,
+    "most_likely_issue": "local_joint_balance_not_checked+support_connectivity_diagnostic_gap"
+  }
+}

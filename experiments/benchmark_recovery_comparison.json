@@ -1,0 +1,94 @@
+[
+  {
+    "mode": "A",
+    "label": "current_active_rules",
+    "scenario_name": "mitchell_planar_benchmark_v1_mode_a",
+    "run_dir": "experiments/runs/20260328_230316",
+    "iterations_executed": 1,
+    "rule_sequence": [
+      "extend_node_rule"
+    ],
+    "final_node_count": 4,
+    "final_edge_count": 1,
+    "final_residual_magnitude": 10.0,
+    "global_equilibrium_valid": false,
+    "termination_reason": "no_admissible_candidate",
+    "support_distance_history": [
+      10.198039027185569,
+      10.006498540132323
+    ],
+    "support_connectivity_history": [
+      null,
+      null
+    ]
+  },
+  {
+    "mode": "B",
+    "label": "current_rules_plus_resolve_two_forces",
+    "scenario_name": "mitchell_planar_benchmark_v1_mode_b",
+    "run_dir": "experiments/runs/20260328_230316_1",
+    "iterations_executed": 1,
+    "rule_sequence": [
+      "extend_node_rule"
+    ],
+    "final_node_count": 4,
+    "final_edge_count": 1,
+    "final_residual_magnitude": 10.0,
+    "global_equilibrium_valid": false,
+    "termination_reason": "no_admissible_candidate",
+    "support_distance_history": [
+      10.198039027185569,
+      10.006498540132323
+    ],
+    "support_connectivity_history": [
+      null,
+      null
+    ]
+  },
+  {
+    "mode": "C",
+    "label": "current_rules_plus_bidirectional_loa",
+    "scenario_name": "mitchell_planar_benchmark_v1_mode_c",
+    "run_dir": "experiments/runs/20260328_230316_2",
+    "iterations_executed": 1,
+    "rule_sequence": [
+      "extend_node_rule"
+    ],
+    "final_node_count": 4,
+    "final_edge_count": 1,
+    "final_residual_magnitude": 10.0,
+    "global_equilibrium_valid": false,
+    "termination_reason": "no_admissible_candidate",
+    "support_distance_history": [
+      10.198039027185569,
+      10.006498540132323
+    ],
+    "support_connectivity_history": [
+      null,
+      null
+    ]
+  },
+  {
+    "mode": "D",
+    "label": "current_rules_plus_single_node_root_link",
+    "scenario_name": "mitchell_planar_benchmark_v1_mode_d",
+    "run_dir": "experiments/runs/20260328_230316_3",
+    "iterations_executed": 1,
+    "rule_sequence": [
+      "extend_node_rule"
+    ],
+    "final_node_count": 4,
+    "final_edge_count": 1,
+    "final_residual_magnitude": 10.0,
+    "global_equilibrium_valid": false,
+    "termination_reason": "no_admissible_candidate",
+    "support_distance_history": [
+      10.198039027185569,
+      10.006498540132323
+    ],
+    "support_connectivity_history": [
+      null,
+      null
+    ]
+  }
+]

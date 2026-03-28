@@ -1,0 +1,2891 @@
+[
+  {
+    "iteration": 0,
+    "grammar_state_before": "start",
+    "grammar_state_after": "start",
+    "candidate_rule_names": [],
+    "selected_rule": null,
+    "selected_rule_status": "initial_state",
+    "selected_rule_reason": "baseline_evaluation",
+    "state_id_before": "397c8810f843",
+    "state_id_after": "397c8810f843",
+    "accepted_new_nodes": [],
+    "accepted_new_edges": [],
+    "candidate_geometry_count": 0,
+    "candidate_evaluations": [],
+    "temp_force_count": 1,
+    "temp_force_count_before": 1,
+    "temp_force_count_after": 1,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": null,
+    "nearest_support_distance_before": 6.4031242374328485,
+    "nearest_support_distance_after": 6.4031242374328485,
+    "created_support_connection": false,
+    "support_reachable_path_count_before": 1,
+    "support_reachable_path_count_after": 1,
+    "support_connectivity_indicator_before": 1,
+    "support_connectivity_indicator_after": 1,
+    "notes": "initial_state"
+  },
+  {
+    "iteration": 1,
+    "grammar_state_before": "start",
+    "grammar_state_after": "grow",
+    "candidate_rule_names": [
+      "split_node_rule",
+      "extend_node_rule"
+    ],
+    "selected_rule": "split_node_rule",
+    "selected_rule_status": "accepted",
+    "selected_rule_reason": "selected_best_candidate",
+    "state_id_before": "397c8810f843",
+    "state_id_after": "a4baeecc4805",
+    "accepted_new_nodes": [
+      {
+        "id": "3",
+        "xyz": [
+          1.0314061142194046,
+          2.2864652242948704,
+          0.0
+        ]
+      },
+      {
+        "id": "4",
+        "xyz": [
+          -1.0314061142194046,
+          2.2864652242948704,
+          0.0
+        ]
+      }
+    ],
+    "accepted_new_edges": [
+      [
+        "2",
+        "3"
+      ],
+      [
+        "2",
+        "4"
+      ]
+    ],
+    "candidate_geometry_count": 2,
+    "candidate_evaluations": [
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "2",
+          "theta": 0.5418280395373651
+        },
+        "status": "accepted",
+        "reason_codes": [
+          "selected_best_candidate"
+        ],
+        "rank_tuple": [
+          0.0,
+          1.822986614,
+          -1,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "2",
+              "theta": 0.5418280395373651
+            },
+            "segments": [
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  0.5157030571097023,
+                  3.143232612147435,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  -0.5157030571097023,
+                  3.143232612147435,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  0.5157030571097023,
+                  3.143232612147435,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -0.5157030571097023,
+                  3.143232612147435,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 1,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 6.4031242374328485,
+        "nearest_support_distance_after": 4.58013762371448,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 1,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "2",
+          "length": 1.6394267984578836
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "ranked_lower"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.873901341,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "2",
+              "length": 1.6394267984578836
+            },
+            "segments": [
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  0.0,
+                  2.3605732015421164,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  0.0,
+                  2.3605732015421164,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 1,
+        "temp_force_count_after": 1,
+        "nearest_support_distance_before": 6.4031242374328485,
+        "nearest_support_distance_after": 5.529222896559587,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 1,
+        "support_reachable_path_count_after": 1
+      }
+    ],
+    "temp_force_count": 2,
+    "temp_force_count_before": 1,
+    "temp_force_count_after": 2,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": "2",
+    "nearest_support_distance_before": 6.4031242374328485,
+    "nearest_support_distance_after": 4.58013762371448,
+    "created_support_connection": false,
+    "support_reachable_path_count_before": 1,
+    "support_reachable_path_count_after": 2,
+    "support_connectivity_indicator_before": 1,
+    "support_connectivity_indicator_after": 2,
+    "notes": ""
+  },
+  {
+    "iteration": 2,
+    "grammar_state_before": "grow",
+    "grammar_state_after": "grow",
+    "candidate_rule_names": [
+      "split_node_rule",
+      "split_node_rule",
+      "extend_node_rule",
+      "extend_node_rule"
+    ],
+    "selected_rule": "split_node_rule",
+    "selected_rule_status": "accepted",
+    "selected_rule_reason": "selected_best_candidate",
+    "state_id_before": "a4baeecc4805",
+    "state_id_after": "a1022f4291ce",
+    "accepted_new_nodes": [
+      {
+        "id": "5",
+        "xyz": [
+          -0.19310631956727464,
+          0.4706311310236275,
+          0.0
+        ]
+      },
+      {
+        "id": "6",
+        "xyz": [
+          -1.8697059088715346,
+          0.4706311310236275,
+          0.0
+        ]
+      }
+    ],
+    "accepted_new_edges": [
+      [
+        "4",
+        "5"
+      ],
+      [
+        "4",
+        "6"
+      ]
+    ],
+    "candidate_geometry_count": 4,
+    "candidate_evaluations": [
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "3",
+          "theta": 0.35750322656680006
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "ranked_lower"
+        ],
+        "rank_tuple": [
+          0.0,
+          1.285439023,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "3",
+              "theta": 0.35750322656680006
+            },
+            "segments": [
+              {
+                "start": [
+                  1.0314061142194046,
+                  2.2864652242948704,
+                  0.0
+                ],
+                "end": [
+                  1.381342529580074,
+                  1.3496917697155228,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  1.0314061142194046,
+                  2.2864652242948704,
+                  0.0
+                ],
+                "end": [
+                  0.6814696988587353,
+                  1.3496917697155228,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  1.381342529580074,
+                  1.3496917697155228,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  0.6814696988587353,
+                  1.3496917697155228,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 4.58013762371448,
+        "nearest_support_distance_after": 3.29469860089851,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "4",
+          "theta": 0.43250879551073573
+        },
+        "status": "accepted",
+        "reason_codes": [
+          "selected_best_candidate"
+        ],
+        "rank_tuple": [
+          0.0,
+          1.414662184,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "4",
+              "theta": 0.43250879551073573
+            },
+            "segments": [
+              {
+                "start": [
+                  -1.0314061142194046,
+                  2.2864652242948704,
+                  0.0
+                ],
+                "end": [
+                  -0.6122562168933396,
+                  1.378548177659249,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -1.0314061142194046,
+                  2.2864652242948704,
+                  0.0
+                ],
+                "end": [
+                  -1.4505560115454696,
+                  1.378548177659249,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -0.6122562168933396,
+                  1.378548177659249,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -1.4505560115454696,
+                  1.378548177659249,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 4.58013762371448,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "3",
+          "length": 1.025010755222667
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "ranked_lower"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.415884412,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "3",
+              "length": 1.025010755222667
+            },
+            "segments": [
+              {
+                "start": [
+                  1.0314061142194046,
+                  2.2864652242948704,
+                  0.0
+                ],
+                "end": [
+                  1.0314061142194046,
+                  1.2614544690722034,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  1.0314061142194046,
+                  1.2614544690722034,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 4.58013762371448,
+        "nearest_support_distance_after": 4.164253211296998,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "4",
+          "length": 1.2750293183691193
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "ranked_lower"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.484684044,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "4",
+              "length": 1.2750293183691193
+            },
+            "segments": [
+              {
+                "start": [
+                  -1.0314061142194046,
+                  2.2864652242948704,
+                  0.0
+                ],
+                "end": [
+                  -1.0314061142194046,
+                  1.0114359059257512,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -1.0314061142194046,
+                  1.0114359059257512,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 4.58013762371448,
+        "nearest_support_distance_after": 4.095453579525834,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      }
+    ],
+    "temp_force_count": 3,
+    "temp_force_count_before": 2,
+    "temp_force_count_after": 3,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": "4",
+    "nearest_support_distance_before": 4.58013762371448,
+    "nearest_support_distance_after": 3.1654754395575972,
+    "created_support_connection": false,
+    "support_reachable_path_count_before": 2,
+    "support_reachable_path_count_after": 3,
+    "support_connectivity_indicator_before": 2,
+    "support_connectivity_indicator_after": 2,
+    "notes": ""
+  },
+  {
+    "iteration": 3,
+    "grammar_state_before": "grow",
+    "grammar_state_after": "grow",
+    "candidate_rule_names": [
+      "split_node_rule",
+      "split_node_rule",
+      "split_node_rule",
+      "extend_node_rule",
+      "extend_node_rule",
+      "extend_node_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule"
+    ],
+    "selected_rule": "split_node_rule",
+    "selected_rule_status": "accepted",
+    "selected_rule_reason": "selected_best_candidate",
+    "state_id_before": "a1022f4291ce",
+    "state_id_after": "e72fb649ea85",
+    "accepted_new_nodes": [
+      {
+        "id": "7",
+        "xyz": [
+          1.8413775706623676,
+          0.45781921159922967,
+          0.0
+        ]
+      },
+      {
+        "id": "8",
+        "xyz": [
+          0.22143465777644178,
+          0.45781921159922967,
+          0.0
+        ]
+      }
+    ],
+    "accepted_new_edges": [
+      [
+        "3",
+        "7"
+      ],
+      [
+        "3",
+        "8"
+      ]
+    ],
+    "candidate_geometry_count": 8,
+    "candidate_evaluations": [
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "3",
+          "theta": 0.4169632214446468
+        },
+        "status": "accepted",
+        "reason_codes": [
+          "selected_best_candidate"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          -1,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "3",
+              "theta": 0.4169632214446468
+            },
+            "segments": [
+              {
+                "start": [
+                  1.0314061142194046,
+                  2.2864652242948704,
+                  0.0
+                ],
+                "end": [
+                  1.4363918424408861,
+                  1.37214221794705,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  1.0314061142194046,
+                  2.2864652242948704,
+                  0.0
+                ],
+                "end": [
+                  0.6264203859979232,
+                  1.37214221794705,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  1.4363918424408861,
+                  1.37214221794705,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  0.6264203859979232,
+                  1.37214221794705,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 3,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 3,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "5",
+          "theta": 0.5709413642492037
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "5",
+              "theta": 0.5709413642492037
+            },
+            "segments": [
+              {
+                "start": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  0.34731802542708434,
+                  -0.3707614808630101,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -0.7335306645616336,
+                  -0.3707614808630101,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  0.34731802542708434,
+                  -0.3707614808630101,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -0.7335306645616336,
+                  -0.3707614808630101,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 3,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 3,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "6",
+          "theta": 0.5530098462268734
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.748546171,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "6",
+              "theta": 0.5530098462268734
+            },
+            "segments": [
+              {
+                "start": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -1.3444550836546647,
+                  -0.3803163236461642,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -2.394956734088405,
+                  -0.3803163236461642,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -1.3444550836546647,
+                  -0.3803163236461642,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -2.394956734088405,
+                  -0.3803163236461642,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 3,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 2.416929268341092,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 3,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "3",
+          "length": 1.2232107381488229
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "no_structural_progress"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "3",
+              "length": 1.2232107381488229
+            },
+            "segments": [
+              {
+                "start": [
+                  1.0314061142194046,
+                  2.2864652242948704,
+                  0.0
+                ],
+                "end": [
+                  1.0314061142194046,
+                  1.0632544861460476,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  1.0314061142194046,
+                  1.0632544861460476,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 3,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 3,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "5",
+          "length": 1.7364712141640124
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "5",
+              "length": 1.7364712141640124
+            },
+            "segments": [
+              {
+                "start": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -0.19310631956727464,
+                  -1.2658400831403849,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -0.19310631956727464,
+                  -1.2658400831403849,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 3,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 3,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "6",
+          "length": 1.6766994874229113
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          -0.189124682,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "6",
+              "length": 1.6766994874229113
+            },
+            "segments": [
+              {
+                "start": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -1.8697059088715346,
+                  -1.2060683563992838,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -1.8697059088715346,
+                  -1.2060683563992838,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 3,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.354600121812055,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 3,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "2",
+          "v": "5",
+          "via": "4"
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "no_structural_progress"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "2",
+              "v": "5",
+              "via": "4"
+            },
+            "segments": [
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 3,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 3,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "2",
+          "v": "6",
+          "via": "4"
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "crossing_introduced"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "2",
+              "v": "6",
+              "via": "4"
+            },
+            "segments": [
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 3,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 3,
+        "support_reachable_path_count_after": 3
+      }
+    ],
+    "temp_force_count": 4,
+    "temp_force_count_before": 3,
+    "temp_force_count_after": 4,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": "3",
+    "nearest_support_distance_before": 3.1654754395575972,
+    "nearest_support_distance_after": 3.1654754395575972,
+    "created_support_connection": false,
+    "support_reachable_path_count_before": 3,
+    "support_reachable_path_count_after": 4,
+    "support_connectivity_indicator_before": 2,
+    "support_connectivity_indicator_after": 3,
+    "notes": ""
+  },
+  {
+    "iteration": 4,
+    "grammar_state_before": "grow",
+    "grammar_state_after": "grow",
+    "candidate_rule_names": [
+      "split_node_rule",
+      "split_node_rule",
+      "split_node_rule",
+      "split_node_rule",
+      "extend_node_rule",
+      "extend_node_rule",
+      "extend_node_rule",
+      "extend_node_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule"
+    ],
+    "selected_rule": "triangle_closure_rule",
+    "selected_rule_status": "accepted",
+    "selected_rule_reason": "selected_best_candidate",
+    "state_id_before": "e72fb649ea85",
+    "state_id_after": "30ce3cff23c4",
+    "accepted_new_nodes": [],
+    "accepted_new_edges": [
+      [
+        "2",
+        "8"
+      ]
+    ],
+    "candidate_geometry_count": 12,
+    "candidate_evaluations": [
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "5",
+          "theta": 0.6176538703114536
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "5",
+              "theta": 0.6176538703114536
+            },
+            "segments": [
+              {
+                "start": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  0.3860177792093985,
+                  -0.3446082683040216,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -0.7722304183439478,
+                  -0.3446082683040216,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  0.3860177792093985,
+                  -0.3446082683040216,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -0.7722304183439478,
+                  -0.3446082683040216,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 5,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 5
+      },
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "6",
+          "theta": 0.37608164978882486
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.395905874,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "6",
+              "theta": 0.37608164978882486
+            },
+            "segments": [
+              {
+                "start": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -1.502427110872235,
+                  -0.45947976803099033,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -2.2369847068708344,
+                  -0.45947976803099033,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -1.502427110872235,
+                  -0.45947976803099033,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -2.2369847068708344,
+                  -0.45947976803099033,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 5,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 2.769569565139782,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 5
+      },
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "7",
+          "theta": 0.47657654590558113
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.56483496,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "7",
+              "theta": 0.47657654590558113
+            },
+            "segments": [
+              {
+                "start": [
+                  1.8413775706623676,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  2.300117459703129,
+                  -0.4307513900992902,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  1.8413775706623676,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  1.382637681621606,
+                  -0.4307513900992902,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  2.300117459703129,
+                  -0.4307513900992902,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  1.382637681621606,
+                  -0.4307513900992902,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 5,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 2.6006404790590727,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 5
+      },
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "8",
+          "theta": 0.3589391658314211
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "8",
+              "theta": 0.3589391658314211
+            },
+            "segments": [
+              {
+                "start": [
+                  0.22143465777644178,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  0.572715861689671,
+                  -0.4784507899373315,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  0.22143465777644178,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  -0.12984654613678742,
+                  -0.4784507899373315,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  0.572715861689671,
+                  -0.4784507899373315,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -0.12984654613678742,
+                  -0.4784507899373315,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 5,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 5
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "5",
+          "length": 1.8921795677048454
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "5",
+              "length": 1.8921795677048454
+            },
+            "segments": [
+              {
+                "start": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -0.19310631956727464,
+                  -1.4215484366812179,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -0.19310631956727464,
+                  -1.4215484366812179,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "6",
+          "length": 1.086938832629416
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "no_structural_progress"
+        ],
+        "rank_tuple": [
+          0.0,
+          -0.024912668,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "6",
+              "length": 1.086938832629416
+            },
+            "segments": [
+              {
+                "start": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -1.8697059088715346,
+                  -0.6163077016057885,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -1.8697059088715346,
+                  -0.6163077016057885,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.190388108054002,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "7",
+          "length": 1.4219218196852705
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "no_structural_progress"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "7",
+              "length": 1.4219218196852705
+            },
+            "segments": [
+              {
+                "start": [
+                  1.8413775706623676,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  1.8413775706623676,
+                  -0.9641026080860409,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  1.8413775706623676,
+                  -0.9641026080860409,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "8",
+          "length": 1.0297972194380702
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "no_structural_progress"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "8",
+              "length": 1.0297972194380702
+            },
+            "segments": [
+              {
+                "start": [
+                  0.22143465777644178,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  0.22143465777644178,
+                  -0.5719780078388406,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  0.22143465777644178,
+                  -0.5719780078388406,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "2",
+          "v": "7",
+          "via": "3"
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "crossing_introduced"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          1,
+          0,
+          0,
+          -1,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "2",
+              "v": "7",
+              "via": "3"
+            },
+            "segments": [
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  1.8413775706623676,
+                  0.45781921159922967,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "2",
+          "v": "8",
+          "via": "3"
+        },
+        "status": "accepted",
+        "reason_codes": [
+          "selected_best_candidate"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "2",
+              "v": "8",
+              "via": "3"
+            },
+            "segments": [
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  0.22143465777644178,
+                  0.45781921159922967,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "2",
+          "v": "5",
+          "via": "4"
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "ranked_lower"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "2",
+              "v": "5",
+              "via": "4"
+            },
+            "segments": [
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "2",
+          "v": "6",
+          "via": "4"
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "crossing_introduced"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          1,
+          0,
+          0,
+          -1,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "2",
+              "v": "6",
+              "via": "4"
+            },
+            "segments": [
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 3,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      }
+    ],
+    "temp_force_count": 4,
+    "temp_force_count_before": 4,
+    "temp_force_count_after": 4,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": "2",
+    "nearest_support_distance_before": 3.1654754395575972,
+    "nearest_support_distance_after": 3.1654754395575972,
+    "created_support_connection": false,
+    "support_reachable_path_count_before": 4,
+    "support_reachable_path_count_after": 4,
+    "support_connectivity_indicator_before": 3,
+    "support_connectivity_indicator_after": 2,
+    "notes": ""
+  },
+  {
+    "iteration": 5,
+    "grammar_state_before": "grow",
+    "grammar_state_after": "grow",
+    "candidate_rule_names": [
+      "split_node_rule",
+      "split_node_rule",
+      "split_node_rule",
+      "split_node_rule",
+      "extend_node_rule",
+      "extend_node_rule",
+      "extend_node_rule",
+      "extend_node_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule"
+    ],
+    "selected_rule": null,
+    "selected_rule_status": "not_selected",
+    "selected_rule_reason": "no_admissible_candidate",
+    "state_id_before": "30ce3cff23c4",
+    "state_id_after": "30ce3cff23c4",
+    "accepted_new_nodes": [],
+    "accepted_new_edges": [],
+    "candidate_geometry_count": 11,
+    "candidate_evaluations": [
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "5",
+          "theta": 0.415591392441081
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "5",
+              "theta": 0.415591392441081
+            },
+            "segments": [
+              {
+                "start": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  0.21062473315462282,
+                  -0.4442465859790703,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -0.5968373722891721,
+                  -0.4442465859790703,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  0.21062473315462282,
+                  -0.4442465859790703,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -0.5968373722891721,
+                  -0.4442465859790703,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 5,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 5
+      },
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "6",
+          "theta": 0.5016065864310087
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.645753538,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "6",
+              "theta": 0.5016065864310087
+            },
+            "segments": [
+              {
+                "start": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -1.3888710773651145,
+                  -0.40618006006040086,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -2.3505407403779546,
+                  -0.40618006006040086,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -1.3888710773651145,
+                  -0.40618006006040086,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -2.3505407403779546,
+                  -0.40618006006040086,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 5,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 2.5197219014670984,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 5
+      },
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "7",
+          "theta": 0.3579607909051591
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.329172777,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "7",
+              "theta": 0.3579607909051591
+            },
+            "segments": [
+              {
+                "start": [
+                  1.8413775706623676,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  2.191742583501777,
+                  -0.4787940264974996,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  1.8413775706623676,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  1.491012557822958,
+                  -0.4787940264974996,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  2.191742583501777,
+                  -0.4787940264974996,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  1.491012557822958,
+                  -0.4787940264974996,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 5,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 2.836302662381047,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 5
+      },
+      {
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "8",
+          "theta": 0.4096512952059945
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          -1,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "8",
+              "theta": 0.4096512952059945
+            },
+            "segments": [
+              {
+                "start": [
+                  0.22143465777644178,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  0.6197241571052904,
+                  -0.4594405524394941,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  0.22143465777644178,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  -0.17685484155240683,
+                  -0.4594405524394941,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  0.6197241571052904,
+                  -0.4594405524394941,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -0.17685484155240683,
+                  -0.4594405524394941,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 5,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 5
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "5",
+          "length": 1.2186379748036034
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "no_structural_progress"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "5",
+              "length": 1.2186379748036034
+            },
+            "segments": [
+              {
+                "start": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -0.19310631956727464,
+                  -0.7480068437799758,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -0.19310631956727464,
+                  -0.7480068437799758,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "6",
+          "length": 1.5053552881033623
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          -0.026153311,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "6",
+              "length": 1.5053552881033623
+            },
+            "segments": [
+              {
+                "start": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ],
+                "end": [
+                  -1.8697059088715346,
+                  -1.0347241570797348,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -1.8697059088715346,
+                  -1.0347241570797348,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1916287505949223,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "7",
+          "length": 1.0265359696838636
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "no_structural_progress"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "7",
+              "length": 1.0265359696838636
+            },
+            "segments": [
+              {
+                "start": [
+                  1.8413775706623676,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  1.8413775706623676,
+                  -0.568716758084634,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  1.8413775706623676,
+                  -0.568716758084634,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "8",
+          "length": 1.1988376506866485
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "no_structural_progress"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "8",
+              "length": 1.1988376506866485
+            },
+            "segments": [
+              {
+                "start": [
+                  0.22143465777644178,
+                  0.45781921159922967,
+                  0.0
+                ],
+                "end": [
+                  0.22143465777644178,
+                  -0.7410184390874188,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  0.22143465777644178,
+                  -0.7410184390874188,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 3,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "2",
+          "v": "7",
+          "via": "3"
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "crossing_introduced"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "2",
+              "v": "7",
+              "via": "3"
+            },
+            "segments": [
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  1.8413775706623676,
+                  0.45781921159922967,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "2",
+          "v": "5",
+          "via": "4"
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "no_structural_progress"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "2",
+              "v": "5",
+              "via": "4"
+            },
+            "segments": [
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  -0.19310631956727464,
+                  0.4706311310236275,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      },
+      {
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "2",
+          "v": "6",
+          "via": "4"
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "crossing_introduced"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "2",
+              "v": "6",
+              "via": "4"
+            },
+            "segments": [
+              {
+                "start": [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                "end": [
+                  -1.8697059088715346,
+                  0.4706311310236275,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 4,
+        "temp_force_count_after": 4,
+        "nearest_support_distance_before": 3.1654754395575972,
+        "nearest_support_distance_after": 3.1654754395575972,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 4,
+        "support_reachable_path_count_after": 4
+      }
+    ],
+    "temp_force_count": 4,
+    "temp_force_count_before": 4,
+    "temp_force_count_after": 4,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": null,
+    "nearest_support_distance_before": 3.1654754395575972,
+    "nearest_support_distance_after": 3.1654754395575972,
+    "created_support_connection": false,
+    "support_reachable_path_count_before": 4,
+    "support_reachable_path_count_after": 4,
+    "support_connectivity_indicator_before": 2,
+    "support_connectivity_indicator_after": 2,
+    "notes": "terminated_no_admissible_candidate"
+  }
+]

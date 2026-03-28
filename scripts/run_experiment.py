@@ -15,6 +15,7 @@ def main():
         "run_dir": str(run_dir),
         "summary": result.get("summary", {}),
         "structural_dna": result.get("structural_dna", {}),
+        "trace_excerpt": result.get("trace_excerpt", []),
         "accepted_graph_digest": result.get("accepted_graph_digest", {}),
         "ml_export_sample": {
             "node_ids": result.get("ml_export", {}).get("node_ids", []),

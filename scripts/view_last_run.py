@@ -1,28 +1,23 @@
 import json
+import sys
 from math import cos
 from math import pi
 from math import sin
 from math import sqrt
 from pathlib import Path
+from compas.geometry import Circle, Line, Point, Frame
 
-from compas.geometry import Circle
-from compas.geometry import Frame
-from compas.geometry import Line
-from compas.geometry import Point
-from compas.geometry import Polygon
-from compas_viewer import Viewer
-from compas_viewer.scene import Tag
+try:
+    from compas_viewer import Viewer
+except Exception as error:  # pragma: no cover - environment dependent
+    Viewer = None
+    VIEWER_IMPORT_ERROR = error
+else:
+    VIEWER_IMPORT_ERROR = None
 
 from morph_engine.model.structural_graph import StructuralGraph
 from morph_engine.visual.style_registry import MemberStyleResolver
 from morph_engine.visual.style_registry import is_graph_globally_equilibrated
-
-
-LOAD_COLOR = (55 / 255, 126 / 255, 227 / 255)
-REACTION_COLOR = (84 / 255, 165 / 255, 71 / 255)
-NODE_COLOR = (0.75, 0.75, 0.75)
-EXPLORED_COLOR = (0.80, 0.80, 0.80)
-BOUNDARY_COLOR = (0.15, 0.15, 0.15)
 
 
 def _node_xyz(graph, key):
@@ -38,18 +33,12 @@ def _vector_magnitude(vec3):
     return sqrt(vec3[0] * vec3[0] + vec3[1] * vec3[1] + vec3[2] * vec3[2])
 
 
-def _sorted_edge_key(u, v):
-    su = str(u)
-    sv = str(v)
-    return (su, sv) if su <= sv else (sv, su)
-
-
 def _load_latest_run(repo_root):
     runs_dir = repo_root / "experiments" / "runs"
     if not runs_dir.exists():
         raise FileNotFoundError("Missing runs directory: {0}".format(runs_dir))
 
-    run_dirs = sorted([path for path in runs_dir.iterdir() if path.is_dir()])
+    run_dirs = sorted([p for p in runs_dir.iterdir() if p.is_dir()])
     if not run_dirs:
         raise FileNotFoundError("No run directories found in: {0}".format(runs_dir))
 
@@ -59,46 +48,8 @@ def _load_latest_run(repo_root):
         raise FileNotFoundError("Missing final_graph.json in: {0}".format(latest_run))
 
     metrics_json = latest_run / "metrics.json"
-    trace_json = latest_run / "trace.json"
-    return latest_run, graph_json, metrics_json, trace_json
-
-
-def _load_json(path):
-    if not path.exists():
-        return {}
-    with open(path, "r", encoding="utf-8") as handle:
-        return json.load(handle)
-
-
-def _boundary_polygon(graph):
-    support_and_load_points = []
-    load_nodes = {str(load.get("node")) for load in graph.get_loads() if load.get("node") is not None}
-
-    for node_key in graph.network.nodes():
-        if not _is_fixed(graph, node_key) and str(node_key) not in load_nodes:
-            continue
-        xyz = _node_xyz(graph, node_key)
-        support_and_load_points.append([xyz[0], xyz[1]])
-
-    if not support_and_load_points:
-        return None
-
-    min_x = min(point[0] for point in support_and_load_points)
-    max_x = max(point[0] for point in support_and_load_points)
-    min_y = min(point[1] for point in support_and_load_points)
-    max_y = max(point[1] for point in support_and_load_points)
-
-    pad_x = max(0.25, 0.10 * max(1.0, max_x - min_x))
-    pad_y = max(0.25, 0.10 * max(1.0, max_y - min_y))
-
-    return Polygon(
-        [
-            Point(min_x - pad_x, min_y - pad_y, 0.0),
-            Point(max_x + pad_x, min_y - pad_y, 0.0),
-            Point(max_x + pad_x, max_y + pad_y, 0.0),
-            Point(min_x - pad_x, max_y + pad_y, 0.0),
-        ]
-    )
+    summary_json = latest_run / "summary.json"
+    return latest_run, graph_json, metrics_json, summary_json
 
 
 def _add(viewer, obj, name=None, color=None, **kwargs):
@@ -122,7 +73,7 @@ def _is_fixed(graph, node_key):
     fixed = graph.network.node_attribute(node_key, "fixed") or [0, 0, 0]
     if len(fixed) != 3:
         return False
-    return any(float(value) != 0.0 for value in fixed)
+    return any(float(v) != 0.0 for v in fixed)
 
 
 def _rotate_z(vec, angle_rad):
@@ -147,18 +98,22 @@ def _arrow_head_lines(end, unit_dir, head_len):
 
 def add_support_symbol(viewer, xyz, scale=1.0):
     x, y, z = xyz
+
+    # --- circle ---
     frame = Frame.worldXY()
     frame.point = Point(x, y, z)
     circle = Circle(0.15 * scale, frame)
-    _add(viewer, circle, color=(0, 0, 0))
+    viewer.scene.add(circle, color=(0, 0, 0))
 
+    # --- triangle ---
     p1 = Point(x - 0.4 * scale, y - 0.6 * scale, z)
     p2 = Point(x + 0.4 * scale, y - 0.6 * scale, z)
     p3 = Point(x, y, z)
 
-    _add(viewer, Line(p1, p2), color=(0, 0, 0))
-    _add(viewer, Line(p2, p3), color=(0, 0, 0))
-    _add(viewer, Line(p3, p1), color=(0, 0, 0))
+    viewer.scene.add(Line(p1, p2), color=(0, 0, 0))
+    viewer.scene.add(Line(p2, p3), color=(0, 0, 0))
+    viewer.scene.add(Line(p3, p1), color=(0, 0, 0))
+    
 
 
 def add_load_arrow(viewer, xyz, vector, scale=1.0):
@@ -170,169 +125,116 @@ def add_load_arrow(viewer, xyz, vector, scale=1.0):
     start = [xyz[0], xyz[1], xyz[2]]
     end = [xyz[0] + unit[0] * scale, xyz[1] + unit[1] * scale, xyz[2] + unit[2] * scale]
 
-    _add(viewer, Line(Point(*start), Point(*end)), name="Load", color=LOAD_COLOR, linewidth=3)
+    _add(viewer, Line(Point(*start), Point(*end)), name="Load", color=(55 / 255, 126 / 255, 227 / 255), linewidth=3)
     l1, l2 = _arrow_head_lines(end, unit, 0.15 * scale)
-    _add(viewer, l1, name="Load", color=LOAD_COLOR, linewidth=3)
-    _add(viewer, l2, name="Load", color=LOAD_COLOR, linewidth=3)
+    _add(viewer, l1, name="Load", color=(0.0, 0.0, 1.0), linewidth=3)
+    _add(viewer, l2, name="Load", color=(0.0, 0.0, 1.0), linewidth=3)
 
 
-def add_reaction_arrow(viewer, xyz, vector, scale=1.0, anchor_offset=None, label=None):
+def add_reaction_arrow(viewer, xyz, vector, scale=1.0):
     mag = _vector_magnitude(vector)
     if mag <= 1e-12:
         return
 
-    offset = anchor_offset or [0.0, 0.0, 0.0]
     unit = [vector[0] / mag, vector[1] / mag, vector[2] / mag]
-    end = [xyz[0] + offset[0], xyz[1] + offset[1], xyz[2] + offset[2]]
-    start = [end[0] - unit[0] * scale, end[1] - unit[1] * scale, end[2] - unit[2] * scale]
+    end = [xyz[0], xyz[1], xyz[2]]
+    start = [xyz[0] - unit[0] * scale, xyz[1] - unit[1] * scale, xyz[2] - unit[2] * scale]
 
-    _add(viewer, Line(Point(*start), Point(*end)), name="Reaction", color=REACTION_COLOR, linewidth=3)
+    _add(viewer, Line(Point(*start), Point(*end)), name="Reaction", color=(0.0, 0.7, 0.0), linewidth=3)
     l1, l2 = _arrow_head_lines(end, unit, 0.15 * scale)
-    _add(viewer, l1, name="Reaction", color=REACTION_COLOR, linewidth=3)
-    _add(viewer, l2, name="Reaction", color=REACTION_COLOR, linewidth=3)
-    if label:
-        label_pos = [end[0] + 0.10, end[1] + 0.10, end[2]]
-        _safe_text(viewer, label_pos, label, REACTION_COLOR)
+    _add(viewer, l1, name="Reaction", color=(0.0, 0.7, 0.0), linewidth=3)
+    _add(viewer, l2, name="Reaction", color=(0.0, 0.7, 0.0), linewidth=3)
 
 
 def _safe_text(viewer, position, label, color):
-    try:
-        _add(
-            viewer,
-            Tag(
-                text=label,
-                position=position,
-                color=color,
-                height=28,
-                absolute_height=True,
-                vertical_align="bottom",
-                horizontal_align="left",
-            ),
-            name=label,
-        )
-    except Exception:
-        _add(viewer, Point(*position), pointsize=12, name=label, show_name=True, color=color)
+    # Viewer text support varies by backend; use named point as robust fallback.
+    _add(viewer, Point(*position), pointsize=6, name=label, show_name=True, color=color)
 
 
-def _sequence_color(step, max_step):
-    if step is None or max_step <= 0:
-        return (0.50, 0.50, 0.50)
-    t = float(step) / float(max_step)
-    return (1.0 - 0.65 * t, 0.25 + 0.55 * t, 0.20 + 0.70 * t)
+def _load_json_if_exists(path):
+    if path is None or not path.exists():
+        return {}
+    with open(path, "r", encoding="utf-8") as handle:
+        return json.load(handle)
 
 
-def _trace_index(trace):
-    node_steps = {}
-    edge_steps = {}
-    max_iteration = 0
-
-    for item in trace:
-        iteration = int(item.get("iteration", 0))
-        if iteration > max_iteration:
-            max_iteration = iteration
-
-        for node in item.get("accepted_new_nodes", []):
-            node_id = str(node.get("id"))
-            if node_id:
-                node_steps.setdefault(node_id, iteration)
-
-        for edge in item.get("accepted_new_edges", []):
-            if len(edge) != 2:
-                continue
-            edge_steps.setdefault(_sorted_edge_key(edge[0], edge[1]), iteration)
-
-    return node_steps, edge_steps, max_iteration
-
-
-def _draw_explored_geometry(viewer, trace):
-    seen_segments = set()
-    seen_points = set()
-
-    for item in trace:
-        iteration = int(item.get("iteration", 0))
-        for geometry in item.get("candidate_geometry", []):
-            for segment in geometry.get("segments", []):
-                start = segment.get("start")
-                end = segment.get("end")
-                if start is None or end is None:
-                    continue
-                skey = (_rounded_xyz(start), _rounded_xyz(end))
-                rkey = (_rounded_xyz(end), _rounded_xyz(start))
-                if skey in seen_segments or rkey in seen_segments:
-                    continue
-                seen_segments.add(skey)
-                _add(
-                    viewer,
-                    Line(Point(*start), Point(*end)),
-                    name="Explored",
-                    color=EXPLORED_COLOR,
-                    linewidth=1,
-                    opacity=0.35,
-                )
-
-            for point in geometry.get("points", []):
-                xyz = point.get("xyz")
-                if xyz is None:
-                    continue
-                pkey = _rounded_xyz(xyz)
-                if pkey in seen_points:
-                    continue
-                seen_points.add(pkey)
-                _safe_text(viewer, xyz, "c{0}".format(iteration), EXPLORED_COLOR)
-
-
-def _draw_boundary(viewer, graph):
-    polygon = _boundary_polygon(graph)
-    if polygon is None:
-        return
-    points = list(polygon.points)
-    for index in range(len(points)):
-        start = points[index]
-        end = points[(index + 1) % len(points)]
-        _add(viewer, Line(start, end), name="Bounds", color=BOUNDARY_COLOR, linewidth=1)
-
-
-def _draw_sequence_labels(viewer, graph, node_steps, edge_steps, max_iteration):
+def _scene_counts(graph, loads_by_node):
+    support_count = 0
     for node_key in graph.network.nodes():
-        step = node_steps.get(str(node_key))
-        if step is None:
-            continue
-        xyz = _node_xyz(graph, node_key)
-        label_pos = [xyz[0] + 0.20, xyz[1] + 0.20, xyz[2]]
-        _safe_text(viewer, label_pos, "n{0}".format(step), _sequence_color(step, max_iteration))
+        if _is_fixed(graph, node_key):
+            support_count += 1
+    return {
+        "nodes": graph.network.number_of_nodes(),
+        "edges": graph.network.number_of_edges(),
+        "supports": support_count,
+        "loads": len([key for key, vec in loads_by_node.items() if _vector_magnitude(vec) > 1e-12]),
+    }
 
-    for u, v in graph.network.edges():
-        step = edge_steps.get(_sorted_edge_key(u, v))
-        if step is None:
-            continue
-        p1 = _node_xyz(graph, u)
-        p2 = _node_xyz(graph, v)
-        midpoint = [
-            0.5 * (p1[0] + p2[0]),
-            0.5 * (p1[1] + p2[1]),
-            0.5 * (p1[2] + p2[2]),
-        ]
-        label_pos = [midpoint[0], midpoint[1] + 0.16, midpoint[2]]
-        _safe_text(viewer, label_pos, "e{0}".format(step), _sequence_color(step, max_iteration))
+
+def _collect_frame_points(graph, loads_by_node, reactions_by_node):
+    coords = []
+    for node_key in graph.network.nodes():
+        xyz = _node_xyz(graph, node_key)
+        coords.append(xyz)
+
+        skey = str(node_key)
+        load = loads_by_node.get(skey)
+        if load and _vector_magnitude(load) > 1e-12:
+            mag = _vector_magnitude(load)
+            unit = [load[0] / mag, load[1] / mag, load[2] / mag]
+            coords.append([xyz[0] + unit[0], xyz[1] + unit[1], xyz[2] + unit[2]])
+
+        reaction = reactions_by_node.get(skey)
+        if reaction and len(reaction) == 3 and _vector_magnitude(reaction) > 1e-12:
+            mag = _vector_magnitude(reaction)
+            unit = [reaction[0] / mag, reaction[1] / mag, reaction[2] / mag]
+            coords.append([xyz[0] + unit[0], xyz[1] + unit[1], xyz[2] + unit[2]])
+
+    boundary = getattr(graph, "boundary", None) or {}
+    if boundary.get("type") == "polygon_xy":
+        for x, y in boundary.get("xy", []):
+            coords.append([float(x), float(y), 0.0])
+    return coords
+
+
+def _frame_scene(viewer, coordinates):
+    if not coordinates:
+        return
+    xs = [point[0] for point in coordinates]
+    ys = [point[1] for point in coordinates]
+    zs = [point[2] for point in coordinates]
+    min_point = [min(xs), min(ys), min(zs)]
+    max_point = [max(xs), max(ys), max(zs)]
+    _add(viewer, Point(*min_point), name="_frame_min", color=(1.0, 1.0, 1.0), pointsize=0.1)
+    _add(viewer, Point(*max_point), name="_frame_max", color=(1.0, 1.0, 1.0), pointsize=0.1)
+
+
+def _print_summary(run_dir, counts, summary):
+    print("run_dir:", run_dir, flush=True)
+    print("nodes:", counts["nodes"], flush=True)
+    print("edges:", counts["edges"], flush=True)
+    print("supports:", counts["supports"], flush=True)
+    print("loads:", counts["loads"], flush=True)
+    if summary:
+        print("termination_reason:", summary.get("termination_reason"), flush=True)
+        print("iterations_executed:", summary.get("iterations_executed"), flush=True)
+        print("final_residual_magnitude:", summary.get("final_residual_magnitude"), flush=True)
+        print("global_equilibrium_valid:", summary.get("global_equilibrium_valid"), flush=True)
 
 
 def main():
     repo_root = Path(__file__).resolve().parent.parent
-    run_dir, graph_json, metrics_json, trace_json = _load_latest_run(repo_root)
+    run_dir, graph_json, metrics_json, summary_json = _load_latest_run(repo_root)
 
-    graph = StructuralGraph.from_json(_load_json(graph_json))
-    result = _load_json(metrics_json) if metrics_json.exists() else {}
-    trace = _load_json(trace_json) if trace_json.exists() else []
-    node_steps, edge_steps, max_iteration = _trace_index(trace)
+    with open(graph_json, "r", encoding="utf-8") as handle:
+        graph_data = json.load(handle)
+    graph = StructuralGraph.from_json(graph_data)
 
-    member_style_resolver = MemberStyleResolver()
-    viewer = Viewer()
-
-    _draw_boundary(viewer, graph)
-    _draw_explored_geometry(viewer, trace)
+    result = _load_json_if_exists(metrics_json)
+    summary = _load_json_if_exists(summary_json)
 
     loads_by_node = {}
-    for load in graph.get_loads():
+    for load in graph.get_loads() or []:
         node_key = load.get("node")
         vec = load.get("vector", [0.0, 0.0, 0.0])
         if node_key is None or len(vec) != 3:
@@ -351,6 +253,15 @@ def main():
         .get("signals", {})
         .get("reactions_by_node", {})
     )
+    counts = _scene_counts(graph, loads_by_node)
+    _print_summary(run_dir, counts, summary)
+
+    if Viewer is None:
+        print("viewer_error: compas_viewer import failed: {0}".format(VIEWER_IMPORT_ERROR), file=sys.stderr)
+        return 1
+
+    member_style_resolver = MemberStyleResolver()
+    viewer = Viewer()
 
     seen_supports = set()
     drawn_loads = set()
@@ -360,43 +271,29 @@ def main():
         xyz = _node_xyz(graph, node_key)
         pkey = _rounded_xyz(xyz)
         skey = str(node_key)
-        node_color = _sequence_color(node_steps.get(skey), max_iteration)
 
         has_load = skey in loads_by_node and _vector_magnitude(loads_by_node[skey]) > 1e-12
-        has_reaction = (
-            skey in reactions_by_node
-            and len(reactions_by_node[skey]) == 3
-            and _vector_magnitude(reactions_by_node[skey]) > 1e-12
-        )
+        has_reaction = skey in reactions_by_node and len(reactions_by_node[skey]) == 3 and _vector_magnitude(reactions_by_node[skey]) > 1e-12
 
         if _is_fixed(graph, node_key) and pkey not in seen_supports:
             seen_supports.add(pkey)
             add_support_symbol(viewer, xyz, scale=0.5)
 
         if has_load:
-            lkey = (pkey, tuple(round(value, 6) for value in loads_by_node[skey]))
+            lkey = (pkey, tuple(round(v, 6) for v in loads_by_node[skey]))
             if lkey not in drawn_loads:
                 drawn_loads.add(lkey)
                 add_load_arrow(viewer, xyz, loads_by_node[skey], scale=1.0)
 
         if has_reaction:
             rvec = [float(reactions_by_node[skey][0]), float(reactions_by_node[skey][1]), float(reactions_by_node[skey][2])]
-            rkey = (pkey, tuple(round(value, 6) for value in rvec))
+            rkey = (pkey, tuple(round(v, 6) for v in rvec))
             if rkey not in drawn_reactions:
                 drawn_reactions.add(rkey)
-                offset = [0.22, 0.22, 0.0] if _is_fixed(graph, node_key) else [0.0, 0.0, 0.0]
-                add_reaction_arrow(
-                    viewer,
-                    xyz,
-                    rvec,
-                    scale=1.0,
-                    anchor_offset=offset,
-                    label="R={0:.1f}".format(_vector_magnitude(rvec)),
-                )
+                add_reaction_arrow(viewer, xyz, rvec, scale=1.0)
 
-        point_color = node_color if skey in node_steps else NODE_COLOR
         if not _is_fixed(graph, node_key) and not has_load and not has_reaction:
-            _add(viewer, Point(*xyz), name="Node", color=point_color, pointsize=8)
+            _add(viewer, Point(*xyz), name="Node", color=(0.75, 0.75, 0.75), pointsize=6)
 
     seen_edges = set()
     for u, v in graph.network.edges():
@@ -408,33 +305,35 @@ def main():
         seen_edges.add(ekey)
 
         style = member_style_resolver.resolve(u, v, graph)
-        step = edge_steps.get(_sorted_edge_key(u, v))
-        edge_color = _sequence_color(step, max_iteration) if step is not None else style["color"]
         _add(
             viewer,
             Line(Point(*p1), Point(*p2)),
             name="Member",
-            color=edge_color,
-            linewidth=max(style.get("linewidth", 2), 3 if step is not None else 2),
+            color=style["color"],
+            linewidth=style.get("linewidth", 2),
         )
 
-    _draw_sequence_labels(viewer, graph, node_steps, edge_steps, max_iteration)
-
-    all_xyz = [_node_xyz(graph, key) for key in graph.network.nodes()]
+    all_xyz = [_node_xyz(graph, k) for k in graph.network.nodes()]
     if all_xyz:
-        cx = sum(point[0] for point in all_xyz) / len(all_xyz)
-        cy = sum(point[1] for point in all_xyz) / len(all_xyz)
-        cz = sum(point[2] for point in all_xyz) / len(all_xyz)
+        cx = sum(p[0] for p in all_xyz) / len(all_xyz)
+        cy = sum(p[1] for p in all_xyz) / len(all_xyz)
+        cz = sum(p[2] for p in all_xyz) / len(all_xyz)
 
         is_eq = is_graph_globally_equilibrated(graph)
-        eq_label = "Equilibrium: TRUE" if is_eq else "Equilibrium: FALSE"
-        eq_color = (0.0, 0.8, 0.0) if is_eq else (1.0, 0.0, 0.0)
-        _safe_text(viewer, (cx + 0.5, cy + 0.5, cz + 0.5), eq_label, eq_color)
-        _safe_text(viewer, (cx + 0.5, cy + 0.2, cz + 0.5), "Run: {0}".format(run_dir.name), (0.1, 0.1, 0.1))
-        _safe_text(viewer, (cx + 0.5, cy - 0.1, cz + 0.5), "Sequence labels: n<step>, e<step>, c<iter>", (0.1, 0.1, 0.1))
+        label = "Equilibrium: TRUE" if is_eq else "Equilibrium: FALSE"
+        color = (0.0, 0.8, 0.0) if is_eq else (1.0, 0.0, 0.0)
+        _safe_text(viewer, (cx + 0.5, cy + 0.5, cz + 0.5), label, color)
 
-    viewer.show()
+    _frame_scene(viewer, _collect_frame_points(graph, loads_by_node, reactions_by_node))
+
+    try:
+        viewer.show()
+    except Exception as error:  # pragma: no cover - environment dependent
+        print("viewer_error: {0}".format(error), file=sys.stderr)
+        print("viewer_note: sparse run summary printed above; viewer failed after scene construction.", file=sys.stderr)
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

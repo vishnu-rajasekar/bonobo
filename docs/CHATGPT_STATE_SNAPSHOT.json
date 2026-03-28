@@ -1,206 +1,318 @@
 {
   "project": {
     "name": "bonobo",
-    "generated_utc": "2026-03-08",
-    "summary": "Structural grammar + evaluator research engine with deterministic experiment harness and COMPAS-based diagnostic visualization."
+    "generated_utc": "2026-03-13",
+    "summary": "Layered structural generation engine for equilibrium-informed growth, currently focused on benchmark validation for a 2D Michell-style planar problem."
   },
-  "structure": {
-    "core_package": "morph_engine/morph_engine",
-    "visual_package": "bonobo/visual",
-    "scripts": "scripts",
-    "tests": "morph_engine/tests",
-    "experiments": "experiments/configs + experiments/runs",
-    "rhino_integration": "morph-rhino-mcp"
-  },
-  "implemented": {
-    "model": [
-      {
-        "file": "morph_engine/morph_engine/model/structural_graph.py",
-        "status": "implemented",
-        "key_symbols": [
-          "StructuralGraph",
-          "add_node",
-          "add_edge",
-          "add_load",
-          "get_loads",
-          "set_temp_force",
-          "get_temp_force",
-          "to_json",
-          "from_json"
-        ],
-        "notes": "Canonical COMPAS Network-backed state with supports, loadcases, temp_force, and JSON roundtrip."
-      }
-    ],
-    "grammar": [
-      {
-        "file": "morph_engine/morph_engine/grammar/base.py",
-        "status": "implemented",
-        "key_symbols": ["Candidate"]
-      },
-      {
-        "file": "morph_engine/morph_engine/grammar/grammar_engine.py",
-        "status": "implemented",
-        "key_symbols": ["GrammarEngine", "propose", "apply"]
-      },
-      {
-        "file": "morph_engine/morph_engine/grammar/rules/extend_node.py",
-        "status": "implemented",
-        "key_symbols": ["ExtendNode", "propose", "apply"]
-      },
-      {
-        "file": "morph_engine/morph_engine/grammar/rules/connect_nodes.py",
-        "status": "implemented",
-        "key_symbols": ["ConnectNodes", "propose", "apply"]
-      },
-      {
-        "file": "morph_engine/morph_engine/grammar/rules/split_edge.py",
-        "status": "implemented",
-        "key_symbols": ["SplitEdge", "propose", "apply"]
-      },
-      {
-        "file": "morph_engine/morph_engine/grammar/rules/resolve_temp_force_v1.py",
-        "status": "implemented",
-        "key_symbols": ["ResolveTempForceV1", "propose", "apply"],
-        "notes": "Force-driven growth rule propagating temp_force along new members."
-      }
-    ],
-    "evaluator": [
-      {
-        "file": "morph_engine/morph_engine/evaluator/evaluator.py",
-        "status": "implemented",
-        "key_symbols": ["Evaluator", "evaluate"],
-        "notes": "Ordered channel pipeline with shared context and overall validity aggregation."
-      },
-      {
-        "file": "morph_engine/morph_engine/evaluator/channels/maxwell_v1.py",
-        "status": "implemented",
-        "key_symbols": ["MaxwellCountChannel"]
-      },
-      {
-        "file": "morph_engine/morph_engine/evaluator/channels/geometry_planar_v1.py",
-        "status": "implemented",
-        "key_symbols": ["GeometryPlanarChannel"],
-        "notes": "Minimal placeholder channel."
-      },
-      {
-        "file": "morph_engine/morph_engine/evaluator/channels/unbalanced_force_v1.py",
-        "status": "implemented",
-        "key_symbols": ["UnbalancedForceChannel"]
-      },
-      {
-        "file": "morph_engine/morph_engine/evaluator/channels/reaction_absorption_v1.py",
-        "status": "implemented",
-        "key_symbols": ["ReactionAbsorptionChannel"],
-        "notes": "Mutates temp_force by absorbing constrained DOF components."
-      },
-      {
-        "file": "morph_engine/morph_engine/evaluator/channels/global_equilibrium_v1.py",
-        "status": "implemented",
-        "key_symbols": ["GlobalEquilibriumChannel"]
-      },
-      {
-        "file": "morph_engine/morph_engine/evaluator/channels/structural_redundancy_v1.py",
-        "status": "implemented",
-        "key_symbols": ["StructuralRedundancyChannel"]
-      }
-    ],
-    "experiments": [
-      {
-        "file": "morph_engine/morph_engine/experiments/logger_v1.py",
-        "status": "implemented",
-        "key_symbols": ["ExperimentLogger", "create_run_dir", "save_config", "save_graph", "save_trace", "save_metrics"]
-      },
-      {
-        "file": "morph_engine/morph_engine/experiments/runner_v1.py",
-        "status": "implemented",
-        "key_symbols": ["ExperimentRunner", "initialize_graph", "run"],
-        "notes": "Deterministic runner with seed, first-candidate selection, and run artifact logging."
-      }
-    ],
-    "visualization": [
-      {
-        "file": "bonobo/visual/symbols.py",
-        "status": "implemented",
-        "key_symbols": ["add_force_arrow", "add_support_symbol"],
-        "notes": "Central symbol geometry. Uses compas Arrow when available, fallback to line+head; load/reaction colors fixed; head-at-node compression semantics."
-      },
-      {
-        "file": "morph_engine/morph_engine/visual/style_registry.py",
-        "status": "implemented",
-        "key_symbols": ["MemberStyleResolver", "classify_member", "has_temp_forces", "is_graph_globally_equilibrated"],
-        "notes": "Member-only semantic styling/classification; no node pointshape logic."
-      },
-      {
-        "file": "scripts/view_last_run.py",
-        "status": "implemented",
-        "key_symbols": ["main"],
-        "notes": "Loads latest run, renders support symbols, load/reaction arrows, member lines, and equilibrium label."
-      },
-      {
-        "file": "morph_engine/morph_engine/visual/debug_compas_viewer.py",
-        "status": "implemented",
-        "key_symbols": ["view_graph_from_json"],
-        "notes": "Older direct-view helper still present; not the new centralized-symbol path."
-      }
-    ],
-    "rhino_mcp": [
-      {
-        "file": "morph-rhino-mcp/mcp_server.py",
-        "status": "implemented",
-        "key_symbols": ["MCPHandler", "start_server"]
-      },
-      {
-        "file": "morph-rhino-mcp/tools/draw.py",
-        "status": "implemented",
-        "key_symbols": ["draw_network"]
-      }
+  "current_priority": {
+    "research_mode": "benchmark_first",
+    "primary_goal": "Validate admissible, interpretable, support-seeking growth on a canonical Michell-style planar benchmark before adding search or learned guidance.",
+    "guardrails": [
+      "Preserve the graph / grammar / evaluator / experiments layer split.",
+      "Keep StructuralGraph as canonical state.",
+      "Do not collapse evaluator semantics into grammar rules.",
+      "Keep ML-style arrays and descriptors as derived experiment artifacts only.",
+      "Do not expand into 3D, curved-surface, scaffold-free shell, RL, archive, or broad new typology work at this stage."
     ]
   },
-  "empty_or_placeholder": [
+  "repo_structure": {
+    "core_package": "morph_engine/morph_engine",
+    "visualization": "bonobo/visual + scripts/view_last_run.py",
+    "experiments": "morph_engine/morph_engine/experiments + experiments/runs",
+    "tests": "morph_engine/tests",
+    "docs": "README.md, ROADMAP.md, ARCHITECTURE.md, docs/*",
+    "integration": "morph-rhino-mcp"
+  },
+  "canonical_layers": [
     {
-      "file": "morph_engine/morph_engine/app.py",
-      "status": "empty"
+      "layer": "StructuralGraph",
+      "path": "morph_engine/morph_engine/model/structural_graph.py",
+      "role": "Canonical structural state with nodes, edges, supports, loads, temp_force, metadata, and JSON roundtrip."
     },
     {
-      "file": "morph_engine/morph_engine/grammar/actions.py",
-      "status": "empty"
+      "layer": "Grammar",
+      "path": "morph_engine/morph_engine/grammar",
+      "role": "Proposes and applies local graph transformations through explicit rule objects."
     },
     {
-      "file": "morph_engine/morph_engine/io/json_codec.py",
-      "status": "empty"
+      "layer": "Evaluator",
+      "path": "morph_engine/morph_engine/evaluator",
+      "role": "Computes reactions, unresolved-force diagnostics, residuals, and benchmark-facing structural signals."
     },
     {
-      "file": "morph-rhino-mcp/tools/clear.py",
-      "status": "empty"
+      "layer": "Experiment Harness",
+      "path": "morph_engine/morph_engine/experiments",
+      "role": "Defines benchmark scenarios, benchmark acceptance/ranking, descriptors, traces, summaries, and derived ML exports."
     }
   ],
-  "tests": {
-    "count_files": 16,
-    "covered_areas": [
-      "structural graph schema/roundtrip",
-      "temp_force and load API",
-      "grammar rules and engine",
-      "evaluator channels and pipeline",
-      "experiment logger and runner"
+  "implemented_state": {
+    "grammar_rules_in_repo": [
+      "connect_nodes.py",
+      "extend_node.py",
+      "extend_node_rule.py",
+      "loa_intersection_rule.py",
+      "resolve_temp_force_v1.py",
+      "split_edge.py",
+      "split_node_rule.py",
+      "triangle_closure_rule.py"
     ],
-    "special_note": "test_handshake.py depends on local MCP server availability."
-  },
-  "runtime_semantics": {
-    "active_runner_channels": [
+    "active_benchmark_rules": [
+      "split_node_rule",
+      "extend_node_rule",
+      "triangle_closure_rule",
+      "loa_intersection_rule"
+    ],
+    "grammar_supporting_modules": [
+      "base.py",
+      "grammar_engine.py",
+      "state_machine.py"
+    ],
+    "evaluator_channels": [
+      "geometry_planar_v1.py",
+      "global_equilibrium_v1.py",
+      "maxwell_v1.py",
+      "reaction_absorption_v1.py",
+      "structural_redundancy_v1.py",
+      "unbalanced_force_v1.py"
+    ],
+    "active_benchmark_channels": [
       "reaction_absorption_v1",
       "unbalanced_force_v1",
       "global_equilibrium_v1"
     ],
-    "loadcases_meaning": "External loads applied to nodes.",
-    "temp_force_meaning": "Unresolved imbalance vector used during growth.",
-    "reactions_meaning": "Absorbed constrained temp_force components at fixed DOF.",
-    "member_force_storage": "Explicit axial member force/sign storage not implemented yet.",
-    "equilibrium_observation": "Recent runs still often report global equilibrium false with residual around 10.0 for baseline config."
+    "experiment_modules": [
+      "artifacts_v1.py",
+      "benchmark_scenarios.py",
+      "generate_structure.py",
+      "logger_v1.py",
+      "runner_v1.py"
+    ],
+    "scripts": [
+      "scripts/export_last_benchmark_run.py",
+      "scripts/run_experiment.py",
+      "scripts/run_force_growth.py",
+      "scripts/run_generate_and_draw.py",
+      "scripts/run_growth_loop.py",
+      "scripts/test_compas_viewer.py",
+      "scripts/view_last_run.py"
+    ]
   },
-  "key_configs_and_scripts": {
-    "config": "experiments/configs/basic_growth.json",
-    "experiment_runner": "scripts/run_experiment.py",
-    "force_growth_demo": "scripts/run_force_growth.py",
-    "visual_latest_run": "scripts/view_last_run.py"
+  "benchmark_state": {
+    "primary_benchmark": {
+      "scenario_name": "mitchell_planar_benchmark_v1",
+      "interpretation": "Cantilever-style planar Michell benchmark.",
+      "implementation_status": "Approximated in the experiment layer using two fixed support nodes on the left side rather than a true continuous root boundary.",
+      "scenario_file": "morph_engine/morph_engine/experiments/benchmark_scenarios.py",
+      "geometry": {
+        "support_nodes": [
+          {
+            "node": "0",
+            "xyz": [
+              -5.0,
+              0.0,
+              0.0
+            ],
+            "fixed": [
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "node": "1",
+            "xyz": [
+              -5.0,
+              4.0,
+              0.0
+            ],
+            "fixed": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "load_node": {
+          "node": "2",
+          "xyz": [
+            5.0,
+            2.0,
+            0.0
+          ]
+        },
+        "load_vector": [
+          0.0,
+          -10.0,
+          0.0
+        ],
+        "planar_bounds": {
+          "min": [
+            -6.0,
+            -1.0
+          ],
+          "max": [
+            6.0,
+            6.0
+          ]
+        },
+        "max_iterations": 12
+      },
+      "selection_policy": "benchmark_ranked"
+    },
+    "secondary_sanity_benchmark": {
+      "scenario_name": "two_support_planar_sanity_v1",
+      "interpretation": "Previous two-support central-load planar case retained as a secondary sanity benchmark."
+    },
+    "benchmark_contract_docs": [
+      "docs/BENCHMARK_MITCHELL_V1.md",
+      "docs/SEMANTIC_CONTRACT_V1.md",
+      "docs/NEXT_STEPS_V1.md"
+    ]
+  },
+  "benchmark_mode_behavior": {
+    "admissibility_checks": [
+      "inside planar bounds",
+      "crossing-free accepted graph",
+      "no duplicate nodes",
+      "no duplicate edges",
+      "no residual worsening"
+    ],
+    "progress_signals_used_for_ranking": [
+      "residual magnitude improvement",
+      "nearest support/root distance improvement",
+      "support hop-count improvement",
+      "support reachable path-count improvement",
+      "temp_force burden reduction"
+    ],
+    "stable_rejection_codes": [
+      "outside_bounds",
+      "crossing_introduced",
+      "duplicate_node",
+      "duplicate_edge",
+      "residual_worsened",
+      "no_structural_progress",
+      "ranked_lower"
+    ],
+    "termination_behavior": "If no admissible candidate remains, the run logs no_admissible_candidate and terminates early."
+  },
+  "artifact_contract": {
+    "run_outputs": [
+      "config.json",
+      "scenario.json",
+      "final_graph.json",
+      "trace.json",
+      "metrics.json",
+      "summary.json",
+      "structural_dna.json",
+      "graph_descriptors.json",
+      "accepted_graph_digest.json",
+      "explored_geometry_digest.json",
+      "ml_export.json",
+      "trace_excerpt.json",
+      "snapshots/step_*.json"
+    ],
+    "top_level_convenience_files": [
+      "experiments/last_run.json",
+      "experiments/last_benchmark_report.json"
+    ],
+    "current_note": "experiments/last_run.json reflects the latest meaningful benchmark run; experiments/last_benchmark_report.json has been observed stale relative to the latest run directory."
+  },
+  "viewer_state": {
+    "primary_script": "scripts/view_last_run.py",
+    "current_capabilities": [
+      "Loads latest run artifacts.",
+      "Draws accepted graph, explored geometry, load arrows, support symbols, and reaction arrows.",
+      "Shows chronology overlays from trace data.",
+      "Uses compas_viewer Tag labels instead of point-name fallback when available.",
+      "Draws a bounding rectangle derived from support/load geometry rather than filling the face."
+    ],
+    "interpretation_rule": "Viewer styling and color are interpretive only; engine truth lives in the graph state, evaluator outputs, and exported artifacts."
+  },
+  "latest_run_snapshot": {
+    "source": "experiments/last_run.json",
+    "run_dir": "experiments/runs/20260312_002247",
+    "scenario_name": "mitchell_planar_benchmark_v1",
+    "result": {
+      "iterations_executed": 1,
+      "rule_sequence": [
+        "extend_node_rule"
+      ],
+      "final_node_count": 4,
+      "final_edge_count": 3,
+      "final_temp_force_count": 1,
+      "final_residual_magnitude": 10.0,
+      "global_equilibrium_valid": false,
+      "crossing_edge_count": 0,
+      "duplicate_node_count": 0,
+      "duplicate_edge_count": 0,
+      "support_distance_history": [
+        10.198039027185569,
+        10.006498540132323
+      ],
+      "support_connectivity_history": [
+        1,
+        2
+      ]
+    },
+    "diagnosis": [
+      "This is a clean benchmark failure rather than noisy overgrowth.",
+      "The first accepted move is extend_node_rule.",
+      "The split candidate is rejected immediately for outside_bounds in the cantilever configuration.",
+      "The run then terminates with no_admissible_candidate.",
+      "Residual remains flat at 10.0 and no reactions are engaged.",
+      "The current issue is primarily benchmark-geometry versus available-rule compatibility, not a viewer problem."
+    ],
+    "seed_vs_generated_edges": {
+      "seed_edges": [
+        [
+          "0",
+          "2"
+        ],
+        [
+          "1",
+          "2"
+        ]
+      ],
+      "generated_edges": [
+        [
+          "2",
+          "3"
+        ]
+      ],
+      "note": "The experiment builder currently seeds a support-to-load fan by explicitly connecting each support node to the load node before the grammar loop begins."
+    }
+  },
+  "semantic_snapshot": {
+    "loadcases": "External loads applied to nodes.",
+    "temp_force": "Currently an unresolved nodal imbalance signal used in growth and debug workflows.",
+    "reactions": "Evaluator-derived constrained components absorbed from temp_force at restrained DOF.",
+    "member_force_storage": "Explicit canonical member axial force/sign storage is not implemented.",
+    "structural_progress_v1": "Minimal benchmark-level notion based on residual improvement, support/root approach or connectivity improvement, and/or reduced temp_force burden while remaining geometrically admissible."
+  },
+  "tests": {
+    "count_files": 23,
+    "covered_areas": [
+      "structural graph schema and roundtrip",
+      "load and temp_force API",
+      "grammar rules and state machine",
+      "evaluator channels and pipeline",
+      "benchmark artifacts and summaries",
+      "experiment logging and runner",
+      "reaction absorption and global equilibrium",
+      "LOA, split-node, triangle, and temp-force closure behavior"
+    ],
+    "known_special_case": "test_handshake.py depends on local MCP/server availability and is not a pure unit test."
+  },
+  "known_gaps_and_uncertainties": [
+    "The cantilever root is still approximated with discrete fixed nodes rather than a true support boundary.",
+    "The benchmark seed currently includes two support-to-load bars, which biases the run toward an already-connected initial fan.",
+    "Residual closure and reaction engagement are not yet achieved on the primary benchmark.",
+    "Viewer member colors, including green members, remain interpretive only.",
+    "At least one benchmark-facing doc still appears partially aligned to the older two-support framing and should be checked before treating all docs as fully synchronized."
+  ],
+  "recommended_entry_points": {
+    "run_benchmark": "conda run -n morph-engine python scripts/run_experiment.py",
+    "inspect_last_run": "conda run -n morph-engine python scripts/export_last_benchmark_run.py",
+    "view_last_run": "python scripts/view_last_run.py"
   }
 }

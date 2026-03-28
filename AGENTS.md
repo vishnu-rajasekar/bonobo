@@ -5,6 +5,11 @@ This file defines how coding agents must behave when editing the Bonobo reposito
 
 Bonobo prioritizes semantic stability, bounded edits, compatibility, and explicit layer separation. Agents must act conservatively.
 
+## Project Mission
+Bonobo is a layered structural generation engine for equilibrium-oriented structural grammars.
+
+Its purpose is to generate structures from the ground up using a small grammar and GS-guided transformations while remaining open to future guidance layers and future GS backends.
+
 ## Current Research Priority
 The immediate project priority is benchmark validation on a 2D Michell-style planar problem.
 
@@ -14,6 +19,13 @@ This means:
 - treat material efficiency as the first benchmark performance target
 - distinguish clearly between current benchmark goals and later ambitions
 - do not introduce ML/search complexity before benchmark evidence justifies it
+
+Important:
+- the benchmark is a validator, regression check, and proving ground
+- it is not the definition of the grammar
+- it is not the definition of long-term equilibrium semantics
+- it is not the definition of the final guidance or RL action space
+- do not optimize architecture around current benchmark quirks
 
 ## Default Operating Mode
 Assume:
@@ -58,6 +70,25 @@ Rules:
 - do not silently move responsibilities across layers
 - do not reinterpret semantics without discussion
 
+## Current Phase
+The project is currently in:
+- runtime grammar alignment
+- vector GS structuring
+- policy-readiness preparation
+- not yet RL training
+
+Near-term implementation priority is:
+- architecture alignment
+- semantic strengthening
+- `GrammarAction`-ready runtime paths
+- non-learning policy baselines over grammar actions
+
+Not current priority:
+- immediate RL implementation
+- broad search/archive work
+- polyhedral or Airy implementation yet
+- benchmark-specific patching as architectural truth
+
 ## Package and Environment Rules
 - Never upgrade or downgrade dependencies unless explicitly instructed.
 - Never modify Python version, conda environment, or package manifests during ordinary bug fixing.
@@ -66,9 +97,55 @@ Rules:
 
 ## Package Rules
 - Canonical semantics live in `morph_engine/morph_engine/{model,grammar,evaluator}`.
+- The intended layer stack is:
+  1. canonical structural state / structural graph
+  2. structural semantic views / semantics layer
+  3. abstract grammar rules
+  4. GS method-specific realization (`vector_gs` now; polyhedral / Airy later)
+  5. evaluator / diagnostics
+  6. policy / guidance layer
+  7. experiment harness
 - Benchmark scenarios, acceptance policies, traces, descriptors, summaries, and derived ML exports belong in `morph_engine/morph_engine/experiments`.
 - Visualization/debug logic belongs in `bonobo/visual` and viewer scripts.
 - Integration protocols belong in `morph-rhino-mcp` only.
+
+## Grammar And GS Distinction
+The stable top-level grammar rule intents are:
+- `StartGeneration`
+- `CreateNode`
+- `ExtendNode`
+- `SplitNode`
+- `ConnectTwoNodes`
+- `ExtendAndConnectTwoNodes`
+- `CloseStructure`
+- `EndGeneration`
+
+These are the only true grammar-level rule intents for now.
+
+Graphic statics transformations such as:
+- LOA intersection
+- projection / closest projection
+- closest link
+- temp-force handling
+- node equilibration
+- force transfer
+- closure helpers
+
+belong to the GS operator / transformation layer, not to the top-level abstract grammar vocabulary.
+
+Current abstract-rule -> implementation bindings are provisional compatibility mappings.
+Do not treat current runtime file names or benchmark-era strategy shims as final architectural truth.
+
+## Guidance Layer Principle
+Grammar is the action language for future guidance.
+
+Codex should preserve and strengthen:
+- `GrammarAction`
+- policy observation extraction
+- reward / goal schema
+- admissible action enumeration and masks
+
+Do not flatten policy around raw geometry or benchmark-specific quirks.
 
 ## Safe Editing Rules
 - Keep patches minimal and reversible.
@@ -76,17 +153,57 @@ Rules:
 - Do not rename public symbols without explicit instruction.
 - Maintain deterministic behavior in experiment/debug tools.
 - Do not collapse evaluator semantics into grammar rules.
+- Do not collapse grammar rules into GS operators or GS operators into grammar rules.
 - Do not redesign the engine around NumPy/PyTorch arrays as canonical state.
+- Do not introduce hidden secondary canonical states from legacy object models, derived arrays, or old Rhino / Grasshopper assumptions.
 - Do not introduce RL, archive systems, MAP-Elites, GNN search complexity, or similar scope expansion before benchmark validation is explicitly requested.
+- Do not let current benchmark rescue behavior define long-term grammar architecture.
 - Documentation and code must distinguish:
   - current validated state
   - immediate benchmark target
   - later ambitions
 
+Codex should optimize for:
+- architecture alignment
+- clarity of interfaces
+- preserving the abstract rule vocabulary
+- converting legacy runtime behavior into operator-backed realizations
+- thin adapters and incremental refactors
+
+Codex should avoid:
+- benchmark-specific patching presented as architecture
+- promoting GS operators into top-level grammar rules
+- overfitting abstract interfaces to `vector_gs`
+- overengineering ML before the action language is stable
+
 ## Semantic Guardrails
 - Do not silently reinterpret `loadcases`, `temp_force`, reactions, support masks, or evaluator channel contracts.
 - Do not claim capabilities as implemented if they are still provisional or benchmark-stage.
 - If wording clarification is needed, keep the current code semantics intact unless the user explicitly requests semantic change.
+
+## Juney Reference
+Juney's codebase is the key structural reference for:
+- rule philosophy
+- GS operator logic
+- structural semantics
+- local force propagation concepts
+
+Codex should salvage aggressively from that reference where useful, but must rehouse the logic inside Bonobo's layered architecture.
+
+Do not blindly transplant:
+- the old runtime object model as a second canonical truth
+- Rhino / Grasshopper assumptions into the core engine
+- benchmark-specific logic as general grammar truth
+
+## How To Use Existing Docs
+When architectural guidance is needed, consult and keep consistent with:
+- `docs/RL_INTERFACE_FREEZE_V1.md`
+- `docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md`
+- `ARCHITECTURE.md`
+- `ROADMAP.md`
+- `docs/SEMANTIC_CONTRACT_V1.md`
+
+If newer frozen-interface docs disagree with older runtime code, prefer the newer interface docs and mark the runtime mapping as provisional rather than silently treating the old runtime as architectural truth.
 
 ## Stop Conditions
 Agents must stop and ask for guidance when:

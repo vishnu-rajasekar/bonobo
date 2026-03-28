@@ -1,0 +1,47 @@
+{
+  "rule_sequence": [
+    "extend_node_rule",
+    "single_node_root_link_rule",
+    "single_node_root_link_rule"
+  ],
+  "rule_counts": {
+    "extend_node_rule": 1,
+    "single_node_root_link_rule": 2
+  },
+  "residual_history": [
+    10.0,
+    10.0,
+    10.0,
+    0.0
+  ],
+  "node_count_history": [
+    3,
+    4,
+    5,
+    5
+  ],
+  "edge_count_history": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "temp_force_count_history": [
+    1,
+    1,
+    1,
+    0
+  ],
+  "support_distance_history": [
+    10.198039027185569,
+    10.006498540132323,
+    0.36057320154211636,
+    null
+  ],
+  "support_connectivity_history": [
+    null,
+    null,
+    null,
+    null
+  ]
+}

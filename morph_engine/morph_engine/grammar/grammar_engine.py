@@ -1,4 +1,5 @@
 from morph_engine.grammar.state_machine import GrammarState
+from morph_engine.grammar.actions import coerce_to_grammar_action
 
 
 class GrammarEngine:
@@ -21,6 +22,13 @@ class GrammarEngine:
         return False
 
     def propose(self, graph):
+        candidates = self._propose_raw(graph)
+        return candidates
+
+    def propose_actions(self, graph, method_family="vector_gs"):
+        return [coerce_to_grammar_action(candidate, method_family=method_family) for candidate in self._propose_raw(graph)]
+
+    def _propose_raw(self, graph):
         if self.state == GrammarState.START:
             self.state = GrammarState.GROW
 
@@ -48,3 +56,6 @@ class GrammarEngine:
             if rule.name == candidate.rule_name:
                 return rule.apply(graph, candidate.payload)
         raise ValueError("Unknown rule")
+
+    def apply_action(self, graph, action):
+        return self.apply(graph, action)

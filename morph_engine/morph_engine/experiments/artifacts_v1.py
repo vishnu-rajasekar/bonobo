@@ -21,6 +21,14 @@ def _edge_pairs(graph):
     return sorted(edges)
 
 
+def _adjacency(graph):
+    adjacency = {key: set() for key in _node_keys(graph)}
+    for u, v in _edge_pairs(graph):
+        adjacency[u].add(v)
+        adjacency[v].add(u)
+    return adjacency
+
+
 def _node_xyz(graph, key):
     xyz = graph.network.node_attribute(key, "xyz") or [0.0, 0.0, 0.0]
     return [float(xyz[0]), float(xyz[1]), float(xyz[2])]
@@ -71,6 +79,41 @@ def graph_counts(graph):
         "node_count": len(list(graph.network.nodes())),
         "edge_count": len(list(graph.network.edges())),
         "temp_force_count": count_temp_force_nodes(graph),
+    }
+
+
+def support_node_ids(graph):
+    supports = []
+    for key in _node_keys(graph):
+        if any(_fixed(graph, key)):
+            supports.append(key)
+    return supports
+
+
+def bounds_contains_xy(bounds, xy, eps=1e-9):
+    return (
+        float(bounds["min"][0]) - eps <= float(xy[0]) <= float(bounds["max"][0]) + eps
+        and float(bounds["min"][1]) - eps <= float(xy[1]) <= float(bounds["max"][1]) + eps
+    )
+
+
+def bounds_contains_graph(graph, bounds, eps=1e-9):
+    outside_nodes = []
+    outside_edges = []
+
+    for key in _node_keys(graph):
+        xyz = _node_xyz(graph, key)
+        if not bounds_contains_xy(bounds, xyz[:2], eps=eps):
+            outside_nodes.append(key)
+
+    for u, v in _edge_pairs(graph):
+        if u in outside_nodes or v in outside_nodes:
+            outside_edges.append([u, v])
+
+    return {
+        "inside_bounds": len(outside_nodes) == 0 and len(outside_edges) == 0,
+        "outside_node_ids": outside_nodes,
+        "outside_edge_ids": outside_edges,
     }
 
 
@@ -140,10 +183,7 @@ def _degree_histogram(graph):
 
 
 def _connected_component_count(graph):
-    adjacency = {key: set() for key in _node_keys(graph)}
-    for u, v in _edge_pairs(graph):
-        adjacency[u].add(v)
-        adjacency[v].add(u)
+    adjacency = _adjacency(graph)
 
     seen = set()
     count = 0
@@ -159,6 +199,60 @@ def _connected_component_count(graph):
             seen.add(current)
             stack.extend(sorted(adjacency[current] - seen))
     return count
+
+
+def _load_node_ids(graph):
+    return sorted({str(load.get("node")) for load in graph.get_loads() if load.get("node") is not None})
+
+
+def _two_member_non_collinear_joints(graph, tolerance=1e-6, alignment_tolerance=0.999):
+    load_nodes = set(_load_node_ids(graph))
+    suspicious = []
+
+    for key in _node_keys(graph):
+        if key in load_nodes:
+            continue
+        if any(_fixed(graph, key)):
+            continue
+        if _vector_magnitude(_temp_force(graph, key)) > tolerance:
+            continue
+
+        neighbors = sorted(_adjacency(graph)[key])
+        if len(neighbors) != 2:
+            continue
+
+        origin = _node_xyz(graph, key)
+        vec_a = _normalize(
+            [
+                _node_xyz(graph, neighbors[0])[0] - origin[0],
+                _node_xyz(graph, neighbors[0])[1] - origin[1],
+                _node_xyz(graph, neighbors[0])[2] - origin[2],
+            ]
+        )
+        vec_b = _normalize(
+            [
+                _node_xyz(graph, neighbors[1])[0] - origin[0],
+                _node_xyz(graph, neighbors[1])[1] - origin[1],
+                _node_xyz(graph, neighbors[1])[2] - origin[2],
+            ]
+        )
+        if vec_a is None or vec_b is None:
+            continue
+
+        alignment = abs(vec_a[0] * vec_b[0] + vec_a[1] * vec_b[1] + vec_a[2] * vec_b[2])
+        if alignment >= alignment_tolerance:
+            continue
+
+        suspicious.append(
+            {
+                "node_id": key,
+                "xyz": origin,
+                "incident_neighbors": neighbors,
+                "abs_alignment": alignment,
+            }
+        )
+
+    return suspicious
 
 
 def _duplicate_nodes(graph, tolerance):
@@ -246,10 +340,7 @@ def _minimum_node_distance(graph):
 
 
 def _triangle_count(graph):
-    adjacency = {key: set() for key in _node_keys(graph)}
-    for u, v in _edge_pairs(graph):
-        adjacency[u].add(v)
-        adjacency[v].add(u)
+    adjacency = _adjacency(graph)
 
     count = 0
     nodes = _node_keys(graph)
@@ -317,6 +408,91 @@ def extract_graph_descriptors(graph, tolerance=1e-6):
         "minimum_node_distance": _minimum_node_distance(graph),
         "triangle_count": _triangle_count(graph),
         "bounding_box": _bounding_box(graph),
+    }
+
+
+def support_distance_metrics(graph, tolerance=1e-6):
+    supports = support_node_ids(graph)
+    active_nodes = [key for key in _node_keys(graph) if _vector_magnitude(_temp_force(graph, key)) > tolerance]
+
+    if not supports:
+        return {
+            "active_temp_force_node_ids": active_nodes,
+            "nearest_support_distance": None,
+            "nearest_support_hops": None,
+            "support_reachable_path_count": 0,
+        }
+
+    adjacency = _adjacency(graph)
+    min_distance = None
+    min_hops = None
+    reachable_count = 0
+
+    for node in active_nodes:
+        point = _node_xyz(graph, node)
+        node_min_distance = min(
+            sqrt(
+                (_node_xyz(graph, support)[0] - point[0]) ** 2
+                + (_node_xyz(graph, support)[1] - point[1]) ** 2
+                + (_node_xyz(graph, support)[2] - point[2]) ** 2
+            )
+            for support in supports
+        )
+        if min_distance is None or node_min_distance < min_distance:
+            min_distance = node_min_distance
+
+        hops = _nearest_support_hops(node, supports, adjacency)
+        if hops is not None:
+            reachable_count += 1
+            if min_hops is None or hops < min_hops:
+                min_hops = hops
+
+    return {
+        "active_temp_force_node_ids": active_nodes,
+        "nearest_support_distance": min_distance,
+        "nearest_support_hops": min_hops,
+        "support_reachable_path_count": reachable_count,
+    }
+
+
+def _nearest_support_hops(start, supports, adjacency):
+    if start in supports:
+        return 0
+
+    seen = {start}
+    frontier = [(start, 0)]
+    while frontier:
+        current, depth = frontier.pop(0)
+        for neighbor in sorted(adjacency[current]):
+            if neighbor in seen:
+                continue
+            if neighbor in supports:
+                return depth + 1
+            seen.add(neighbor)
+            frontier.append((neighbor, depth + 1))
+    return None
+
+
+def benchmark_graph_diagnostics(graph, bounds, tolerance=1e-6):
+    descriptors = extract_graph_descriptors(graph, tolerance=tolerance)
+    bounds_check = bounds_contains_graph(graph, bounds, eps=tolerance)
+    support_metrics = support_distance_metrics(graph, tolerance=tolerance)
+    suspicious_joints = _two_member_non_collinear_joints(graph, tolerance=tolerance)
+    return {
+        "inside_bounds": bounds_check["inside_bounds"],
+        "outside_node_ids": bounds_check["outside_node_ids"],
+        "outside_edge_ids": bounds_check["outside_edge_ids"],
+        "duplicate_node_count": descriptors["duplicate_node_count"],
+        "duplicate_edge_count": descriptors["duplicate_edge_count"],
+        "crossing_edge_count": descriptors["crossing_edge_count"],
+        "overlapping_edge_count": descriptors["overlapping_edge_count"],
+        "two_member_non_collinear_joint_count": len(suspicious_joints),
+        "two_member_non_collinear_joints": suspicious_joints,
+        "nearest_support_distance": support_metrics["nearest_support_distance"],
+        "nearest_support_hops": support_metrics["nearest_support_hops"],
+        "support_reachable_path_count": support_metrics["support_reachable_path_count"],
+        "active_temp_force_node_ids": support_metrics["active_temp_force_node_ids"],
+        "graph_descriptors": descriptors,
     }
 
 
