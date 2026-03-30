@@ -1,11 +1,22 @@
 import json
 import sys
+from fnmatch import fnmatch
 from math import cos
 from math import pi
 from math import sin
 from math import sqrt
 from pathlib import Path
-from compas.geometry import Circle, Line, Point, Frame
+
+from compas.geometry import Circle, Frame, Line, Point
+
+try:
+    from PySide6.QtCore import Qt
+except Exception:  # pragma: no cover - environment dependent
+    Qt = None
+try:
+    from PySide6.QtGui import QAction
+except Exception:  # pragma: no cover - environment dependent
+    QAction = None
 
 try:
     from compas_viewer import Viewer
@@ -18,6 +29,14 @@ else:
 from morph_engine.model.structural_graph import StructuralGraph
 from morph_engine.visual.style_registry import MemberStyleResolver
 from morph_engine.visual.style_registry import is_graph_globally_equilibrated
+
+
+# Viewer run source configuration.
+# Leave RUNS_SOURCE_SUBDIR = None to browse every run in `experiments/runs/`.
+# Set it to a subfolder name to browse only runs under that folder, for example:
+# RUNS_SOURCE_SUBDIR = "20260329"
+# which will load runs from `experiments/runs/20260329/`.
+RUNS_SOURCE_SUBDIR = "20260330_*"
 
 
 def _node_xyz(graph, key):
@@ -33,23 +52,37 @@ def _vector_magnitude(vec3):
     return sqrt(vec3[0] * vec3[0] + vec3[1] * vec3[1] + vec3[2] * vec3[2])
 
 
-def _load_latest_run(repo_root):
+def _load_runs(repo_root):
     runs_dir = repo_root / "experiments" / "runs"
     if not runs_dir.exists():
         raise FileNotFoundError("Missing runs directory: {0}".format(runs_dir))
 
-    run_dirs = sorted([p for p in runs_dir.iterdir() if p.is_dir()])
+    run_dirs = []
+    if RUNS_SOURCE_SUBDIR:
+        selector = str(RUNS_SOURCE_SUBDIR)
+        nested_dir = runs_dir / selector
+        if nested_dir.exists() and nested_dir.is_dir():
+            for path in sorted([p for p in nested_dir.iterdir() if p.is_dir()]):
+                if (path / "final_graph.json").exists():
+                    run_dirs.append(path)
+        else:
+            for path in sorted([p for p in runs_dir.iterdir() if p.is_dir()]):
+                if fnmatch(path.name, selector) and (path / "final_graph.json").exists():
+                    run_dirs.append(path)
+    else:
+        for path in sorted([p for p in runs_dir.iterdir() if p.is_dir()]):
+            if (path / "final_graph.json").exists():
+                run_dirs.append(path)
+
     if not run_dirs:
-        raise FileNotFoundError("No run directories found in: {0}".format(runs_dir))
-
-    latest_run = run_dirs[-1]
-    graph_json = latest_run / "final_graph.json"
-    if not graph_json.exists():
-        raise FileNotFoundError("Missing final_graph.json in: {0}".format(latest_run))
-
-    metrics_json = latest_run / "metrics.json"
-    summary_json = latest_run / "summary.json"
-    return latest_run, graph_json, metrics_json, summary_json
+        if RUNS_SOURCE_SUBDIR:
+            raise FileNotFoundError(
+                "No run directories with final_graph.json matched selector '{0}' in: {1}".format(
+                    RUNS_SOURCE_SUBDIR, runs_dir
+                )
+            )
+        raise FileNotFoundError("No run directories with final_graph.json found in: {0}".format(runs_dir))
+    return run_dirs
 
 
 def _add(viewer, obj, name=None, color=None, **kwargs):
@@ -99,13 +132,11 @@ def _arrow_head_lines(end, unit_dir, head_len):
 def add_support_symbol(viewer, xyz, scale=1.0):
     x, y, z = xyz
 
-    # --- circle ---
     frame = Frame.worldXY()
     frame.point = Point(x, y, z)
     circle = Circle(0.15 * scale, frame)
     viewer.scene.add(circle, color=(0, 0, 0))
 
-    # --- triangle ---
     p1 = Point(x - 0.4 * scale, y - 0.6 * scale, z)
     p2 = Point(x + 0.4 * scale, y - 0.6 * scale, z)
     p3 = Point(x, y, z)
@@ -113,7 +144,6 @@ def add_support_symbol(viewer, xyz, scale=1.0):
     viewer.scene.add(Line(p1, p2), color=(0, 0, 0))
     viewer.scene.add(Line(p2, p3), color=(0, 0, 0))
     viewer.scene.add(Line(p3, p1), color=(0, 0, 0))
-    
 
 
 def add_load_arrow(viewer, xyz, vector, scale=1.0):
@@ -147,7 +177,6 @@ def add_reaction_arrow(viewer, xyz, vector, scale=1.0):
 
 
 def _safe_text(viewer, position, label, color):
-    # Viewer text support varies by backend; use named point as robust fallback.
     _add(viewer, Point(*position), pointsize=6, name=label, show_name=True, color=color)
 
 
@@ -222,14 +251,14 @@ def _print_summary(run_dir, counts, summary):
         print("global_equilibrium_valid:", summary.get("global_equilibrium_valid"), flush=True)
 
 
-def main():
-    repo_root = Path(__file__).resolve().parent.parent
-    run_dir, graph_json, metrics_json, summary_json = _load_latest_run(repo_root)
+def _run_payload(run_dir):
+    graph_json = run_dir / "final_graph.json"
+    metrics_json = run_dir / "metrics.json"
+    summary_json = run_dir / "summary.json"
 
     with open(graph_json, "r", encoding="utf-8") as handle:
         graph_data = json.load(handle)
     graph = StructuralGraph.from_json(graph_data)
-
     result = _load_json_if_exists(metrics_json)
     summary = _load_json_if_exists(summary_json)
 
@@ -253,84 +282,230 @@ def main():
         .get("signals", {})
         .get("reactions_by_node", {})
     )
+
     counts = _scene_counts(graph, loads_by_node)
-    _print_summary(run_dir, counts, summary)
+    return {
+        "run_dir": run_dir,
+        "graph": graph,
+        "summary": summary,
+        "loads_by_node": loads_by_node,
+        "reactions_by_node": reactions_by_node,
+        "counts": counts,
+    }
+
+
+def _member_display_style(style):
+    color = tuple(style.get("color", (0.75, 0.75, 0.75)))
+    linewidth = float(style.get("linewidth", 2))
+    if color == (0.75, 0.75, 0.75):
+        return {"color": (0.2, 0.2, 0.2), "linewidth": max(3.0, linewidth)}
+    return {"color": color, "linewidth": max(2.5, linewidth)}
+
+
+class RunViewerBrowser:
+    def __init__(self, viewer, run_dirs):
+        self.viewer = viewer
+        self.run_dirs = list(run_dirs)
+        self.member_style_resolver = MemberStyleResolver()
+        self.current_index = len(self.run_dirs) - 1
+        self._statusbar = None
+
+    def init_controls(self):
+        self._statusbar = self.viewer.ui.statusbar.widget
+        self._add_toolbar_action("Prev", "View previous run", self.show_previous_run)
+        self._add_toolbar_action("Next", "View next run", self.show_next_run)
+        self._install_key_navigation()
+
+    def _add_toolbar_action(self, text, tooltip, action):
+        toolbar = self.viewer.ui.toolbar.widget
+        if QAction is None:
+            qaction = toolbar.addAction(text)
+            qaction.setToolTip(tooltip)
+            qaction.triggered.connect(action)
+            return qaction
+
+        qaction = QAction(text, toolbar)
+        qaction.setToolTip(tooltip)
+        qaction.triggered.connect(action)
+        toolbar.addAction(qaction)
+        return qaction
+
+    def _install_key_navigation(self):
+        if Qt is None:
+            return
+
+        renderer = self.viewer.renderer
+        original = renderer.keyPressEvent
+        browser = self
+
+        def keypress(event):
+            key = event.key()
+            if key == Qt.Key_Left:
+                browser.show_previous_run()
+                event.accept()
+                return
+            if key == Qt.Key_Right:
+                browser.show_next_run()
+                event.accept()
+                return
+            original(event)
+
+        renderer.keyPressEvent = keypress
+
+    def show_previous_run(self):
+        self.current_index = (self.current_index - 1) % len(self.run_dirs)
+        self.render_current_run()
+
+    def show_next_run(self):
+        self.current_index = (self.current_index + 1) % len(self.run_dirs)
+        self.render_current_run()
+
+    def render_current_run(self):
+        payload = _run_payload(self.run_dirs[self.current_index])
+        self._clear_scene()
+        self._draw_payload(payload)
+        if self.viewer.running:
+            self.viewer.renderer.rebuild_buffers()
+            self.viewer.renderer.update()
+            self.viewer.ui.sidebar.update()
+        self._set_status(payload)
+        _print_summary(payload["run_dir"], payload["counts"], payload["summary"])
+
+    def _clear_scene(self):
+        for sceneobject in list(self.viewer.scene.objects):
+            self.viewer.scene.remove(sceneobject, rebuild_buffers=False)
+
+    def _set_status(self, payload):
+        if self._statusbar is None:
+            return
+        summary = payload["summary"]
+        run_name = payload["run_dir"].name
+        message = "{0} ({1}/{2})  |  nodes={3} edges={4} supports={5} loads={6}".format(
+            run_name,
+            self.current_index + 1,
+            len(self.run_dirs),
+            payload["counts"]["nodes"],
+            payload["counts"]["edges"],
+            payload["counts"]["supports"],
+            payload["counts"]["loads"],
+        )
+        if summary:
+            message += "  |  termination={0} residual={1}".format(
+                summary.get("termination_reason"),
+                summary.get("final_residual_magnitude"),
+            )
+        self._statusbar.showMessage(message)
+
+    def _draw_payload(self, payload):
+        graph = payload["graph"]
+        summary = payload["summary"]
+        loads_by_node = payload["loads_by_node"]
+        reactions_by_node = payload["reactions_by_node"]
+
+        seen_supports = set()
+        drawn_loads = set()
+        drawn_reactions = set()
+
+        for node_key in graph.network.nodes():
+            xyz = _node_xyz(graph, node_key)
+            pkey = _rounded_xyz(xyz)
+            skey = str(node_key)
+
+            has_load = skey in loads_by_node and _vector_magnitude(loads_by_node[skey]) > 1e-12
+            has_reaction = (
+                skey in reactions_by_node
+                and len(reactions_by_node[skey]) == 3
+                and _vector_magnitude(reactions_by_node[skey]) > 1e-12
+            )
+
+            if _is_fixed(graph, node_key) and pkey not in seen_supports:
+                seen_supports.add(pkey)
+                add_support_symbol(self.viewer, xyz, scale=0.5)
+
+            if has_load:
+                lkey = (pkey, tuple(round(v, 6) for v in loads_by_node[skey]))
+                if lkey not in drawn_loads:
+                    drawn_loads.add(lkey)
+                    add_load_arrow(self.viewer, xyz, loads_by_node[skey], scale=1.0)
+
+            if has_reaction:
+                rvec = [
+                    float(reactions_by_node[skey][0]),
+                    float(reactions_by_node[skey][1]),
+                    float(reactions_by_node[skey][2]),
+                ]
+                rkey = (pkey, tuple(round(v, 6) for v in rvec))
+                if rkey not in drawn_reactions:
+                    drawn_reactions.add(rkey)
+                    add_reaction_arrow(self.viewer, xyz, rvec, scale=1.0)
+
+            if not _is_fixed(graph, node_key) and not has_load and not has_reaction:
+                _add(self.viewer, Point(*xyz), name="Node", color=(0.2, 0.2, 0.2), pointsize=8)
+
+        seen_edges = set()
+        for u, v in graph.network.edges():
+            p1 = _node_xyz(graph, u)
+            p2 = _node_xyz(graph, v)
+            ekey = tuple(sorted([_rounded_xyz(p1), _rounded_xyz(p2)]))
+            if ekey in seen_edges:
+                continue
+            seen_edges.add(ekey)
+
+            style = _member_display_style(self.member_style_resolver.resolve(u, v, graph))
+            _add(
+                self.viewer,
+                Line(Point(*p1), Point(*p2)),
+                name="Member",
+                color=style["color"],
+                linewidth=style["linewidth"],
+            )
+
+        all_xyz = [_node_xyz(graph, k) for k in graph.network.nodes()]
+        if all_xyz:
+            cx = sum(p[0] for p in all_xyz) / len(all_xyz)
+            cy = sum(p[1] for p in all_xyz) / len(all_xyz)
+            cz = sum(p[2] for p in all_xyz) / len(all_xyz)
+
+            is_eq = is_graph_globally_equilibrated(graph)
+            eq_label = "Equilibrium: TRUE" if is_eq else "Equilibrium: FALSE"
+            eq_color = (0.0, 0.8, 0.0) if is_eq else (1.0, 0.0, 0.0)
+            _safe_text(self.viewer, (cx + 0.5, cy + 0.5, cz + 0.5), eq_label, eq_color)
+
+            run_label = "Run {0}/{1}: {2}".format(
+                self.current_index + 1,
+                len(self.run_dirs),
+                payload["run_dir"].name,
+            )
+            _safe_text(self.viewer, (cx + 0.5, cy + 1.0, cz + 0.5), run_label, (0.0, 0.0, 0.0))
+            if summary:
+                step_label = "steps={0} edges={1} termination={2}".format(
+                    summary.get("iterations_executed"),
+                    summary.get("final_edge_count"),
+                    summary.get("termination_reason"),
+                )
+                _safe_text(self.viewer, (cx + 0.5, cy + 1.5, cz + 0.5), step_label, (0.1, 0.1, 0.1))
+
+        _frame_scene(self.viewer, _collect_frame_points(graph, loads_by_node, reactions_by_node))
+
+
+def main():
+    repo_root = Path(__file__).resolve().parent.parent
+    run_dirs = _load_runs(repo_root)
 
     if Viewer is None:
         print("viewer_error: compas_viewer import failed: {0}".format(VIEWER_IMPORT_ERROR), file=sys.stderr)
         return 1
 
-    member_style_resolver = MemberStyleResolver()
     viewer = Viewer()
-
-    seen_supports = set()
-    drawn_loads = set()
-    drawn_reactions = set()
-
-    for node_key in graph.network.nodes():
-        xyz = _node_xyz(graph, node_key)
-        pkey = _rounded_xyz(xyz)
-        skey = str(node_key)
-
-        has_load = skey in loads_by_node and _vector_magnitude(loads_by_node[skey]) > 1e-12
-        has_reaction = skey in reactions_by_node and len(reactions_by_node[skey]) == 3 and _vector_magnitude(reactions_by_node[skey]) > 1e-12
-
-        if _is_fixed(graph, node_key) and pkey not in seen_supports:
-            seen_supports.add(pkey)
-            add_support_symbol(viewer, xyz, scale=0.5)
-
-        if has_load:
-            lkey = (pkey, tuple(round(v, 6) for v in loads_by_node[skey]))
-            if lkey not in drawn_loads:
-                drawn_loads.add(lkey)
-                add_load_arrow(viewer, xyz, loads_by_node[skey], scale=1.0)
-
-        if has_reaction:
-            rvec = [float(reactions_by_node[skey][0]), float(reactions_by_node[skey][1]), float(reactions_by_node[skey][2])]
-            rkey = (pkey, tuple(round(v, 6) for v in rvec))
-            if rkey not in drawn_reactions:
-                drawn_reactions.add(rkey)
-                add_reaction_arrow(viewer, xyz, rvec, scale=1.0)
-
-        if not _is_fixed(graph, node_key) and not has_load and not has_reaction:
-            _add(viewer, Point(*xyz), name="Node", color=(0.75, 0.75, 0.75), pointsize=6)
-
-    seen_edges = set()
-    for u, v in graph.network.edges():
-        p1 = _node_xyz(graph, u)
-        p2 = _node_xyz(graph, v)
-        ekey = tuple(sorted([_rounded_xyz(p1), _rounded_xyz(p2)]))
-        if ekey in seen_edges:
-            continue
-        seen_edges.add(ekey)
-
-        style = member_style_resolver.resolve(u, v, graph)
-        _add(
-            viewer,
-            Line(Point(*p1), Point(*p2)),
-            name="Member",
-            color=style["color"],
-            linewidth=style.get("linewidth", 2),
-        )
-
-    all_xyz = [_node_xyz(graph, k) for k in graph.network.nodes()]
-    if all_xyz:
-        cx = sum(p[0] for p in all_xyz) / len(all_xyz)
-        cy = sum(p[1] for p in all_xyz) / len(all_xyz)
-        cz = sum(p[2] for p in all_xyz) / len(all_xyz)
-
-        is_eq = is_graph_globally_equilibrated(graph)
-        label = "Equilibrium: TRUE" if is_eq else "Equilibrium: FALSE"
-        color = (0.0, 0.8, 0.0) if is_eq else (1.0, 0.0, 0.0)
-        _safe_text(viewer, (cx + 0.5, cy + 0.5, cz + 0.5), label, color)
-
-    _frame_scene(viewer, _collect_frame_points(graph, loads_by_node, reactions_by_node))
+    browser = RunViewerBrowser(viewer, run_dirs)
+    browser.init_controls()
+    browser.render_current_run()
 
     try:
         viewer.show()
     except Exception as error:  # pragma: no cover - environment dependent
         print("viewer_error: {0}".format(error), file=sys.stderr)
-        print("viewer_note: sparse run summary printed above; viewer failed after scene construction.", file=sys.stderr)
+        print("viewer_note: run summary printed above; viewer failed after scene construction.", file=sys.stderr)
         return 1
     return 0
 

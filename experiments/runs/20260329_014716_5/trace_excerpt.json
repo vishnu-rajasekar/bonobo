@@ -1,0 +1,6159 @@
+[
+  {
+    "iteration": 1,
+    "grammar_state_before": "start",
+    "grammar_state_after": "grow",
+    "candidate_rule_names": [
+      "split_node_rule",
+      "extend_node_rule",
+      "single_node_root_link_rule"
+    ],
+    "selected_rule": "single_node_root_link_rule",
+    "selected_rule_status": "accepted",
+    "selected_rule_reason": "policy_selected_action",
+    "state_id_before": "0e37c834d4b4",
+    "state_id_after": "d04a4b480fb0",
+    "accepted_new_nodes": [
+      {
+        "id": "3",
+        "xyz": [
+          -5.0,
+          2.0,
+          0.0
+        ]
+      }
+    ],
+    "accepted_new_edges": [
+      [
+        "2",
+        "3"
+      ]
+    ],
+    "candidate_geometry_count": 3,
+    "candidate_evaluations": [
+      {
+        "action_id": "split_node_rule:55a9920db4a3",
+        "abstract_rule_id": "split_node",
+        "abstract_rule_name": "SplitNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "2",
+          "theta": 0.6033265554575145
+        },
+        "target_node_ids": [
+          "2"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_temp_force_split",
+        "topology_delta": {
+          "nodes": 2,
+          "edges": 2,
+          "summary": "current runtime creates 2 nodes + 2 members"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS split realization. Runtime topology is provisional relative to the frozen abstract intent."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 10.198039027185569,
+          "support_distance_after": 8.872259201959837,
+          "support_distance_delta": 1.325779825225732,
+          "support_hops_before": null,
+          "support_hops_after": null,
+          "support_hops_delta": 0,
+          "support_reachable_before": 0,
+          "support_reachable_after": 0,
+          "support_reachable_delta": 0,
+          "temp_force_before": 1,
+          "temp_force_after": 2,
+          "temp_force_delta": -1,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 2,
+          "added_edge_count": 2,
+          "added_edge_length_total": 4.0,
+          "rank_tuple": [
+            0.0,
+            1.325779825,
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          1.325779825,
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "2",
+              "theta": 0.6033265554575145
+            },
+            "segments": [
+              {
+                "start": [
+                  5.0,
+                  2.0,
+                  0.0
+                ],
+                "end": [
+                  5.567384868869651,
+                  1.1765472626933775,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  5.0,
+                  2.0,
+                  0.0
+                ],
+                "end": [
+                  4.432615131130349,
+                  1.1765472626933775,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  5.567384868869651,
+                  1.1765472626933775,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  4.432615131130349,
+                  1.1765472626933775,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 1,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 10.198039027185569,
+        "nearest_support_distance_after": 8.872259201959837,
+        "support_connectivity_indicator_before": null,
+        "support_connectivity_indicator_after": null,
+        "support_reachable_path_count_before": 0,
+        "support_reachable_path_count_after": 0
+      },
+      {
+        "action_id": "extend_node_rule:6eb05b3195db",
+        "abstract_rule_id": "extend_node",
+        "abstract_rule_name": "ExtendNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "2",
+          "length": 1.8444218515250481
+        },
+        "target_node_ids": [
+          "2"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_loa_extension",
+        "topology_delta": {
+          "nodes": 1,
+          "edges": 1,
+          "summary": "creates 1 node + 1 member"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS extend realization. Runtime mapping is provisional rather than final grammar truth."
+        },
+        "policy_metadata": {
+          "admissible": true,
+          "reason_codes": [],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 10.198039027185569,
+          "support_distance_after": 10.001210154790414,
+          "support_distance_delta": 0.19682887239515523,
+          "support_hops_before": null,
+          "support_hops_after": null,
+          "support_hops_delta": 0,
+          "support_reachable_before": 0,
+          "support_reachable_after": 0,
+          "support_reachable_delta": 0,
+          "temp_force_before": 1,
+          "temp_force_after": 1,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 1,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.8444218515250481,
+          "rank_tuple": [
+            0.0,
+            0.196828872,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "policy_not_selected"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.196828872,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "2",
+              "length": 1.8444218515250481
+            },
+            "segments": [
+              {
+                "start": [
+                  5.0,
+                  2.0,
+                  0.0
+                ],
+                "end": [
+                  5.0,
+                  0.15557814847495188,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  5.0,
+                  0.15557814847495188,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 1,
+        "temp_force_count_after": 1,
+        "nearest_support_distance_before": 10.198039027185569,
+        "nearest_support_distance_after": 10.001210154790414,
+        "support_connectivity_indicator_before": null,
+        "support_connectivity_indicator_after": null,
+        "support_reachable_path_count_before": 0,
+        "support_reachable_path_count_after": 0
+      },
+      {
+        "action_id": "single_node_root_link_rule:a09577ee48bb",
+        "abstract_rule_id": "extend_and_connect_two_nodes",
+        "abstract_rule_name": "ExtendAndConnectTwoNodesRule",
+        "method_family": "vector_gs",
+        "rule_name": "single_node_root_link_rule",
+        "payload": {
+          "target_kind": "root_projection",
+          "source_node": "2",
+          "target_xyz": [
+            -5.0,
+            2.0,
+            0.0
+          ],
+          "support_nodes": [
+            "0",
+            "1"
+          ]
+        },
+        "target_node_ids": [
+          "2",
+          "['0', '1']"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "root_link_projection_or_direct_support_link",
+        "topology_delta": {
+          "nodes": null,
+          "edges": 1,
+          "summary": "benchmark-specific runtime may add 0-1 nodes and 1 member; not final abstract behavior"
+        },
+        "metadata": {
+          "binding_status": "benchmark_optional",
+          "binding_provisional": true,
+          "binding_notes": "Benchmark-specific recovery realization. Explicitly provisional and not long-term grammar truth."
+        },
+        "policy_metadata": {
+          "admissible": true,
+          "reason_codes": [],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 10.198039027185569,
+          "support_distance_after": 2.0,
+          "support_distance_delta": 8.198039027185569,
+          "support_hops_before": null,
+          "support_hops_after": null,
+          "support_hops_delta": 0,
+          "support_reachable_before": 0,
+          "support_reachable_after": 0,
+          "support_reachable_delta": 0,
+          "temp_force_before": 1,
+          "temp_force_after": 1,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 1,
+          "added_edge_count": 1,
+          "added_edge_length_total": 10.0,
+          "rank_tuple": [
+            0.0,
+            8.198039027,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "accepted",
+        "reason_codes": [
+          "policy_selected_action"
+        ],
+        "rank_tuple": [
+          0.0,
+          8.198039027,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "single_node_root_link_rule",
+            "payload": {
+              "target_kind": "root_projection",
+              "source_node": "2",
+              "target_xyz": [
+                -5.0,
+                2.0,
+                0.0
+              ],
+              "support_nodes": [
+                "0",
+                "1"
+              ]
+            },
+            "segments": [],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 1,
+        "temp_force_count_after": 1,
+        "nearest_support_distance_before": 10.198039027185569,
+        "nearest_support_distance_after": 2.0,
+        "support_connectivity_indicator_before": null,
+        "support_connectivity_indicator_after": null,
+        "support_reachable_path_count_before": 0,
+        "support_reachable_path_count_after": 0
+      }
+    ],
+    "temp_force_count": 1,
+    "temp_force_count_before": 1,
+    "temp_force_count_after": 1,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": null,
+    "nearest_support_distance_before": 10.198039027185569,
+    "nearest_support_distance_after": 2.0,
+    "created_support_connection": false,
+    "support_reachable_path_count_before": 0,
+    "support_reachable_path_count_after": 0,
+    "support_connectivity_indicator_before": null,
+    "support_connectivity_indicator_after": null,
+    "policy_name": "random",
+    "observation_summary": {
+      "phase": "grow",
+      "node_count": 3,
+      "edge_count": 0,
+      "support_count": 2,
+      "load_count": 1,
+      "active_front_count": 1,
+      "unresolved_force_count": 1,
+      "action_count": 3,
+      "action_mask": [
+        0,
+        1,
+        1
+      ]
+    },
+    "action_bundle_summary": {
+      "ordering_policy": "grammar_proposal_order_v1",
+      "action_count": 3,
+      "admissible_action_count": 2,
+      "mask": [
+        0,
+        1,
+        1
+      ],
+      "actions": [
+        {
+          "index": 0,
+          "action_id": "split_node_rule:55a9920db4a3",
+          "abstract_rule_id": "split_node",
+          "abstract_rule_name": "SplitNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "split_node_rule",
+          "operator_strategy": "vector_temp_force_split",
+          "target_node_ids": [
+            "2"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 10.198039027185569,
+            "support_distance_after": 8.872259201959837,
+            "support_distance_delta": 1.325779825225732,
+            "support_hops_before": null,
+            "support_hops_after": null,
+            "support_hops_delta": 0,
+            "support_reachable_before": 0,
+            "support_reachable_after": 0,
+            "support_reachable_delta": 0,
+            "temp_force_before": 1,
+            "temp_force_after": 2,
+            "temp_force_delta": -1,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 2,
+            "added_edge_count": 2,
+            "added_edge_length_total": 4.0,
+            "rank_tuple": [
+              0.0,
+              1.325779825,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 1,
+          "action_id": "extend_node_rule:6eb05b3195db",
+          "abstract_rule_id": "extend_node",
+          "abstract_rule_name": "ExtendNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "extend_node_rule",
+          "operator_strategy": "vector_loa_extension",
+          "target_node_ids": [
+            "2"
+          ],
+          "target_edge_ids": [],
+          "mask": 1,
+          "metadata": {
+            "admissible": true,
+            "reason_codes": [],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 10.198039027185569,
+            "support_distance_after": 10.001210154790414,
+            "support_distance_delta": 0.19682887239515523,
+            "support_hops_before": null,
+            "support_hops_after": null,
+            "support_hops_delta": 0,
+            "support_reachable_before": 0,
+            "support_reachable_after": 0,
+            "support_reachable_delta": 0,
+            "temp_force_before": 1,
+            "temp_force_after": 1,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 1,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.8444218515250481,
+            "rank_tuple": [
+              0.0,
+              0.196828872,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 2,
+          "action_id": "single_node_root_link_rule:a09577ee48bb",
+          "abstract_rule_id": "extend_and_connect_two_nodes",
+          "abstract_rule_name": "ExtendAndConnectTwoNodesRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "single_node_root_link_rule",
+          "operator_strategy": "root_link_projection_or_direct_support_link",
+          "target_node_ids": [
+            "2",
+            "['0', '1']"
+          ],
+          "target_edge_ids": [],
+          "mask": 1,
+          "metadata": {
+            "admissible": true,
+            "reason_codes": [],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 10.198039027185569,
+            "support_distance_after": 2.0,
+            "support_distance_delta": 8.198039027185569,
+            "support_hops_before": null,
+            "support_hops_after": null,
+            "support_hops_delta": 0,
+            "support_reachable_before": 0,
+            "support_reachable_after": 0,
+            "support_reachable_delta": 0,
+            "temp_force_before": 1,
+            "temp_force_after": 1,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 1,
+            "added_edge_count": 1,
+            "added_edge_length_total": 10.0,
+            "rank_tuple": [
+              0.0,
+              8.198039027,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "selected_action_id": "single_node_root_link_rule:a09577ee48bb",
+    "selected_action_summary": {
+      "action_id": "single_node_root_link_rule:a09577ee48bb",
+      "abstract_rule_id": "extend_and_connect_two_nodes",
+      "abstract_rule_name": "ExtendAndConnectTwoNodesRule",
+      "method_family": "vector_gs",
+      "implementation_rule_name": "single_node_root_link_rule",
+      "operator_strategy": "root_link_projection_or_direct_support_link",
+      "target_node_ids": [
+        "2",
+        "['0', '1']"
+      ],
+      "target_edge_ids": [],
+      "payload": {
+        "target_kind": "root_projection",
+        "source_node": "2",
+        "target_xyz": [
+          -5.0,
+          2.0,
+          0.0
+        ],
+        "support_nodes": [
+          "0",
+          "1"
+        ]
+      },
+      "topology_delta": {
+        "nodes": null,
+        "edges": 1,
+        "summary": "benchmark-specific runtime may add 0-1 nodes and 1 member; not final abstract behavior"
+      },
+      "metadata": {
+        "binding_status": "benchmark_optional",
+        "binding_provisional": true,
+        "binding_notes": "Benchmark-specific recovery realization. Explicitly provisional and not long-term grammar truth."
+      }
+    },
+    "policy_decision_summary": {
+      "policy_name": "random",
+      "selected_action_id": "single_node_root_link_rule:a09577ee48bb",
+      "selected_index": 2,
+      "admissible_action_ids": [
+        "extend_node_rule:6eb05b3195db",
+        "single_node_root_link_rule:a09577ee48bb"
+      ],
+      "weights": {},
+      "scores": {},
+      "metadata": {}
+    },
+    "notes": ""
+  },
+  {
+    "iteration": 2,
+    "grammar_state_before": "grow",
+    "grammar_state_after": "grow",
+    "candidate_rule_names": [
+      "split_node_rule",
+      "extend_node_rule",
+      "single_node_root_link_rule"
+    ],
+    "selected_rule": "single_node_root_link_rule",
+    "selected_rule_status": "accepted",
+    "selected_rule_reason": "policy_selected_action",
+    "state_id_before": "d04a4b480fb0",
+    "state_id_after": "d001a40d3d4f",
+    "accepted_new_nodes": [],
+    "accepted_new_edges": [
+      [
+        "0",
+        "3"
+      ]
+    ],
+    "candidate_geometry_count": 3,
+    "candidate_evaluations": [
+      {
+        "action_id": "split_node_rule:3a8b92b65970",
+        "abstract_rule_id": "split_node",
+        "abstract_rule_name": "SplitNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "3",
+          "theta": 0.5773863208820907
+        },
+        "target_node_ids": [
+          "3"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_temp_force_split",
+        "topology_delta": {
+          "nodes": 2,
+          "edges": 2,
+          "summary": "current runtime creates 2 nodes + 2 members"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS split realization. Runtime topology is provisional relative to the frozen abstract intent."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 2.0,
+          "support_distance_after": 1.138798841115307,
+          "support_distance_delta": 0.8612011588846931,
+          "support_hops_before": null,
+          "support_hops_after": null,
+          "support_hops_delta": 0,
+          "support_reachable_before": 0,
+          "support_reachable_after": 0,
+          "support_reachable_delta": 0,
+          "temp_force_before": 1,
+          "temp_force_after": 2,
+          "temp_force_delta": -1,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 2,
+          "added_edge_count": 2,
+          "added_edge_length_total": 4.0,
+          "rank_tuple": [
+            0.0,
+            0.861201159,
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.861201159,
+          0,
+          0,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "3",
+              "theta": 0.5773863208820907
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.0,
+                  2.0,
+                  0.0
+                ],
+                "end": [
+                  -4.454164177541937,
+                  1.1621078500656958,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -5.0,
+                  2.0,
+                  0.0
+                ],
+                "end": [
+                  -5.545835822458063,
+                  1.1621078500656958,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -4.454164177541937,
+                  1.1621078500656958,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -5.545835822458063,
+                  1.1621078500656958,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 1,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 2.0,
+        "nearest_support_distance_after": 1.138798841115307,
+        "support_connectivity_indicator_before": null,
+        "support_connectivity_indicator_after": null,
+        "support_reachable_path_count_before": 0,
+        "support_reachable_path_count_after": 0
+      },
+      {
+        "action_id": "extend_node_rule:e26d803bfd35",
+        "abstract_rule_id": "extend_node",
+        "abstract_rule_name": "ExtendNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "3",
+          "length": 1.7579544029403025
+        },
+        "target_node_ids": [
+          "3"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_loa_extension",
+        "topology_delta": {
+          "nodes": 1,
+          "edges": 1,
+          "summary": "creates 1 node + 1 member"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS extend realization. Runtime mapping is provisional rather than final grammar truth."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "local_joint_non_equilibrated"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 2.0,
+          "support_distance_after": 0.24204559705969753,
+          "support_distance_delta": 1.7579544029403025,
+          "support_hops_before": null,
+          "support_hops_after": null,
+          "support_hops_delta": 0,
+          "support_reachable_before": 0,
+          "support_reachable_after": 0,
+          "support_reachable_delta": 0,
+          "temp_force_before": 1,
+          "temp_force_after": 1,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": false,
+          "added_node_count": 1,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.7579544029403025,
+          "rank_tuple": [
+            0.0,
+            1.757954403,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "local_joint_non_equilibrated"
+        ],
+        "rank_tuple": [
+          0.0,
+          1.757954403,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "3",
+              "length": 1.7579544029403025
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.0,
+                  2.0,
+                  0.0
+                ],
+                "end": [
+                  -5.0,
+                  0.24204559705969753,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -5.0,
+                  0.24204559705969753,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 1,
+        "temp_force_count_after": 1,
+        "nearest_support_distance_before": 2.0,
+        "nearest_support_distance_after": 0.24204559705969753,
+        "support_connectivity_indicator_before": null,
+        "support_connectivity_indicator_after": null,
+        "support_reachable_path_count_before": 0,
+        "support_reachable_path_count_after": 0
+      },
+      {
+        "action_id": "single_node_root_link_rule:a6003d8be910",
+        "abstract_rule_id": "extend_and_connect_two_nodes",
+        "abstract_rule_name": "ExtendAndConnectTwoNodesRule",
+        "method_family": "vector_gs",
+        "rule_name": "single_node_root_link_rule",
+        "payload": {
+          "target_kind": "support_node",
+          "source_node": "3",
+          "target_node": "0",
+          "target_xyz": [
+            -5.0,
+            0.0,
+            0.0
+          ],
+          "alignment": 1.0,
+          "distance": 2.0
+        },
+        "target_node_ids": [
+          "0",
+          "3"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "root_link_projection_or_direct_support_link",
+        "topology_delta": {
+          "nodes": null,
+          "edges": 1,
+          "summary": "benchmark-specific runtime may add 0-1 nodes and 1 member; not final abstract behavior"
+        },
+        "metadata": {
+          "binding_status": "benchmark_optional",
+          "binding_provisional": true,
+          "binding_notes": "Benchmark-specific recovery realization. Explicitly provisional and not long-term grammar truth."
+        },
+        "policy_metadata": {
+          "admissible": true,
+          "reason_codes": [],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 2.0,
+          "support_distance_after": 2.0,
+          "support_distance_delta": 0.0,
+          "support_hops_before": null,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 0,
+          "support_reachable_after": 1,
+          "support_reachable_delta": 1,
+          "temp_force_before": 1,
+          "temp_force_after": 1,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 1,
+          "closure_progress": true,
+          "created_support_connection": true,
+          "plausibility_pass": true,
+          "added_node_count": 0,
+          "added_edge_count": 1,
+          "added_edge_length_total": 2.0,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "accepted",
+        "reason_codes": [
+          "policy_selected_action"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "single_node_root_link_rule",
+            "payload": {
+              "target_kind": "support_node",
+              "source_node": "3",
+              "target_node": "0",
+              "target_xyz": [
+                -5.0,
+                0.0,
+                0.0
+              ],
+              "alignment": 1.0,
+              "distance": 2.0
+            },
+            "segments": [],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 1,
+        "temp_force_count_after": 1,
+        "nearest_support_distance_before": 2.0,
+        "nearest_support_distance_after": 2.0,
+        "support_connectivity_indicator_before": null,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 0,
+        "support_reachable_path_count_after": 1
+      }
+    ],
+    "temp_force_count": 1,
+    "temp_force_count_before": 1,
+    "temp_force_count_after": 1,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": null,
+    "nearest_support_distance_before": 2.0,
+    "nearest_support_distance_after": 2.0,
+    "created_support_connection": true,
+    "support_reachable_path_count_before": 0,
+    "support_reachable_path_count_after": 1,
+    "support_connectivity_indicator_before": null,
+    "support_connectivity_indicator_after": 1,
+    "policy_name": "random",
+    "observation_summary": {
+      "phase": "grow",
+      "node_count": 4,
+      "edge_count": 1,
+      "support_count": 2,
+      "load_count": 1,
+      "active_front_count": 1,
+      "unresolved_force_count": 1,
+      "action_count": 3,
+      "action_mask": [
+        0,
+        0,
+        1
+      ]
+    },
+    "action_bundle_summary": {
+      "ordering_policy": "grammar_proposal_order_v1",
+      "action_count": 3,
+      "admissible_action_count": 1,
+      "mask": [
+        0,
+        0,
+        1
+      ],
+      "actions": [
+        {
+          "index": 0,
+          "action_id": "split_node_rule:3a8b92b65970",
+          "abstract_rule_id": "split_node",
+          "abstract_rule_name": "SplitNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "split_node_rule",
+          "operator_strategy": "vector_temp_force_split",
+          "target_node_ids": [
+            "3"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 2.0,
+            "support_distance_after": 1.138798841115307,
+            "support_distance_delta": 0.8612011588846931,
+            "support_hops_before": null,
+            "support_hops_after": null,
+            "support_hops_delta": 0,
+            "support_reachable_before": 0,
+            "support_reachable_after": 0,
+            "support_reachable_delta": 0,
+            "temp_force_before": 1,
+            "temp_force_after": 2,
+            "temp_force_delta": -1,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 2,
+            "added_edge_count": 2,
+            "added_edge_length_total": 4.0,
+            "rank_tuple": [
+              0.0,
+              0.861201159,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 1,
+          "action_id": "extend_node_rule:e26d803bfd35",
+          "abstract_rule_id": "extend_node",
+          "abstract_rule_name": "ExtendNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "extend_node_rule",
+          "operator_strategy": "vector_loa_extension",
+          "target_node_ids": [
+            "3"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "local_joint_non_equilibrated"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 2.0,
+            "support_distance_after": 0.24204559705969753,
+            "support_distance_delta": 1.7579544029403025,
+            "support_hops_before": null,
+            "support_hops_after": null,
+            "support_hops_delta": 0,
+            "support_reachable_before": 0,
+            "support_reachable_after": 0,
+            "support_reachable_delta": 0,
+            "temp_force_before": 1,
+            "temp_force_after": 1,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": false,
+            "added_node_count": 1,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.7579544029403025,
+            "rank_tuple": [
+              0.0,
+              1.757954403,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 2,
+          "action_id": "single_node_root_link_rule:a6003d8be910",
+          "abstract_rule_id": "extend_and_connect_two_nodes",
+          "abstract_rule_name": "ExtendAndConnectTwoNodesRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "single_node_root_link_rule",
+          "operator_strategy": "root_link_projection_or_direct_support_link",
+          "target_node_ids": [
+            "0",
+            "3"
+          ],
+          "target_edge_ids": [],
+          "mask": 1,
+          "metadata": {
+            "admissible": true,
+            "reason_codes": [],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 2.0,
+            "support_distance_after": 2.0,
+            "support_distance_delta": 0.0,
+            "support_hops_before": null,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 0,
+            "support_reachable_after": 1,
+            "support_reachable_delta": 1,
+            "temp_force_before": 1,
+            "temp_force_after": 1,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 1,
+            "closure_progress": true,
+            "created_support_connection": true,
+            "plausibility_pass": true,
+            "added_node_count": 0,
+            "added_edge_count": 1,
+            "added_edge_length_total": 2.0,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "selected_action_id": "single_node_root_link_rule:a6003d8be910",
+    "selected_action_summary": {
+      "action_id": "single_node_root_link_rule:a6003d8be910",
+      "abstract_rule_id": "extend_and_connect_two_nodes",
+      "abstract_rule_name": "ExtendAndConnectTwoNodesRule",
+      "method_family": "vector_gs",
+      "implementation_rule_name": "single_node_root_link_rule",
+      "operator_strategy": "root_link_projection_or_direct_support_link",
+      "target_node_ids": [
+        "0",
+        "3"
+      ],
+      "target_edge_ids": [],
+      "payload": {
+        "target_kind": "support_node",
+        "source_node": "3",
+        "target_node": "0",
+        "target_xyz": [
+          -5.0,
+          0.0,
+          0.0
+        ],
+        "alignment": 1.0,
+        "distance": 2.0
+      },
+      "topology_delta": {
+        "nodes": null,
+        "edges": 1,
+        "summary": "benchmark-specific runtime may add 0-1 nodes and 1 member; not final abstract behavior"
+      },
+      "metadata": {
+        "binding_status": "benchmark_optional",
+        "binding_provisional": true,
+        "binding_notes": "Benchmark-specific recovery realization. Explicitly provisional and not long-term grammar truth."
+      }
+    },
+    "policy_decision_summary": {
+      "policy_name": "random",
+      "selected_action_id": "single_node_root_link_rule:a6003d8be910",
+      "selected_index": 2,
+      "admissible_action_ids": [
+        "single_node_root_link_rule:a6003d8be910"
+      ],
+      "weights": {},
+      "scores": {},
+      "metadata": {}
+    },
+    "notes": ""
+  },
+  {
+    "iteration": 3,
+    "grammar_state_before": "grow",
+    "grammar_state_after": "grow",
+    "candidate_rule_names": [
+      "split_node_rule",
+      "extend_node_rule"
+    ],
+    "selected_rule": "split_node_rule",
+    "selected_rule_status": "accepted",
+    "selected_rule_reason": "policy_selected_action",
+    "state_id_before": "d001a40d3d4f",
+    "state_id_after": "4227a5990ea7",
+    "accepted_new_nodes": [
+      {
+        "id": "4",
+        "xyz": [
+          -4.083240166701016,
+          0.22248729735913853,
+          0.0
+        ]
+      },
+      {
+        "id": "5",
+        "xyz": [
+          -5.916759833298984,
+          0.22248729735913853,
+          0.0
+        ]
+      }
+    ],
+    "accepted_new_edges": [
+      [
+        "3",
+        "4"
+      ],
+      [
+        "3",
+        "5"
+      ]
+    ],
+    "candidate_geometry_count": 2,
+    "candidate_evaluations": [
+      {
+        "action_id": "split_node_rule:697cc23e5a9f",
+        "abstract_rule_id": "split_node",
+        "abstract_rule_name": "SplitNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "3",
+          "theta": 0.4761714742492535
+        },
+        "target_node_ids": [
+          "3"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_temp_force_split",
+        "topology_delta": {
+          "nodes": 2,
+          "edges": 2,
+          "summary": "current runtime creates 2 nodes + 2 members"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS split realization. Runtime topology is provisional relative to the frozen abstract intent."
+        },
+        "policy_metadata": {
+          "admissible": true,
+          "reason_codes": [],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 2.0,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 1.0566288167234728,
+          "support_hops_before": 1,
+          "support_hops_after": 2,
+          "support_hops_delta": -1,
+          "support_reachable_before": 1,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 1,
+          "temp_force_before": 1,
+          "temp_force_after": 2,
+          "temp_force_delta": -1,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 2,
+          "added_edge_count": 2,
+          "added_edge_length_total": 4.0,
+          "rank_tuple": [
+            0.0,
+            1.056628817,
+            -1,
+            1,
+            -1,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "accepted",
+        "reason_codes": [
+          "policy_selected_action"
+        ],
+        "rank_tuple": [
+          0.0,
+          1.056628817,
+          -1,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "3",
+              "theta": 0.4761714742492535
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.0,
+                  2.0,
+                  0.0
+                ],
+                "end": [
+                  -4.541620083350508,
+                  1.1112436486795692,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -5.0,
+                  2.0,
+                  0.0
+                ],
+                "end": [
+                  -5.458379916649492,
+                  1.1112436486795692,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -4.541620083350508,
+                  1.1112436486795692,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -5.458379916649492,
+                  1.1112436486795692,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 1,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 2.0,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 1,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "extend_node_rule:f431caa34430",
+        "abstract_rule_id": "extend_node",
+        "abstract_rule_name": "ExtendNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "3",
+          "length": 1.420571580830845
+        },
+        "target_node_ids": [
+          "3"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_loa_extension",
+        "topology_delta": {
+          "nodes": 1,
+          "edges": 1,
+          "summary": "creates 1 node + 1 member"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS extend realization. Runtime mapping is provisional rather than final grammar truth."
+        },
+        "policy_metadata": {
+          "admissible": true,
+          "reason_codes": [],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 2.0,
+          "support_distance_after": 0.579428419169155,
+          "support_distance_delta": 1.420571580830845,
+          "support_hops_before": 1,
+          "support_hops_after": 2,
+          "support_hops_delta": -1,
+          "support_reachable_before": 1,
+          "support_reachable_after": 1,
+          "support_reachable_delta": 0,
+          "temp_force_before": 1,
+          "temp_force_after": 1,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 1,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.420571580830845,
+          "rank_tuple": [
+            0.0,
+            1.420571581,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "policy_not_selected"
+        ],
+        "rank_tuple": [
+          0.0,
+          1.420571581,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "3",
+              "length": 1.420571580830845
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.0,
+                  2.0,
+                  0.0
+                ],
+                "end": [
+                  -5.0,
+                  0.579428419169155,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -5.0,
+                  0.579428419169155,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 1,
+        "temp_force_count_after": 1,
+        "nearest_support_distance_before": 2.0,
+        "nearest_support_distance_after": 0.579428419169155,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 1,
+        "support_reachable_path_count_after": 1
+      }
+    ],
+    "temp_force_count": 2,
+    "temp_force_count_before": 1,
+    "temp_force_count_after": 2,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": "3",
+    "nearest_support_distance_before": 2.0,
+    "nearest_support_distance_after": 0.9433711832765274,
+    "created_support_connection": false,
+    "support_reachable_path_count_before": 1,
+    "support_reachable_path_count_after": 2,
+    "support_connectivity_indicator_before": 1,
+    "support_connectivity_indicator_after": 2,
+    "policy_name": "random",
+    "observation_summary": {
+      "phase": "grow",
+      "node_count": 4,
+      "edge_count": 2,
+      "support_count": 2,
+      "load_count": 1,
+      "active_front_count": 1,
+      "unresolved_force_count": 1,
+      "action_count": 2,
+      "action_mask": [
+        1,
+        1
+      ]
+    },
+    "action_bundle_summary": {
+      "ordering_policy": "grammar_proposal_order_v1",
+      "action_count": 2,
+      "admissible_action_count": 2,
+      "mask": [
+        1,
+        1
+      ],
+      "actions": [
+        {
+          "index": 0,
+          "action_id": "split_node_rule:697cc23e5a9f",
+          "abstract_rule_id": "split_node",
+          "abstract_rule_name": "SplitNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "split_node_rule",
+          "operator_strategy": "vector_temp_force_split",
+          "target_node_ids": [
+            "3"
+          ],
+          "target_edge_ids": [],
+          "mask": 1,
+          "metadata": {
+            "admissible": true,
+            "reason_codes": [],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 2.0,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 1.0566288167234728,
+            "support_hops_before": 1,
+            "support_hops_after": 2,
+            "support_hops_delta": -1,
+            "support_reachable_before": 1,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 1,
+            "temp_force_before": 1,
+            "temp_force_after": 2,
+            "temp_force_delta": -1,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 2,
+            "added_edge_count": 2,
+            "added_edge_length_total": 4.0,
+            "rank_tuple": [
+              0.0,
+              1.056628817,
+              -1,
+              1,
+              -1,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 1,
+          "action_id": "extend_node_rule:f431caa34430",
+          "abstract_rule_id": "extend_node",
+          "abstract_rule_name": "ExtendNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "extend_node_rule",
+          "operator_strategy": "vector_loa_extension",
+          "target_node_ids": [
+            "3"
+          ],
+          "target_edge_ids": [],
+          "mask": 1,
+          "metadata": {
+            "admissible": true,
+            "reason_codes": [],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 2.0,
+            "support_distance_after": 0.579428419169155,
+            "support_distance_delta": 1.420571580830845,
+            "support_hops_before": 1,
+            "support_hops_after": 2,
+            "support_hops_delta": -1,
+            "support_reachable_before": 1,
+            "support_reachable_after": 1,
+            "support_reachable_delta": 0,
+            "temp_force_before": 1,
+            "temp_force_after": 1,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 1,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.420571580830845,
+            "rank_tuple": [
+              0.0,
+              1.420571581,
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "selected_action_id": "split_node_rule:697cc23e5a9f",
+    "selected_action_summary": {
+      "action_id": "split_node_rule:697cc23e5a9f",
+      "abstract_rule_id": "split_node",
+      "abstract_rule_name": "SplitNodeRule",
+      "method_family": "vector_gs",
+      "implementation_rule_name": "split_node_rule",
+      "operator_strategy": "vector_temp_force_split",
+      "target_node_ids": [
+        "3"
+      ],
+      "target_edge_ids": [],
+      "payload": {
+        "node": "3",
+        "theta": 0.4761714742492535
+      },
+      "topology_delta": {
+        "nodes": 2,
+        "edges": 2,
+        "summary": "current runtime creates 2 nodes + 2 members"
+      },
+      "metadata": {
+        "binding_status": "active",
+        "binding_provisional": true,
+        "binding_notes": "Current vector GS split realization. Runtime topology is provisional relative to the frozen abstract intent."
+      }
+    },
+    "policy_decision_summary": {
+      "policy_name": "random",
+      "selected_action_id": "split_node_rule:697cc23e5a9f",
+      "selected_index": 0,
+      "admissible_action_ids": [
+        "split_node_rule:697cc23e5a9f",
+        "extend_node_rule:f431caa34430"
+      ],
+      "weights": {},
+      "scores": {},
+      "metadata": {}
+    },
+    "notes": ""
+  },
+  {
+    "iteration": 4,
+    "grammar_state_before": "grow",
+    "grammar_state_after": "grow",
+    "candidate_rule_names": [
+      "split_node_rule",
+      "split_node_rule",
+      "extend_node_rule",
+      "extend_node_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule"
+    ],
+    "selected_rule": "triangle_closure_rule",
+    "selected_rule_status": "accepted",
+    "selected_rule_reason": "policy_selected_action",
+    "state_id_before": "4227a5990ea7",
+    "state_id_after": "ad7e278d1acb",
+    "accepted_new_nodes": [],
+    "accepted_new_edges": [
+      [
+        "0",
+        "5"
+      ]
+    ],
+    "candidate_geometry_count": 7,
+    "candidate_evaluations": [
+      {
+        "action_id": "split_node_rule:eba3690ec795",
+        "abstract_rule_id": "split_node",
+        "abstract_rule_name": "SplitNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "4",
+          "theta": 0.427675025087889
+        },
+        "target_node_ids": [
+          "4"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_temp_force_split",
+        "topology_delta": {
+          "nodes": 2,
+          "edges": 2,
+          "summary": "current runtime creates 2 nodes + 2 members"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS split realization. Runtime topology is provisional relative to the frozen abstract intent."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 2,
+          "support_hops_after": 2,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 3,
+          "support_reachable_delta": 1,
+          "temp_force_before": 2,
+          "temp_force_after": 3,
+          "temp_force_delta": -1,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 2,
+          "added_edge_count": 2,
+          "added_edge_length_total": 4.0,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            1,
+            -1,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "4",
+              "theta": 0.427675025087889
+            },
+            "segments": [
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -3.2975280355105827,
+                  -0.3961050133756362,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -4.034762725149217,
+                  -0.7763369803096575,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -3.2975280355105827,
+                  -0.3961050133756362,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -4.034762725149217,
+                  -0.7763369803096575,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "action_id": "split_node_rule:a57655aadef4",
+        "abstract_rule_id": "split_node",
+        "abstract_rule_name": "SplitNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "5",
+          "theta": 0.5033824164105826
+        },
+        "target_node_ids": [
+          "5"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_temp_force_split",
+        "topology_delta": {
+          "nodes": 2,
+          "edges": 2,
+          "summary": "current runtime creates 2 nodes + 2 members"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS split realization. Runtime topology is provisional relative to the frozen abstract intent."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 2,
+          "support_hops_after": 2,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 3,
+          "support_reachable_delta": 1,
+          "temp_force_before": 2,
+          "temp_force_after": 3,
+          "temp_force_delta": -1,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 2,
+          "added_edge_count": 2,
+          "added_edge_length_total": 4.0,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            1,
+            -1,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "5",
+              "theta": 0.5033824164105826
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -5.889552249004025,
+                  -0.7771425077971668,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -6.747008628198292,
+                  -0.33490568660123365,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -5.889552249004025,
+                  -0.7771425077971668,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -6.747008628198292,
+                  -0.33490568660123365,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "action_id": "extend_node_rule:d9007924407e",
+        "abstract_rule_id": "extend_node",
+        "abstract_rule_name": "ExtendNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "4",
+          "length": 1.2589167502929635
+        },
+        "target_node_ids": [
+          "4"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_loa_extension",
+        "topology_delta": {
+          "nodes": 1,
+          "edges": 1,
+          "summary": "creates 1 node + 1 member"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS extend realization. Runtime mapping is provisional rather than final grammar truth."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "no_structural_progress"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 2,
+          "support_hops_after": 2,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 1,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.2589167502929635,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "no_structural_progress"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "4",
+              "length": 1.2589167502929635
+            },
+            "segments": [
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -3.506178011633078,
+                  -0.8963829602474094,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -3.506178011633078,
+                  -0.8963829602474094,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "extend_node_rule:deed4877cab5",
+        "abstract_rule_id": "extend_node",
+        "abstract_rule_name": "ExtendNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "5",
+          "length": 1.5112747213686086
+        },
+        "target_node_ids": [
+          "5"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_loa_extension",
+        "topology_delta": {
+          "nodes": 1,
+          "edges": 1,
+          "summary": "creates 1 node + 1 member"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS extend realization. Runtime mapping is provisional rather than final grammar truth."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 2,
+          "support_hops_after": 2,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 1,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.5112747213686089,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "5",
+              "length": 1.5112747213686086
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -6.609497814114412,
+                  -1.1206677098472266,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -6.609497814114412,
+                  -1.1206677098472266,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "triangle_closure_rule:71feeb80afee",
+        "abstract_rule_id": "close_structure",
+        "abstract_rule_name": "CloseStructureRule",
+        "method_family": "vector_gs",
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "0",
+          "v": "4",
+          "via": "3"
+        },
+        "target_node_ids": [
+          "0",
+          "4"
+        ],
+        "target_edge_ids": [
+          [
+            "0",
+            "4"
+          ]
+        ],
+        "operator_strategy": "triangle_closure_strategy",
+        "topology_delta": {
+          "nodes": 0,
+          "edges": 1,
+          "summary": "current runtime adds 1 member; abstract close intent remains broader"
+        },
+        "metadata": {
+          "binding_status": "benchmark_active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+        },
+        "policy_metadata": {
+          "admissible": true,
+          "reason_codes": [],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 2,
+          "support_hops_after": 1,
+          "support_hops_delta": 1,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 1,
+          "component_delta": 0,
+          "closure_progress": true,
+          "created_support_connection": true,
+          "plausibility_pass": true,
+          "added_node_count": 0,
+          "added_edge_count": 1,
+          "added_edge_length_total": 0.9433711832765274,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "policy_not_selected"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "0",
+              "v": "4",
+              "via": "3"
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.0,
+                  0.0,
+                  0.0
+                ],
+                "end": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "triangle_closure_rule:2d54148275ab",
+        "abstract_rule_id": "close_structure",
+        "abstract_rule_name": "CloseStructureRule",
+        "method_family": "vector_gs",
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "0",
+          "v": "5",
+          "via": "3"
+        },
+        "target_node_ids": [
+          "0",
+          "5"
+        ],
+        "target_edge_ids": [
+          [
+            "0",
+            "5"
+          ]
+        ],
+        "operator_strategy": "triangle_closure_strategy",
+        "topology_delta": {
+          "nodes": 0,
+          "edges": 1,
+          "summary": "current runtime adds 1 member; abstract close intent remains broader"
+        },
+        "metadata": {
+          "binding_status": "benchmark_active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+        },
+        "policy_metadata": {
+          "admissible": true,
+          "reason_codes": [],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 2,
+          "support_hops_after": 1,
+          "support_hops_delta": 1,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 1,
+          "component_delta": 0,
+          "closure_progress": true,
+          "created_support_connection": true,
+          "plausibility_pass": true,
+          "added_node_count": 0,
+          "added_edge_count": 1,
+          "added_edge_length_total": 0.9433711832765274,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "accepted",
+        "reason_codes": [
+          "policy_selected_action"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "0",
+              "v": "5",
+              "via": "3"
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.0,
+                  0.0,
+                  0.0
+                ],
+                "end": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "triangle_closure_rule:7c06603341b4",
+        "abstract_rule_id": "close_structure",
+        "abstract_rule_name": "CloseStructureRule",
+        "method_family": "vector_gs",
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "4",
+          "v": "5",
+          "via": "3"
+        },
+        "target_node_ids": [
+          "4",
+          "5"
+        ],
+        "target_edge_ids": [
+          [
+            "4",
+            "5"
+          ]
+        ],
+        "operator_strategy": "triangle_closure_strategy",
+        "topology_delta": {
+          "nodes": 0,
+          "edges": 1,
+          "summary": "current runtime adds 1 member; abstract close intent remains broader"
+        },
+        "metadata": {
+          "binding_status": "benchmark_active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "crossing_introduced"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 2,
+          "support_hops_after": 2,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 1,
+          "component_delta": 0,
+          "closure_progress": true,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 0,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.8335196665979687,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            -1,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "crossing_introduced"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "4",
+              "v": "5",
+              "via": "3"
+            },
+            "segments": [
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 2,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      }
+    ],
+    "temp_force_count": 2,
+    "temp_force_count_before": 2,
+    "temp_force_count_after": 2,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": "0",
+    "nearest_support_distance_before": 0.9433711832765274,
+    "nearest_support_distance_after": 0.9433711832765274,
+    "created_support_connection": true,
+    "support_reachable_path_count_before": 2,
+    "support_reachable_path_count_after": 2,
+    "support_connectivity_indicator_before": 2,
+    "support_connectivity_indicator_after": 1,
+    "policy_name": "random",
+    "observation_summary": {
+      "phase": "grow",
+      "node_count": 6,
+      "edge_count": 4,
+      "support_count": 2,
+      "load_count": 1,
+      "active_front_count": 2,
+      "unresolved_force_count": 2,
+      "action_count": 7,
+      "action_mask": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0
+      ]
+    },
+    "action_bundle_summary": {
+      "ordering_policy": "grammar_proposal_order_v1",
+      "action_count": 7,
+      "admissible_action_count": 2,
+      "mask": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "actions": [
+        {
+          "index": 0,
+          "action_id": "split_node_rule:eba3690ec795",
+          "abstract_rule_id": "split_node",
+          "abstract_rule_name": "SplitNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "split_node_rule",
+          "operator_strategy": "vector_temp_force_split",
+          "target_node_ids": [
+            "4"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 2,
+            "support_hops_after": 2,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 3,
+            "support_reachable_delta": 1,
+            "temp_force_before": 2,
+            "temp_force_after": 3,
+            "temp_force_delta": -1,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 2,
+            "added_edge_count": 2,
+            "added_edge_length_total": 4.0,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              1,
+              -1,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 1,
+          "action_id": "split_node_rule:a57655aadef4",
+          "abstract_rule_id": "split_node",
+          "abstract_rule_name": "SplitNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "split_node_rule",
+          "operator_strategy": "vector_temp_force_split",
+          "target_node_ids": [
+            "5"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 2,
+            "support_hops_after": 2,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 3,
+            "support_reachable_delta": 1,
+            "temp_force_before": 2,
+            "temp_force_after": 3,
+            "temp_force_delta": -1,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 2,
+            "added_edge_count": 2,
+            "added_edge_length_total": 4.0,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              1,
+              -1,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 2,
+          "action_id": "extend_node_rule:d9007924407e",
+          "abstract_rule_id": "extend_node",
+          "abstract_rule_name": "ExtendNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "extend_node_rule",
+          "operator_strategy": "vector_loa_extension",
+          "target_node_ids": [
+            "4"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "no_structural_progress"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 2,
+            "support_hops_after": 2,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 1,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.2589167502929635,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 3,
+          "action_id": "extend_node_rule:deed4877cab5",
+          "abstract_rule_id": "extend_node",
+          "abstract_rule_name": "ExtendNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "extend_node_rule",
+          "operator_strategy": "vector_loa_extension",
+          "target_node_ids": [
+            "5"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 2,
+            "support_hops_after": 2,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 1,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.5112747213686089,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 4,
+          "action_id": "triangle_closure_rule:71feeb80afee",
+          "abstract_rule_id": "close_structure",
+          "abstract_rule_name": "CloseStructureRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "triangle_closure_rule",
+          "operator_strategy": "triangle_closure_strategy",
+          "target_node_ids": [
+            "0",
+            "4"
+          ],
+          "target_edge_ids": [
+            [
+              "0",
+              "4"
+            ]
+          ],
+          "mask": 1,
+          "metadata": {
+            "admissible": true,
+            "reason_codes": [],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 2,
+            "support_hops_after": 1,
+            "support_hops_delta": 1,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 1,
+            "component_delta": 0,
+            "closure_progress": true,
+            "created_support_connection": true,
+            "plausibility_pass": true,
+            "added_node_count": 0,
+            "added_edge_count": 1,
+            "added_edge_length_total": 0.9433711832765274,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 5,
+          "action_id": "triangle_closure_rule:2d54148275ab",
+          "abstract_rule_id": "close_structure",
+          "abstract_rule_name": "CloseStructureRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "triangle_closure_rule",
+          "operator_strategy": "triangle_closure_strategy",
+          "target_node_ids": [
+            "0",
+            "5"
+          ],
+          "target_edge_ids": [
+            [
+              "0",
+              "5"
+            ]
+          ],
+          "mask": 1,
+          "metadata": {
+            "admissible": true,
+            "reason_codes": [],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 2,
+            "support_hops_after": 1,
+            "support_hops_delta": 1,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 1,
+            "component_delta": 0,
+            "closure_progress": true,
+            "created_support_connection": true,
+            "plausibility_pass": true,
+            "added_node_count": 0,
+            "added_edge_count": 1,
+            "added_edge_length_total": 0.9433711832765274,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 6,
+          "action_id": "triangle_closure_rule:7c06603341b4",
+          "abstract_rule_id": "close_structure",
+          "abstract_rule_name": "CloseStructureRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "triangle_closure_rule",
+          "operator_strategy": "triangle_closure_strategy",
+          "target_node_ids": [
+            "4",
+            "5"
+          ],
+          "target_edge_ids": [
+            [
+              "4",
+              "5"
+            ]
+          ],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "crossing_introduced"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 2,
+            "support_hops_after": 2,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 1,
+            "component_delta": 0,
+            "closure_progress": true,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 0,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.8335196665979687,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "selected_action_id": "triangle_closure_rule:2d54148275ab",
+    "selected_action_summary": {
+      "action_id": "triangle_closure_rule:2d54148275ab",
+      "abstract_rule_id": "close_structure",
+      "abstract_rule_name": "CloseStructureRule",
+      "method_family": "vector_gs",
+      "implementation_rule_name": "triangle_closure_rule",
+      "operator_strategy": "triangle_closure_strategy",
+      "target_node_ids": [
+        "0",
+        "5"
+      ],
+      "target_edge_ids": [
+        [
+          "0",
+          "5"
+        ]
+      ],
+      "payload": {
+        "u": "0",
+        "v": "5",
+        "via": "3"
+      },
+      "topology_delta": {
+        "nodes": 0,
+        "edges": 1,
+        "summary": "current runtime adds 1 member; abstract close intent remains broader"
+      },
+      "metadata": {
+        "binding_status": "benchmark_active",
+        "binding_provisional": true,
+        "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+      }
+    },
+    "policy_decision_summary": {
+      "policy_name": "random",
+      "selected_action_id": "triangle_closure_rule:2d54148275ab",
+      "selected_index": 5,
+      "admissible_action_ids": [
+        "triangle_closure_rule:71feeb80afee",
+        "triangle_closure_rule:2d54148275ab"
+      ],
+      "weights": {},
+      "scores": {},
+      "metadata": {}
+    },
+    "notes": ""
+  },
+  {
+    "iteration": 5,
+    "grammar_state_before": "grow",
+    "grammar_state_after": "grow",
+    "candidate_rule_names": [
+      "split_node_rule",
+      "split_node_rule",
+      "extend_node_rule",
+      "extend_node_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule"
+    ],
+    "selected_rule": "triangle_closure_rule",
+    "selected_rule_status": "accepted",
+    "selected_rule_reason": "policy_selected_action",
+    "state_id_before": "ad7e278d1acb",
+    "state_id_after": "2c14d859ad2e",
+    "accepted_new_nodes": [],
+    "accepted_new_edges": [
+      [
+        "0",
+        "4"
+      ]
+    ],
+    "candidate_geometry_count": 7,
+    "candidate_evaluations": [
+      {
+        "action_id": "split_node_rule:0f80a26eb650",
+        "abstract_rule_id": "split_node",
+        "abstract_rule_name": "SplitNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "4",
+          "theta": 0.4714802412351243
+        },
+        "target_node_ids": [
+          "4"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_temp_force_split",
+        "topology_delta": {
+          "nodes": 2,
+          "edges": 2,
+          "summary": "current runtime creates 2 nodes + 2 members"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS split realization. Runtime topology is provisional relative to the frozen abstract intent."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 3,
+          "support_reachable_delta": 1,
+          "temp_force_before": 2,
+          "temp_force_after": 3,
+          "temp_force_delta": -1,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 2,
+          "added_edge_count": 2,
+          "added_edge_length_total": 4.0,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            1,
+            -1,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "4",
+              "theta": 0.4714802412351243
+            },
+            "segments": [
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -3.2711928608127496,
+                  -0.36110431755629957,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -4.07854895089405,
+                  -0.7775016988274459,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -3.2711928608127496,
+                  -0.36110431755629957,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -4.07854895089405,
+                  -0.7775016988274459,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "action_id": "split_node_rule:12c3561de286",
+        "abstract_rule_id": "split_node",
+        "abstract_rule_name": "SplitNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "5",
+          "theta": 0.5851395767104318
+        },
+        "target_node_ids": [
+          "5"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_temp_force_split",
+        "topology_delta": {
+          "nodes": 2,
+          "edges": 2,
+          "summary": "current runtime creates 2 nodes + 2 members"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS split realization. Runtime topology is provisional relative to the frozen abstract intent."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 2,
+          "support_hops_delta": -1,
+          "support_reachable_before": 2,
+          "support_reachable_after": 3,
+          "support_reachable_delta": 1,
+          "temp_force_before": 2,
+          "temp_force_after": 3,
+          "temp_force_delta": -1,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 2,
+          "added_edge_count": 2,
+          "added_edge_length_total": 4.000000000000001,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            -1,
+            1,
+            -1,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          -1,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "5",
+              "theta": 0.5851395767104318
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -5.8080072515776155,
+                  -0.7715815513474977,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -6.789755501946427,
+                  -0.2652406621867592,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -5.8080072515776155,
+                  -0.7715815513474977,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -6.789755501946427,
+                  -0.2652406621867592,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "action_id": "extend_node_rule:958abced1c5c",
+        "abstract_rule_id": "extend_node",
+        "abstract_rule_name": "ExtendNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "4",
+          "length": 1.4049341374504143
+        },
+        "target_node_ids": [
+          "4"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_loa_extension",
+        "topology_delta": {
+          "nodes": 1,
+          "edges": 1,
+          "summary": "creates 1 node + 1 member"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS extend realization. Runtime mapping is provisional rather than final grammar truth."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 1,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.4049341374504143,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "4",
+              "length": 1.4049341374504143
+            },
+            "segments": [
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -3.439246573878469,
+                  -1.0261568404868082,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -3.439246573878469,
+                  -1.0261568404868082,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "extend_node_rule:b66bcb6bdf02",
+        "abstract_rule_id": "extend_node",
+        "abstract_rule_name": "ExtendNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "5",
+          "length": 1.7837985890347725
+        },
+        "target_node_ids": [
+          "5"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_loa_extension",
+        "topology_delta": {
+          "nodes": 1,
+          "edges": 1,
+          "summary": "creates 1 node + 1 member"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS extend realization. Runtime mapping is provisional rather than final grammar truth."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 2,
+          "support_hops_delta": -1,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 1,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.7837985890347725,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "5",
+              "length": 1.7837985890347725
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -6.734417281860225,
+                  -1.3628750281219384,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -6.734417281860225,
+                  -1.3628750281219384,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 2,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "triangle_closure_rule:71feeb80afee",
+        "abstract_rule_id": "close_structure",
+        "abstract_rule_name": "CloseStructureRule",
+        "method_family": "vector_gs",
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "0",
+          "v": "4",
+          "via": "3"
+        },
+        "target_node_ids": [
+          "0",
+          "4"
+        ],
+        "target_edge_ids": [
+          [
+            "0",
+            "4"
+          ]
+        ],
+        "operator_strategy": "triangle_closure_strategy",
+        "topology_delta": {
+          "nodes": 0,
+          "edges": 1,
+          "summary": "current runtime adds 1 member; abstract close intent remains broader"
+        },
+        "metadata": {
+          "binding_status": "benchmark_active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+        },
+        "policy_metadata": {
+          "admissible": true,
+          "reason_codes": [],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 1,
+          "component_delta": 0,
+          "closure_progress": true,
+          "created_support_connection": true,
+          "plausibility_pass": true,
+          "added_node_count": 0,
+          "added_edge_count": 1,
+          "added_edge_length_total": 0.9433711832765274,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "accepted",
+        "reason_codes": [
+          "policy_selected_action"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "0",
+              "v": "4",
+              "via": "3"
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.0,
+                  0.0,
+                  0.0
+                ],
+                "end": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "triangle_closure_rule:7c06603341b4",
+        "abstract_rule_id": "close_structure",
+        "abstract_rule_name": "CloseStructureRule",
+        "method_family": "vector_gs",
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "4",
+          "v": "5",
+          "via": "3"
+        },
+        "target_node_ids": [
+          "4",
+          "5"
+        ],
+        "target_edge_ids": [
+          [
+            "4",
+            "5"
+          ]
+        ],
+        "operator_strategy": "triangle_closure_strategy",
+        "topology_delta": {
+          "nodes": 0,
+          "edges": 1,
+          "summary": "current runtime adds 1 member; abstract close intent remains broader"
+        },
+        "metadata": {
+          "binding_status": "benchmark_active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "crossing_introduced"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 1,
+          "component_delta": 0,
+          "closure_progress": true,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 0,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.8335196665979687,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            -1,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "crossing_introduced"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "4",
+              "v": "5",
+              "via": "3"
+            },
+            "segments": [
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "triangle_closure_rule:65bf0ae2bd16",
+        "abstract_rule_id": "close_structure",
+        "abstract_rule_name": "CloseStructureRule",
+        "method_family": "vector_gs",
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "0",
+          "v": "3",
+          "via": "5"
+        },
+        "target_node_ids": [
+          "0",
+          "3"
+        ],
+        "target_edge_ids": [
+          [
+            "0",
+            "3"
+          ]
+        ],
+        "operator_strategy": "triangle_closure_strategy",
+        "topology_delta": {
+          "nodes": 0,
+          "edges": 1,
+          "summary": "current runtime adds 1 member; abstract close intent remains broader"
+        },
+        "metadata": {
+          "binding_status": "benchmark_active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "duplicate_edge"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 0,
+          "added_edge_count": 0,
+          "added_edge_length_total": 0.0,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -1
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "duplicate_edge"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -1
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "0",
+              "v": "3",
+              "via": "5"
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.0,
+                  0.0,
+                  0.0
+                ],
+                "end": [
+                  -5.0,
+                  2.0,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      }
+    ],
+    "temp_force_count": 2,
+    "temp_force_count_before": 2,
+    "temp_force_count_after": 2,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": "0",
+    "nearest_support_distance_before": 0.9433711832765274,
+    "nearest_support_distance_after": 0.9433711832765274,
+    "created_support_connection": true,
+    "support_reachable_path_count_before": 2,
+    "support_reachable_path_count_after": 2,
+    "support_connectivity_indicator_before": 1,
+    "support_connectivity_indicator_after": 1,
+    "policy_name": "random",
+    "observation_summary": {
+      "phase": "grow",
+      "node_count": 6,
+      "edge_count": 5,
+      "support_count": 2,
+      "load_count": 1,
+      "active_front_count": 2,
+      "unresolved_force_count": 2,
+      "action_count": 7,
+      "action_mask": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    "action_bundle_summary": {
+      "ordering_policy": "grammar_proposal_order_v1",
+      "action_count": 7,
+      "admissible_action_count": 1,
+      "mask": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "actions": [
+        {
+          "index": 0,
+          "action_id": "split_node_rule:0f80a26eb650",
+          "abstract_rule_id": "split_node",
+          "abstract_rule_name": "SplitNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "split_node_rule",
+          "operator_strategy": "vector_temp_force_split",
+          "target_node_ids": [
+            "4"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 3,
+            "support_reachable_delta": 1,
+            "temp_force_before": 2,
+            "temp_force_after": 3,
+            "temp_force_delta": -1,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 2,
+            "added_edge_count": 2,
+            "added_edge_length_total": 4.0,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              1,
+              -1,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 1,
+          "action_id": "split_node_rule:12c3561de286",
+          "abstract_rule_id": "split_node",
+          "abstract_rule_name": "SplitNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "split_node_rule",
+          "operator_strategy": "vector_temp_force_split",
+          "target_node_ids": [
+            "5"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 2,
+            "support_hops_delta": -1,
+            "support_reachable_before": 2,
+            "support_reachable_after": 3,
+            "support_reachable_delta": 1,
+            "temp_force_before": 2,
+            "temp_force_after": 3,
+            "temp_force_delta": -1,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 2,
+            "added_edge_count": 2,
+            "added_edge_length_total": 4.000000000000001,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              -1,
+              1,
+              -1,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 2,
+          "action_id": "extend_node_rule:958abced1c5c",
+          "abstract_rule_id": "extend_node",
+          "abstract_rule_name": "ExtendNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "extend_node_rule",
+          "operator_strategy": "vector_loa_extension",
+          "target_node_ids": [
+            "4"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 1,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.4049341374504143,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 3,
+          "action_id": "extend_node_rule:b66bcb6bdf02",
+          "abstract_rule_id": "extend_node",
+          "abstract_rule_name": "ExtendNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "extend_node_rule",
+          "operator_strategy": "vector_loa_extension",
+          "target_node_ids": [
+            "5"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 2,
+            "support_hops_delta": -1,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 1,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.7837985890347725,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 4,
+          "action_id": "triangle_closure_rule:71feeb80afee",
+          "abstract_rule_id": "close_structure",
+          "abstract_rule_name": "CloseStructureRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "triangle_closure_rule",
+          "operator_strategy": "triangle_closure_strategy",
+          "target_node_ids": [
+            "0",
+            "4"
+          ],
+          "target_edge_ids": [
+            [
+              "0",
+              "4"
+            ]
+          ],
+          "mask": 1,
+          "metadata": {
+            "admissible": true,
+            "reason_codes": [],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 1,
+            "component_delta": 0,
+            "closure_progress": true,
+            "created_support_connection": true,
+            "plausibility_pass": true,
+            "added_node_count": 0,
+            "added_edge_count": 1,
+            "added_edge_length_total": 0.9433711832765274,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 5,
+          "action_id": "triangle_closure_rule:7c06603341b4",
+          "abstract_rule_id": "close_structure",
+          "abstract_rule_name": "CloseStructureRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "triangle_closure_rule",
+          "operator_strategy": "triangle_closure_strategy",
+          "target_node_ids": [
+            "4",
+            "5"
+          ],
+          "target_edge_ids": [
+            [
+              "4",
+              "5"
+            ]
+          ],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "crossing_introduced"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 1,
+            "component_delta": 0,
+            "closure_progress": true,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 0,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.8335196665979687,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 6,
+          "action_id": "triangle_closure_rule:65bf0ae2bd16",
+          "abstract_rule_id": "close_structure",
+          "abstract_rule_name": "CloseStructureRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "triangle_closure_rule",
+          "operator_strategy": "triangle_closure_strategy",
+          "target_node_ids": [
+            "0",
+            "3"
+          ],
+          "target_edge_ids": [
+            [
+              "0",
+              "3"
+            ]
+          ],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "duplicate_edge"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 0,
+            "added_edge_count": 0,
+            "added_edge_length_total": 0.0,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1
+            ]
+          }
+        }
+      ]
+    },
+    "selected_action_id": "triangle_closure_rule:71feeb80afee",
+    "selected_action_summary": {
+      "action_id": "triangle_closure_rule:71feeb80afee",
+      "abstract_rule_id": "close_structure",
+      "abstract_rule_name": "CloseStructureRule",
+      "method_family": "vector_gs",
+      "implementation_rule_name": "triangle_closure_rule",
+      "operator_strategy": "triangle_closure_strategy",
+      "target_node_ids": [
+        "0",
+        "4"
+      ],
+      "target_edge_ids": [
+        [
+          "0",
+          "4"
+        ]
+      ],
+      "payload": {
+        "u": "0",
+        "v": "4",
+        "via": "3"
+      },
+      "topology_delta": {
+        "nodes": 0,
+        "edges": 1,
+        "summary": "current runtime adds 1 member; abstract close intent remains broader"
+      },
+      "metadata": {
+        "binding_status": "benchmark_active",
+        "binding_provisional": true,
+        "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+      }
+    },
+    "policy_decision_summary": {
+      "policy_name": "random",
+      "selected_action_id": "triangle_closure_rule:71feeb80afee",
+      "selected_index": 4,
+      "admissible_action_ids": [
+        "triangle_closure_rule:71feeb80afee"
+      ],
+      "weights": {},
+      "scores": {},
+      "metadata": {}
+    },
+    "notes": ""
+  },
+  {
+    "iteration": 6,
+    "grammar_state_before": "grow",
+    "grammar_state_after": "grow",
+    "candidate_rule_names": [
+      "split_node_rule",
+      "split_node_rule",
+      "extend_node_rule",
+      "extend_node_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule",
+      "triangle_closure_rule"
+    ],
+    "selected_rule": null,
+    "selected_rule_status": "not_selected",
+    "selected_rule_reason": "no_admissible_candidate",
+    "state_id_before": "2c14d859ad2e",
+    "state_id_after": "2c14d859ad2e",
+    "accepted_new_nodes": [],
+    "accepted_new_edges": [],
+    "candidate_geometry_count": 8,
+    "candidate_evaluations": [
+      {
+        "action_id": "split_node_rule:e8406a21719d",
+        "abstract_rule_id": "split_node",
+        "abstract_rule_name": "SplitNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "4",
+          "theta": 0.44099381782367825
+        },
+        "target_node_ids": [
+          "4"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_temp_force_split",
+        "topology_delta": {
+          "nodes": 2,
+          "edges": 2,
+          "summary": "current runtime creates 2 nodes + 2 members"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS split realization. Runtime topology is provisional relative to the frozen abstract intent."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 3,
+          "support_reachable_delta": 1,
+          "temp_force_before": 2,
+          "temp_force_after": 3,
+          "temp_force_delta": -1,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 2,
+          "added_edge_count": 2,
+          "added_edge_length_total": 4.0,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            1,
+            -1,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "4",
+              "theta": 0.44099381782367825
+            },
+            "segments": [
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -3.28935906411885,
+                  -0.3855857204297819,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -4.0480697650277095,
+                  -0.7768940326876752,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -3.28935906411885,
+                  -0.3855857204297819,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -4.0480697650277095,
+                  -0.7768940326876752,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "action_id": "split_node_rule:f344eed652cd",
+        "abstract_rule_id": "split_node",
+        "abstract_rule_name": "SplitNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "split_node_rule",
+        "payload": {
+          "node": "5",
+          "theta": 0.49297908624570674
+        },
+        "target_node_ids": [
+          "5"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_temp_force_split",
+        "topology_delta": {
+          "nodes": 2,
+          "edges": 2,
+          "summary": "current runtime creates 2 nodes + 2 members"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS split realization. Runtime topology is provisional relative to the frozen abstract intent."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 3,
+          "support_reachable_delta": 1,
+          "temp_force_before": 2,
+          "temp_force_after": 3,
+          "temp_force_delta": -1,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 2,
+          "added_edge_count": 2,
+          "added_edge_length_total": 4.0,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            1,
+            -1,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "split_node_rule",
+            "payload": {
+              "node": "5",
+              "theta": 0.49297908624570674
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -5.899953012638045,
+                  -0.7773714580554806,
+                  0.0
+                ]
+              },
+              {
+                "start": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -6.74116506134415,
+                  -0.343512720283793,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -5.899953012638045,
+                  -0.7773714580554806,
+                  0.0
+                ]
+              },
+              {
+                "xyz": [
+                  -6.74116506134415,
+                  -0.343512720283793,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 3,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 3
+      },
+      {
+        "action_id": "extend_node_rule:e740833740b6",
+        "abstract_rule_id": "extend_node",
+        "abstract_rule_name": "ExtendNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "4",
+          "length": 1.3033127260789275
+        },
+        "target_node_ids": [
+          "4"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_loa_extension",
+        "topology_delta": {
+          "nodes": 1,
+          "edges": 1,
+          "summary": "creates 1 node + 1 member"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS extend realization. Runtime mapping is provisional rather than final grammar truth."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "no_structural_progress"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 1,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.3033127260789277,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "no_structural_progress"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "4",
+              "length": 1.3033127260789275
+            },
+            "segments": [
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -3.4858277879527346,
+                  -0.9358401657002531,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -3.4858277879527346,
+                  -0.9358401657002531,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "extend_node_rule:337a4b78b4bb",
+        "abstract_rule_id": "extend_node",
+        "abstract_rule_name": "ExtendNodeRule",
+        "method_family": "vector_gs",
+        "rule_name": "extend_node_rule",
+        "payload": {
+          "node": "5",
+          "length": 1.4765969541523558
+        },
+        "target_node_ids": [
+          "5"
+        ],
+        "target_edge_ids": [],
+        "operator_strategy": "vector_loa_extension",
+        "topology_delta": {
+          "nodes": 1,
+          "edges": 1,
+          "summary": "creates 1 node + 1 member"
+        },
+        "metadata": {
+          "binding_status": "active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS extend realization. Runtime mapping is provisional rather than final grammar truth."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "outside_bounds"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 1,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.4765969541523556,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "outside_bounds"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "extend_node_rule",
+            "payload": {
+              "node": "5",
+              "length": 1.4765969541523558
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -6.593602222068235,
+                  -1.0898476239841706,
+                  0.0
+                ]
+              }
+            ],
+            "points": [
+              {
+                "xyz": [
+                  -6.593602222068235,
+                  -1.0898476239841706,
+                  0.0
+                ]
+              }
+            ]
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "triangle_closure_rule:4939c2c9fbc4",
+        "abstract_rule_id": "close_structure",
+        "abstract_rule_name": "CloseStructureRule",
+        "method_family": "vector_gs",
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "4",
+          "v": "5",
+          "via": "0"
+        },
+        "target_node_ids": [
+          "4",
+          "5"
+        ],
+        "target_edge_ids": [
+          [
+            "4",
+            "5"
+          ]
+        ],
+        "operator_strategy": "triangle_closure_strategy",
+        "topology_delta": {
+          "nodes": 0,
+          "edges": 1,
+          "summary": "current runtime adds 1 member; abstract close intent remains broader"
+        },
+        "metadata": {
+          "binding_status": "benchmark_active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "crossing_introduced"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 2,
+          "component_delta": 0,
+          "closure_progress": true,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 0,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.8335196665979687,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            -1,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "crossing_introduced"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "4",
+              "v": "5",
+              "via": "0"
+            },
+            "segments": [
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "triangle_closure_rule:7c06603341b4",
+        "abstract_rule_id": "close_structure",
+        "abstract_rule_name": "CloseStructureRule",
+        "method_family": "vector_gs",
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "4",
+          "v": "5",
+          "via": "3"
+        },
+        "target_node_ids": [
+          "4",
+          "5"
+        ],
+        "target_edge_ids": [
+          [
+            "4",
+            "5"
+          ]
+        ],
+        "operator_strategy": "triangle_closure_strategy",
+        "topology_delta": {
+          "nodes": 0,
+          "edges": 1,
+          "summary": "current runtime adds 1 member; abstract close intent remains broader"
+        },
+        "metadata": {
+          "binding_status": "benchmark_active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "crossing_introduced"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 2,
+          "component_delta": 0,
+          "closure_progress": true,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 0,
+          "added_edge_count": 1,
+          "added_edge_length_total": 1.8335196665979687,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            -1,
+            0,
+            0
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "crossing_introduced"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          -1,
+          0,
+          0
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "4",
+              "v": "5",
+              "via": "3"
+            },
+            "segments": [
+              {
+                "start": [
+                  -4.083240166701016,
+                  0.22248729735913853,
+                  0.0
+                ],
+                "end": [
+                  -5.916759833298984,
+                  0.22248729735913853,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "triangle_closure_rule:9e150c23cdda",
+        "abstract_rule_id": "close_structure",
+        "abstract_rule_name": "CloseStructureRule",
+        "method_family": "vector_gs",
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "0",
+          "v": "3",
+          "via": "4"
+        },
+        "target_node_ids": [
+          "0",
+          "3"
+        ],
+        "target_edge_ids": [
+          [
+            "0",
+            "3"
+          ]
+        ],
+        "operator_strategy": "triangle_closure_strategy",
+        "topology_delta": {
+          "nodes": 0,
+          "edges": 1,
+          "summary": "current runtime adds 1 member; abstract close intent remains broader"
+        },
+        "metadata": {
+          "binding_status": "benchmark_active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "duplicate_edge"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 0,
+          "added_edge_count": 0,
+          "added_edge_length_total": 0.0,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -1
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "duplicate_edge"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -1
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "0",
+              "v": "3",
+              "via": "4"
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.0,
+                  0.0,
+                  0.0
+                ],
+                "end": [
+                  -5.0,
+                  2.0,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      },
+      {
+        "action_id": "triangle_closure_rule:65bf0ae2bd16",
+        "abstract_rule_id": "close_structure",
+        "abstract_rule_name": "CloseStructureRule",
+        "method_family": "vector_gs",
+        "rule_name": "triangle_closure_rule",
+        "payload": {
+          "u": "0",
+          "v": "3",
+          "via": "5"
+        },
+        "target_node_ids": [
+          "0",
+          "3"
+        ],
+        "target_edge_ids": [
+          [
+            "0",
+            "3"
+          ]
+        ],
+        "operator_strategy": "triangle_closure_strategy",
+        "topology_delta": {
+          "nodes": 0,
+          "edges": 1,
+          "summary": "current runtime adds 1 member; abstract close intent remains broader"
+        },
+        "metadata": {
+          "binding_status": "benchmark_active",
+          "binding_provisional": true,
+          "binding_notes": "Current vector GS closure realization. Provisional mapping from benchmark-era runtime behavior."
+        },
+        "policy_metadata": {
+          "admissible": false,
+          "reason_codes": [
+            "duplicate_edge"
+          ],
+          "residual_before": 10.0,
+          "residual_after": 10.0,
+          "residual_delta": 0.0,
+          "support_distance_before": 0.9433711832765274,
+          "support_distance_after": 0.9433711832765274,
+          "support_distance_delta": 0.0,
+          "support_hops_before": 1,
+          "support_hops_after": 1,
+          "support_hops_delta": 0,
+          "support_reachable_before": 2,
+          "support_reachable_after": 2,
+          "support_reachable_delta": 0,
+          "temp_force_before": 2,
+          "temp_force_after": 2,
+          "temp_force_delta": 0,
+          "triangle_delta": 0,
+          "component_delta": 0,
+          "closure_progress": false,
+          "created_support_connection": false,
+          "plausibility_pass": true,
+          "added_node_count": 0,
+          "added_edge_count": 0,
+          "added_edge_length_total": 0.0,
+          "rank_tuple": [
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -1
+          ]
+        },
+        "status": "rejected",
+        "reason_codes": [
+          "duplicate_edge"
+        ],
+        "rank_tuple": [
+          0.0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -1
+        ],
+        "candidate_geometry": [
+          {
+            "rule_name": "triangle_closure_rule",
+            "payload": {
+              "u": "0",
+              "v": "3",
+              "via": "5"
+            },
+            "segments": [
+              {
+                "start": [
+                  -5.0,
+                  0.0,
+                  0.0
+                ],
+                "end": [
+                  -5.0,
+                  2.0,
+                  0.0
+                ]
+              }
+            ],
+            "points": []
+          }
+        ],
+        "residual_before": 10.0,
+        "residual_after": 10.0,
+        "temp_force_count_before": 2,
+        "temp_force_count_after": 2,
+        "nearest_support_distance_before": 0.9433711832765274,
+        "nearest_support_distance_after": 0.9433711832765274,
+        "support_connectivity_indicator_before": 1,
+        "support_connectivity_indicator_after": 1,
+        "support_reachable_path_count_before": 2,
+        "support_reachable_path_count_after": 2
+      }
+    ],
+    "temp_force_count": 2,
+    "temp_force_count_before": 2,
+    "temp_force_count_after": 2,
+    "residual_vector": [
+      0.0,
+      -10.0,
+      0.0
+    ],
+    "residual_magnitude": 10.0,
+    "residual_before": 10.0,
+    "residual_after": 10.0,
+    "global_equilibrium_valid": false,
+    "source_parent_node": null,
+    "nearest_support_distance_before": 0.9433711832765274,
+    "nearest_support_distance_after": 0.9433711832765274,
+    "created_support_connection": false,
+    "support_reachable_path_count_before": 2,
+    "support_reachable_path_count_after": 2,
+    "support_connectivity_indicator_before": 1,
+    "support_connectivity_indicator_after": 1,
+    "policy_name": "random",
+    "observation_summary": {
+      "phase": "grow",
+      "node_count": 6,
+      "edge_count": 6,
+      "support_count": 2,
+      "load_count": 1,
+      "active_front_count": 2,
+      "unresolved_force_count": 2,
+      "action_count": 8,
+      "action_mask": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "action_bundle_summary": {
+      "ordering_policy": "grammar_proposal_order_v1",
+      "action_count": 8,
+      "admissible_action_count": 0,
+      "mask": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "actions": [
+        {
+          "index": 0,
+          "action_id": "split_node_rule:e8406a21719d",
+          "abstract_rule_id": "split_node",
+          "abstract_rule_name": "SplitNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "split_node_rule",
+          "operator_strategy": "vector_temp_force_split",
+          "target_node_ids": [
+            "4"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 3,
+            "support_reachable_delta": 1,
+            "temp_force_before": 2,
+            "temp_force_after": 3,
+            "temp_force_delta": -1,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 2,
+            "added_edge_count": 2,
+            "added_edge_length_total": 4.0,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              1,
+              -1,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 1,
+          "action_id": "split_node_rule:f344eed652cd",
+          "abstract_rule_id": "split_node",
+          "abstract_rule_name": "SplitNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "split_node_rule",
+          "operator_strategy": "vector_temp_force_split",
+          "target_node_ids": [
+            "5"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 3,
+            "support_reachable_delta": 1,
+            "temp_force_before": 2,
+            "temp_force_after": 3,
+            "temp_force_delta": -1,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 2,
+            "added_edge_count": 2,
+            "added_edge_length_total": 4.0,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              1,
+              -1,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 2,
+          "action_id": "extend_node_rule:e740833740b6",
+          "abstract_rule_id": "extend_node",
+          "abstract_rule_name": "ExtendNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "extend_node_rule",
+          "operator_strategy": "vector_loa_extension",
+          "target_node_ids": [
+            "4"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "no_structural_progress"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 1,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.3033127260789277,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 3,
+          "action_id": "extend_node_rule:337a4b78b4bb",
+          "abstract_rule_id": "extend_node",
+          "abstract_rule_name": "ExtendNodeRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "extend_node_rule",
+          "operator_strategy": "vector_loa_extension",
+          "target_node_ids": [
+            "5"
+          ],
+          "target_edge_ids": [],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "outside_bounds"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 1,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.4765969541523556,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 4,
+          "action_id": "triangle_closure_rule:4939c2c9fbc4",
+          "abstract_rule_id": "close_structure",
+          "abstract_rule_name": "CloseStructureRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "triangle_closure_rule",
+          "operator_strategy": "triangle_closure_strategy",
+          "target_node_ids": [
+            "4",
+            "5"
+          ],
+          "target_edge_ids": [
+            [
+              "4",
+              "5"
+            ]
+          ],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "crossing_introduced"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 2,
+            "component_delta": 0,
+            "closure_progress": true,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 0,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.8335196665979687,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 5,
+          "action_id": "triangle_closure_rule:7c06603341b4",
+          "abstract_rule_id": "close_structure",
+          "abstract_rule_name": "CloseStructureRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "triangle_closure_rule",
+          "operator_strategy": "triangle_closure_strategy",
+          "target_node_ids": [
+            "4",
+            "5"
+          ],
+          "target_edge_ids": [
+            [
+              "4",
+              "5"
+            ]
+          ],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "crossing_introduced"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 2,
+            "component_delta": 0,
+            "closure_progress": true,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 0,
+            "added_edge_count": 1,
+            "added_edge_length_total": 1.8335196665979687,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "index": 6,
+          "action_id": "triangle_closure_rule:9e150c23cdda",
+          "abstract_rule_id": "close_structure",
+          "abstract_rule_name": "CloseStructureRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "triangle_closure_rule",
+          "operator_strategy": "triangle_closure_strategy",
+          "target_node_ids": [
+            "0",
+            "3"
+          ],
+          "target_edge_ids": [
+            [
+              "0",
+              "3"
+            ]
+          ],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "duplicate_edge"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 0,
+            "added_edge_count": 0,
+            "added_edge_length_total": 0.0,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1
+            ]
+          }
+        },
+        {
+          "index": 7,
+          "action_id": "triangle_closure_rule:65bf0ae2bd16",
+          "abstract_rule_id": "close_structure",
+          "abstract_rule_name": "CloseStructureRule",
+          "method_family": "vector_gs",
+          "implementation_rule_name": "triangle_closure_rule",
+          "operator_strategy": "triangle_closure_strategy",
+          "target_node_ids": [
+            "0",
+            "3"
+          ],
+          "target_edge_ids": [
+            [
+              "0",
+              "3"
+            ]
+          ],
+          "mask": 0,
+          "metadata": {
+            "admissible": false,
+            "reason_codes": [
+              "duplicate_edge"
+            ],
+            "residual_before": 10.0,
+            "residual_after": 10.0,
+            "residual_delta": 0.0,
+            "support_distance_before": 0.9433711832765274,
+            "support_distance_after": 0.9433711832765274,
+            "support_distance_delta": 0.0,
+            "support_hops_before": 1,
+            "support_hops_after": 1,
+            "support_hops_delta": 0,
+            "support_reachable_before": 2,
+            "support_reachable_after": 2,
+            "support_reachable_delta": 0,
+            "temp_force_before": 2,
+            "temp_force_after": 2,
+            "temp_force_delta": 0,
+            "triangle_delta": 0,
+            "component_delta": 0,
+            "closure_progress": false,
+            "created_support_connection": false,
+            "plausibility_pass": true,
+            "added_node_count": 0,
+            "added_edge_count": 0,
+            "added_edge_length_total": 0.0,
+            "rank_tuple": [
+              0.0,
+              0.0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1
+            ]
+          }
+        }
+      ]
+    },
+    "selected_action_id": null,
+    "selected_action_summary": null,
+    "policy_decision_summary": {
+      "policy_name": "random",
+      "selected_action_id": null,
+      "selected_index": null,
+      "admissible_action_ids": [],
+      "weights": {},
+      "scores": {},
+      "metadata": {}
+    },
+    "notes": "terminated_no_admissible_candidate"
+  }
+]

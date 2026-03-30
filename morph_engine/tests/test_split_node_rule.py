@@ -48,3 +48,23 @@ def test_split_node_rule_branch_angles_correct():
 
     angle = acos(max(-1.0, min(1.0, _dot(v1, v2) / (_mag(v1) * _mag(v2)))))
     assert abs(angle - 2.0 * theta) < 1e-9
+
+
+def test_split_node_rule_decomposes_force_across_branches():
+    graph = StructuralGraph()
+    graph.add_node("0", (0.0, 0.0, 0.0), fixed=[0, 0, 0])
+    graph.set_temp_force("0", [0.0, -10.0, 0.0])
+
+    theta = pi / 6.0
+    rule = SplitNodeRule(theta_min=theta, theta_max=theta, length=2.0, seed=0)
+    candidate = rule.propose(graph)[0]
+    new_graph = rule.apply(graph, candidate.payload)
+
+    branch_keys = sorted([str(k) for k in new_graph.network.nodes() if str(k) != "0"])
+    force_a = new_graph.get_temp_force(branch_keys[0])
+    force_b = new_graph.get_temp_force(branch_keys[1])
+
+    assert force_a != [0.0, -10.0, 0.0]
+    assert force_b != [0.0, -10.0, 0.0]
+    assert abs(force_a[0] + force_b[0]) < 1e-9
+    assert abs((force_a[1] + force_b[1]) - (-10.0)) < 1e-9

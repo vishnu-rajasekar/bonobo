@@ -1,5 +1,14 @@
 # SEMANTIC_CONTRACT_V1
 
+Status: transitional/reference
+
+This document is benchmark-facing and narrower than the canonical architecture docs.
+
+For current benchmark geometry and scenario truth, prefer:
+- [BENCHMARK_MITCHELL_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/BENCHMARK_MITCHELL_V1.md)
+- [RL_INTERFACE_FREEZE_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RL_INTERFACE_FREEZE_V1.md)
+- [RUNTIME_GRAMMAR_ALIGNMENT_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md)
+
 ## Purpose of the Contract
 Freeze benchmark-level meanings for the Michell-style planar benchmark so implementation work can remain bounded, comparable across runs, and explicit about what is canonical versus interpretive.
 
@@ -11,13 +20,14 @@ Freeze benchmark-level meanings for the Michell-style planar benchmark so implem
 
 ## load
 - A load is an externally applied force recorded in `loadcases`.
-- In the current workflow, the canonical benchmark uses one point load at `(0, 4)` with vector `(0, -10)`.
+- In the current workflow, the primary `v1` benchmark uses one point load at `(5, 2)` with vector `(0, -10)`.
 - Load is engine truth, not a viewer-only concept.
 
 ## support
 - A support is a node with restrained degrees of freedom described by a support mask such as `fixed = [ux, uy, uz]`.
-- For benchmark framing, support A is intended as a pin and support B as a roller.
-- If the current implementation does not yet fully express that distinction, the gap should be treated as benchmark alignment work rather than hidden reinterpretation.
+- For benchmark framing, the primary `v1` case is a cantilever-style root condition on the left side of the domain.
+- The current implementation approximates that root condition with discrete fixed support nodes rather than a continuous boundary.
+- That approximation should be treated as benchmark alignment work rather than hidden reinterpretation.
 
 ## reaction
 - A reaction is currently an evaluator-derived constrained component absorbed from `temp_force` at restrained DOF.

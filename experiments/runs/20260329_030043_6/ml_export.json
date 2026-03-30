@@ -1,0 +1,92 @@
+{
+  "node_ids": [
+    "0",
+    "1",
+    "2",
+    "3"
+  ],
+  "node_feature_names": [
+    "x",
+    "y",
+    "is_support",
+    "is_load",
+    "degree",
+    "incident_temp_force_count"
+  ],
+  "node_features": [
+    [
+      -5.0,
+      0.0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      -5.0,
+      4.0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      5.0,
+      2.0,
+      0,
+      1,
+      1,
+      0
+    ],
+    [
+      -5.0,
+      2.0,
+      0,
+      0,
+      1,
+      1
+    ]
+  ],
+  "edge_index": [
+    [
+      2,
+      3
+    ]
+  ],
+  "edge_feature_names": [
+    "length",
+    "dx",
+    "dy",
+    "is_accepted_member",
+    "is_temp_force_related",
+    "provisional_force_mag_if_available"
+  ],
+  "edge_features": [
+    [
+      10.0,
+      -10.0,
+      0.0,
+      1,
+      1,
+      10.0
+    ]
+  ],
+  "global_feature_names": [
+    "residual_magnitude",
+    "node_count",
+    "edge_count",
+    "temp_force_count",
+    "crossing_edge_count",
+    "overlapping_edge_count",
+    "connected_components_count"
+  ],
+  "global_features": [
+    10.0,
+    4,
+    1,
+    1,
+    0,
+    0,
+    3
+  ]
+}

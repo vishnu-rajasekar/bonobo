@@ -1,0 +1,75 @@
+{
+  "node_coordinates": {
+    "0": [
+      -5.0,
+      0.0,
+      0.0
+    ],
+    "1": [
+      -5.0,
+      4.0,
+      0.0
+    ],
+    "2": [
+      5.0,
+      2.0,
+      0.0
+    ],
+    "3": [
+      5.0,
+      0.04396572811075061,
+      0.0
+    ]
+  },
+  "edge_endpoint_ids": [
+    [
+      "2",
+      "3"
+    ]
+  ],
+  "edge_lengths": [
+    {
+      "u": "2",
+      "v": "3",
+      "length": 1.9560342718892494
+    }
+  ],
+  "edge_direction_vectors": [
+    {
+      "u": "2",
+      "v": "3",
+      "direction": [
+        0.0,
+        -1.9560342718892494,
+        0.0
+      ]
+    }
+  ],
+  "node_degree_histogram": {
+    "0": 2,
+    "1": 2
+  },
+  "connected_component_count": 3,
+  "duplicate_nodes": [],
+  "duplicate_node_count": 0,
+  "duplicate_edges": [],
+  "duplicate_edge_count": 0,
+  "overlapping_edges": [],
+  "overlapping_edge_count": 0,
+  "crossing_edges": [],
+  "crossing_edge_count": 0,
+  "minimum_node_distance": 1.9560342718892494,
+  "triangle_count": 0,
+  "bounding_box": {
+    "min": [
+      -5.0,
+      0.0,
+      0.0
+    ],
+    "max": [
+      5.0,
+      4.0,
+      0.0
+    ]
+  }
+}

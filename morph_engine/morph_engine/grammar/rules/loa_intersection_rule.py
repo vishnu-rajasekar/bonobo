@@ -1,9 +1,17 @@
+"""Provisional compatibility module for vector-GS LOA intersection strategy.
+
+This file remains in `grammar/rules/` to preserve current runtime imports and
+benchmark/test compatibility. Architecturally, LOA intersection is treated as a
+vector graphic-statics operator/strategy, not as a canonical top-level abstract
+grammar rule intent.
+"""
+
 from morph_engine.grammar.actions import Action
 from morph_engine.grammar.operators.base import clone_graph
-from morph_engine.grammar.operators.base import next_node_key
 from morph_engine.grammar.operators.force_ops import bidirected_ray_intersection
 from morph_engine.grammar.operators.force_ops import directed_ray_intersection
 from morph_engine.grammar.operators.force_ops import get_line_of_action
+from morph_engine.grammar.operators.node_ops import connect_two_forces
 from morph_engine.grammar.operators.node_ops import get_active_nodes
 
 
@@ -47,14 +55,12 @@ class LOAIntersectionRule:
         return actions
 
     def apply(self, graph, payload):
-        new_graph = clone_graph(graph)
-        node_a = payload["node_a"]
-        node_b = payload["node_b"]
-        new_node = next_node_key(new_graph.network)
-        new_graph.add_node(new_node, payload["intersection"], fixed=[0, 0, 0])
-        new_graph.add_edge(node_a, new_node, family="bar")
-        new_graph.add_edge(node_b, new_node, family="bar")
-        new_graph.set_temp_force(node_a, [0.0, 0.0, 0.0])
-        new_graph.set_temp_force(node_b, [0.0, 0.0, 0.0])
-        new_graph.set_temp_force(new_node, [0.0, 0.0, 0.0])
-        return new_graph
+        connected = connect_two_forces(
+            graph,
+            payload["node_a"],
+            payload["node_b"],
+            bidirectional=self.bidirectional,
+        )
+        if connected is None:
+            return clone_graph(graph)
+        return connected

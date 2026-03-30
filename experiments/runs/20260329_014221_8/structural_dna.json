@@ -1,0 +1,32 @@
+{
+  "rule_sequence": [
+    "split_node_rule"
+  ],
+  "rule_counts": {
+    "split_node_rule": 1
+  },
+  "residual_history": [
+    10.0,
+    10.0
+  ],
+  "node_count_history": [
+    3,
+    5
+  ],
+  "edge_count_history": [
+    0,
+    2
+  ],
+  "temp_force_count_history": [
+    1,
+    2
+  ],
+  "support_distance_history": [
+    10.198039027185569,
+    9.18360931585369
+  ],
+  "support_connectivity_history": [
+    null,
+    null
+  ]
+}

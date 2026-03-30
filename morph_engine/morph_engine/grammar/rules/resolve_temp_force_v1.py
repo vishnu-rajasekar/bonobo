@@ -1,3 +1,10 @@
+"""Provisional compatibility module for legacy temp-force propagation.
+
+This file remains in `grammar/rules/` for legacy scripts and tests. It is not
+part of the frozen top-level abstract grammar vocabulary and should be treated
+as vector-GS-era compatibility logic rather than long-term grammar truth.
+"""
+
 from morph_engine.grammar.actions import Action
 from morph_engine.grammar.operators.base import clone_graph
 from morph_engine.grammar.operators.base import next_node_key

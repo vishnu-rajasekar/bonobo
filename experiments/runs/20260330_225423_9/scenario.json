@@ -1,0 +1,87 @@
+{
+  "scenario_name": "mitchell_planar_benchmark_v1",
+  "seed": 4,
+  "planar_bounds": {
+    "min": [
+      -6.0,
+      -1.0
+    ],
+    "max": [
+      6.0,
+      6.0
+    ]
+  },
+  "support_locations": [
+    {
+      "node": "0",
+      "xyz": [
+        -5.0,
+        0.0,
+        0.0
+      ],
+      "fixed": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "node": "1",
+      "xyz": [
+        -5.0,
+        4.0,
+        0.0
+      ],
+      "fixed": [
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "load_location": {
+    "node": "2",
+    "xyz": [
+      5.0,
+      2.0,
+      0.0
+    ]
+  },
+  "load_vector": [
+    0.0,
+    -10.0,
+    0.0
+  ],
+  "load_magnitude": 10.0,
+  "seed_support_to_load_edges": false,
+  "max_iterations": 12,
+  "enabled_rules": [
+    "split_node_rule",
+    "extend_node_rule",
+    "triangle_closure_rule",
+    "loa_intersection_rule",
+    "single_node_root_link_rule"
+  ],
+  "rule_settings": {
+    "split_node_rule": {
+      "theta_min": 0.35,
+      "theta_max": 0.65,
+      "length": 2.0
+    },
+    "extend_node_rule": {
+      "lmin": 1.0,
+      "lmax": 2.0
+    },
+    "triangle_closure_rule": {
+      "radius": 6.0
+    },
+    "loa_intersection_rule": {}
+  },
+  "evaluator_settings": {
+    "unbalanced_force_eps": 1e-06,
+    "global_equilibrium_tolerance": 1e-06
+  },
+  "policy_name": "heuristic",
+  "policy_settings": {},
+  "selection_policy": "heuristic"
+}

@@ -1,0 +1,42 @@
+{
+  "iterations": 12,
+  "seed": 3,
+  "scenario_name": "mitchell_planar_benchmark_v1",
+  "policy_name": "weighted_random",
+  "policy_settings": {
+    "rule_weights": {
+      "extend_node": 1.5,
+      "split_node": 1.0,
+      "connect_two_nodes": 1.2,
+      "extend_and_connect_two_nodes": 1.2,
+      "close_structure": 1.1
+    },
+    "operator_weights": {
+      "vector_loa_extension": 1.4,
+      "direct_two_force_connection": 1.1,
+      "triangle_closure_strategy": 1.05
+    }
+  },
+  "selection_policy": "weighted_random",
+  "selection_top_band_size": null,
+  "enabled_rules": [
+    "split_node_rule",
+    "extend_node_rule",
+    "triangle_closure_rule",
+    "loa_intersection_rule"
+  ],
+  "evaluator_settings": {
+    "unbalanced_force_eps": 1e-06,
+    "global_equilibrium_tolerance": 1e-06
+  },
+  "planar_bounds": {
+    "min": [
+      -6.0,
+      -1.0
+    ],
+    "max": [
+      6.0,
+      6.0
+    ]
+  }
+}

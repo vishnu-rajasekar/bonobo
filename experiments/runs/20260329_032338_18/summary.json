@@ -1,0 +1,96 @@
+{
+  "scenario_name": "mitchell_planar_benchmark_v1",
+  "seed": 3,
+  "policy_name": "weighted_random",
+  "iterations_executed": 6,
+  "final_node_count": 6,
+  "final_edge_count": 7,
+  "final_temp_force_count": 1,
+  "final_unresolved_force_magnitude": 5.739578495484205,
+  "final_residual_magnitude": 5.739578495484205,
+  "global_equilibrium_valid": false,
+  "residual_history": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    5.739578495484205
+  ],
+  "unresolved_force_magnitude_history": [
+    10.0,
+    10.0,
+    11.47915699096841,
+    11.47915699096841,
+    11.47915699096841,
+    11.47915699096841,
+    5.739578495484205
+  ],
+  "absorbed_magnitude_history": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    5.739578495484205
+  ],
+  "rule_sequence": [
+    "extend_node_rule",
+    "split_node_rule",
+    "triangle_closure_rule",
+    "triangle_closure_rule",
+    "triangle_closure_rule",
+    "single_node_root_link_rule"
+  ],
+  "rule_counts": {
+    "extend_node_rule": 1,
+    "split_node_rule": 1,
+    "triangle_closure_rule": 3,
+    "single_node_root_link_rule": 1
+  },
+  "duplicate_node_count": 0,
+  "duplicate_edge_count": 0,
+  "overlapping_edge_count": 0,
+  "crossing_edge_count": 0,
+  "two_member_non_collinear_joint_count": 0,
+  "support_distance_history": [
+    10.198039027185569,
+    10.02899286616374,
+    9.071065543481492,
+    9.071065543481492,
+    9.071065543481492,
+    9.071065543481492,
+    11.02571651691909
+  ],
+  "support_connectivity_history": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    2
+  ],
+  "support_trend": {
+    "accepted_steps_closer_to_support": 2,
+    "accepted_steps_farther_from_all_supports": 1,
+    "accepted_steps_improved_support_connectivity": 1,
+    "accepted_steps_improved_residual": 1
+  },
+  "termination_reason": "no_admissible_candidate",
+  "artifact_paths": {
+    "scenario": "experiments/runs/20260329_032338_18/scenario.json",
+    "config": "experiments/runs/20260329_032338_18/config.json",
+    "final_graph": "experiments/runs/20260329_032338_18/final_graph.json",
+    "trace": "experiments/runs/20260329_032338_18/trace.json",
+    "metrics": "experiments/runs/20260329_032338_18/metrics.json",
+    "structural_dna": "experiments/runs/20260329_032338_18/structural_dna.json",
+    "graph_descriptors": "experiments/runs/20260329_032338_18/graph_descriptors.json",
+    "accepted_graph_digest": "experiments/runs/20260329_032338_18/accepted_graph_digest.json",
+    "explored_geometry_digest": "experiments/runs/20260329_032338_18/explored_geometry_digest.json",
+    "ml_export": "experiments/runs/20260329_032338_18/ml_export.json",
+    "trace_excerpt": "experiments/runs/20260329_032338_18/trace_excerpt.json"
+  }
+}

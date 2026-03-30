@@ -3,7 +3,7 @@
     "mode": "A",
     "label": "current_active_rules",
     "scenario_name": "mitchell_planar_benchmark_v1_mode_a",
-    "run_dir": "experiments/runs/20260328_230316",
+    "run_dir": "experiments/runs/20260329_011329",
     "iterations_executed": 1,
     "rule_sequence": [
       "extend_node_rule"
@@ -26,7 +26,7 @@
     "mode": "B",
     "label": "current_rules_plus_resolve_two_forces",
     "scenario_name": "mitchell_planar_benchmark_v1_mode_b",
-    "run_dir": "experiments/runs/20260328_230316_1",
+    "run_dir": "experiments/runs/20260329_011329_1",
     "iterations_executed": 1,
     "rule_sequence": [
       "extend_node_rule"
@@ -49,7 +49,7 @@
     "mode": "C",
     "label": "current_rules_plus_bidirectional_loa",
     "scenario_name": "mitchell_planar_benchmark_v1_mode_c",
-    "run_dir": "experiments/runs/20260328_230316_2",
+    "run_dir": "experiments/runs/20260329_011329_2",
     "iterations_executed": 1,
     "rule_sequence": [
       "extend_node_rule"
@@ -72,7 +72,7 @@
     "mode": "D",
     "label": "current_rules_plus_single_node_root_link",
     "scenario_name": "mitchell_planar_benchmark_v1_mode_d",
-    "run_dir": "experiments/runs/20260328_230316_3",
+    "run_dir": "experiments/runs/20260329_011329_3",
     "iterations_executed": 1,
     "rule_sequence": [
       "extend_node_rule"

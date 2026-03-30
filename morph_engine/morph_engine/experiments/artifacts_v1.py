@@ -69,6 +69,15 @@ def count_temp_force_nodes(graph, eps=1e-12):
     return count
 
 
+def total_temp_force_magnitude(graph, eps=1e-12):
+    total = 0.0
+    for key in graph.network.nodes():
+        magnitude = _vector_magnitude(_temp_force(graph, key))
+        if magnitude > eps:
+            total += magnitude
+    return total
+
+
 def graph_state_id(graph):
     payload = json.dumps(graph.to_json(), sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha1(payload).hexdigest()[:12]
@@ -79,6 +88,7 @@ def graph_counts(graph):
         "node_count": len(list(graph.network.nodes())),
         "edge_count": len(list(graph.network.edges())),
         "temp_force_count": count_temp_force_nodes(graph),
+        "total_temp_force_magnitude": total_temp_force_magnitude(graph),
     }
 
 
@@ -492,6 +502,7 @@ def benchmark_graph_diagnostics(graph, bounds, tolerance=1e-6):
         "nearest_support_hops": support_metrics["nearest_support_hops"],
         "support_reachable_path_count": support_metrics["support_reachable_path_count"],
         "active_temp_force_node_ids": support_metrics["active_temp_force_node_ids"],
+        "total_temp_force_magnitude": total_temp_force_magnitude(graph, eps=tolerance),
         "graph_descriptors": descriptors,
     }
 

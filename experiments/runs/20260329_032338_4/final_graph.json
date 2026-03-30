@@ -1,0 +1,246 @@
+{
+  "schema": "StructuralGraph",
+  "version": "0.3",
+  "metadata": {
+    "stage": 0,
+    "units": "meters",
+    "profile": "planar_truss",
+    "assumptions": {
+      "dimension": 3,
+      "behavior": "axial_only"
+    },
+    "boundary": {
+      "type": "polygon_xy",
+      "xy": [
+        [
+          -6.0,
+          -1.0
+        ],
+        [
+          6.0,
+          -1.0
+        ],
+        [
+          6.0,
+          6.0
+        ],
+        [
+          -6.0,
+          6.0
+        ]
+      ]
+    },
+    "loadcases": [
+      {
+        "node": "2",
+        "vector": [
+          0.0,
+          -10.0,
+          0.0
+        ]
+      }
+    ],
+    "targets": [],
+    "channels": {
+      "enabled": [
+        "reaction_absorption_v1",
+        "unbalanced_force_v1",
+        "global_equilibrium_v1"
+      ]
+    }
+  },
+  "nodes": {
+    "0": {
+      "xyz": [
+        -5.0,
+        0.0,
+        0.0
+      ],
+      "fixed": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "1": {
+      "xyz": [
+        -5.0,
+        4.0,
+        0.0
+      ],
+      "fixed": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "2": {
+      "xyz": [
+        5.0,
+        2.0,
+        0.0
+      ],
+      "fixed": [
+        0,
+        0,
+        0
+      ],
+      "attributes": {
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "3": {
+      "xyz": [
+        -5.0,
+        2.0,
+        0.0
+      ],
+      "fixed": [
+        0,
+        0,
+        0
+      ],
+      "attributes": {
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "4": {
+      "xyz": [
+        -4.256395285646225,
+        0.143376174667889,
+        0.0
+      ],
+      "fixed": [
+        0,
+        0,
+        0
+      ],
+      "attributes": {
+        "temp_force": [
+          2.002572368747771,
+          -5.0,
+          0.0
+        ]
+      }
+    },
+    "5": {
+      "xyz": [
+        -5.743604714353775,
+        0.143376174667889,
+        0.0
+      ],
+      "fixed": [
+        0,
+        0,
+        0
+      ],
+      "attributes": {
+        "temp_force": [
+          -2.002572368747771,
+          -5.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "edges": [
+    {
+      "u": "2",
+      "v": "3",
+      "family": "bar",
+      "attributes": {}
+    },
+    {
+      "u": "3",
+      "v": "4",
+      "family": "bar",
+      "attributes": {
+        "force": {
+          "kind": "member",
+          "vector": [
+            2.002572368747771,
+            -5.0,
+            0.0
+          ],
+          "magnitude": 5.386120690448002,
+          "direction": [
+            0.3718023571768873,
+            -0.9283119126660555,
+            0.0
+          ],
+          "source_node": "3",
+          "target_edge": [
+            "3",
+            "4"
+          ],
+          "metadata": {
+            "semantic_origin": "split_node",
+            "branch": "a",
+            "theta": 0.3809498102692147,
+            "incident_member_count_before": 1
+          }
+        }
+      }
+    },
+    {
+      "u": "3",
+      "v": "5",
+      "family": "bar",
+      "attributes": {
+        "force": {
+          "kind": "member",
+          "vector": [
+            -2.002572368747771,
+            -5.0,
+            0.0
+          ],
+          "magnitude": 5.386120690448002,
+          "direction": [
+            -0.3718023571768873,
+            -0.9283119126660555,
+            0.0
+          ],
+          "source_node": "3",
+          "target_edge": [
+            "3",
+            "5"
+          ],
+          "metadata": {
+            "semantic_origin": "split_node",
+            "branch": "b",
+            "theta": -0.3809498102692147,
+            "incident_member_count_before": 1
+          }
+        }
+      }
+    },
+    {
+      "u": "4",
+      "v": "5",
+      "family": "bar",
+      "attributes": {}
+    }
+  ]
+}

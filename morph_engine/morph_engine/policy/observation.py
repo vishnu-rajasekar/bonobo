@@ -44,7 +44,8 @@ class PolicyObservation:
     global_features: PolicyGlobalObservation
     node_features: list[PolicyNodeObservation]
     edge_features: list[PolicyEdgeObservation]
-    action_mask: list[str] = field(default_factory=list)
+    action_ids: list[str] = field(default_factory=list)
+    action_mask: list[int] = field(default_factory=list)
 
 
 def _node_xyz(graph, node_key):
@@ -73,7 +74,7 @@ def _load_nodes(graph):
     return sorted({str(load.get("node")) for load in graph.get_loads() if load.get("node") is not None})
 
 
-def extract_policy_observation(state, applicable_actions=None, phase=None):
+def extract_policy_observation(state, applicable_actions=None, action_bundle=None, phase=None):
     graph = state
     support_nodes = set(_support_nodes(graph))
     load_nodes = set(_load_nodes(graph))
@@ -141,9 +142,19 @@ def extract_policy_observation(state, applicable_actions=None, phase=None):
         },
     )
 
+    action_ids = []
+    action_mask = []
+    if action_bundle is not None:
+        action_ids = [action.action_id for action in action_bundle.actions]
+        action_mask = [int(value) for value in action_bundle.mask]
+    elif applicable_actions is not None:
+        action_ids = [getattr(action, "action_id", getattr(action, "rule_name", "")) for action in applicable_actions]
+        action_mask = [1] * len(action_ids)
+
     return PolicyObservation(
         global_features=global_features,
         node_features=node_features,
         edge_features=edge_features,
-        action_mask=[getattr(action, "action_id", getattr(action, "rule_name", "")) for action in (applicable_actions or [])],
+        action_ids=action_ids,
+        action_mask=action_mask,
     )

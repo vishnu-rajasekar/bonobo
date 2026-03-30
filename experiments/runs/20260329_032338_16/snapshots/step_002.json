@@ -1,0 +1,221 @@
+{
+  "schema": "StructuralGraph",
+  "version": "0.3",
+  "metadata": {
+    "stage": 0,
+    "units": "meters",
+    "profile": "planar_truss",
+    "assumptions": {
+      "dimension": 3,
+      "behavior": "axial_only"
+    },
+    "boundary": {
+      "type": "polygon_xy",
+      "xy": [
+        [
+          -6.0,
+          -1.0
+        ],
+        [
+          6.0,
+          -1.0
+        ],
+        [
+          6.0,
+          6.0
+        ],
+        [
+          -6.0,
+          6.0
+        ]
+      ]
+    },
+    "loadcases": [
+      {
+        "node": "2",
+        "vector": [
+          0.0,
+          -10.0,
+          0.0
+        ]
+      }
+    ],
+    "targets": [],
+    "channels": {
+      "enabled": [
+        "reaction_absorption_v1",
+        "unbalanced_force_v1",
+        "global_equilibrium_v1"
+      ]
+    }
+  },
+  "nodes": {
+    "0": {
+      "xyz": [
+        -5.0,
+        0.0,
+        0.0
+      ],
+      "fixed": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "1": {
+      "xyz": [
+        -5.0,
+        4.0,
+        0.0
+      ],
+      "fixed": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "2": {
+      "xyz": [
+        5.0,
+        2.0,
+        0.0
+      ],
+      "fixed": [
+        0,
+        0,
+        0
+      ],
+      "attributes": {
+        "temp_force": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "3": {
+      "xyz": [
+        5.760948893103885,
+        0.1504171329502504,
+        0.0
+      ],
+      "fixed": [
+        0,
+        0,
+        0
+      ],
+      "attributes": {
+        "temp_force": [
+          2.057082455347531,
+          -5.0,
+          0.0
+        ]
+      }
+    },
+    "4": {
+      "xyz": [
+        4.239051106896115,
+        0.1504171329502504,
+        0.0
+      ],
+      "fixed": [
+        0,
+        0,
+        0
+      ],
+      "attributes": {
+        "temp_force": [
+          -2.057082455347531,
+          -5.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "edges": [
+    {
+      "u": "2",
+      "v": "3",
+      "family": "bar",
+      "attributes": {
+        "force": {
+          "kind": "member",
+          "vector": [
+            2.057082455347531,
+            -5.0,
+            0.0
+          ],
+          "magnitude": 5.4066244763344375,
+          "direction": [
+            0.3804744465519425,
+            -0.9247914335248748,
+            0.0
+          ],
+          "source_node": "2",
+          "target_edge": [
+            "2",
+            "3"
+          ],
+          "metadata": {
+            "semantic_origin": "split_node",
+            "branch": "a",
+            "theta": 0.39030927323372033,
+            "incident_member_count_before": 0
+          }
+        }
+      }
+    },
+    {
+      "u": "2",
+      "v": "4",
+      "family": "bar",
+      "attributes": {
+        "force": {
+          "kind": "member",
+          "vector": [
+            -2.057082455347531,
+            -5.0,
+            0.0
+          ],
+          "magnitude": 5.4066244763344375,
+          "direction": [
+            -0.3804744465519425,
+            -0.9247914335248748,
+            0.0
+          ],
+          "source_node": "2",
+          "target_edge": [
+            "2",
+            "4"
+          ],
+          "metadata": {
+            "semantic_origin": "split_node",
+            "branch": "b",
+            "theta": -0.39030927323372033,
+            "incident_member_count_before": 0
+          }
+        }
+      }
+    },
+    {
+      "u": "3",
+      "v": "4",
+      "family": "bar",
+      "attributes": {}
+    }
+  ]
+}

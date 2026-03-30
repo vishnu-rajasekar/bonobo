@@ -1,0 +1,77 @@
+{
+  "scenario_name": "mitchell_planar_benchmark_v1",
+  "seed": 4,
+  "policy_name": "heuristic",
+  "iterations_executed": 3,
+  "final_node_count": 6,
+  "final_edge_count": 4,
+  "final_temp_force_count": 2,
+  "final_unresolved_force_magnitude": 10.772241380896004,
+  "final_residual_magnitude": 10.0,
+  "global_equilibrium_valid": false,
+  "residual_history": [
+    10.0,
+    10.0,
+    10.0,
+    10.0
+  ],
+  "unresolved_force_magnitude_history": [
+    10.0,
+    10.0,
+    10.772241380896004,
+    10.772241380896004
+  ],
+  "absorbed_magnitude_history": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "rule_sequence": [
+    "single_node_root_link_rule",
+    "split_node_rule",
+    "triangle_closure_rule"
+  ],
+  "rule_counts": {
+    "single_node_root_link_rule": 1,
+    "split_node_rule": 1,
+    "triangle_closure_rule": 1
+  },
+  "duplicate_node_count": 0,
+  "duplicate_edge_count": 0,
+  "overlapping_edge_count": 0,
+  "crossing_edge_count": 0,
+  "two_member_non_collinear_joint_count": 0,
+  "support_distance_history": [
+    10.198039027185569,
+    2.0,
+    0.7573009300611983,
+    0.7573009300611983
+  ],
+  "support_connectivity_history": [
+    null,
+    null,
+    null,
+    null
+  ],
+  "support_trend": {
+    "accepted_steps_closer_to_support": 2,
+    "accepted_steps_farther_from_all_supports": 0,
+    "accepted_steps_improved_support_connectivity": 0,
+    "accepted_steps_improved_residual": 0
+  },
+  "termination_reason": "no_admissible_candidate",
+  "artifact_paths": {
+    "scenario": "experiments/runs/20260330_225423_9/scenario.json",
+    "config": "experiments/runs/20260330_225423_9/config.json",
+    "final_graph": "experiments/runs/20260330_225423_9/final_graph.json",
+    "trace": "experiments/runs/20260330_225423_9/trace.json",
+    "metrics": "experiments/runs/20260330_225423_9/metrics.json",
+    "structural_dna": "experiments/runs/20260330_225423_9/structural_dna.json",
+    "graph_descriptors": "experiments/runs/20260330_225423_9/graph_descriptors.json",
+    "accepted_graph_digest": "experiments/runs/20260330_225423_9/accepted_graph_digest.json",
+    "explored_geometry_digest": "experiments/runs/20260330_225423_9/explored_geometry_digest.json",
+    "ml_export": "experiments/runs/20260330_225423_9/ml_export.json",
+    "trace_excerpt": "experiments/runs/20260330_225423_9/trace_excerpt.json"
+  }
+}

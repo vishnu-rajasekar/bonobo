@@ -1,0 +1,1315 @@
+{
+  "study_name": "policy_baseline_study_v1",
+  "scenario_name": "mitchell_planar_benchmark_v1",
+  "seed_count": 5,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "policies_compared": [
+    "benchmark_ranked",
+    "heuristic",
+    "random",
+    "weighted_random"
+  ],
+  "per_policy": [
+    {
+      "policy_name": "benchmark_ranked",
+      "policy_label": "default_benchmark_policy",
+      "policy_settings": {},
+      "aggregate_metrics": {
+        "run_count": 5,
+        "accepted_step_count": {
+          "min": 1,
+          "max": 3,
+          "mean": 1.8
+        },
+        "equilibrium_count": 0,
+        "support_path_exists_count": 0,
+        "plausibility_pass_count": 5,
+        "termination_reason_distribution": {
+          "no_admissible_candidate": 5
+        },
+        "invalid_joint_rejection": {
+          "runs_with_invalid_joint_rejection": 5,
+          "total_count": 10,
+          "mean_per_run": 2.0
+        },
+        "action_rule_diversity": {
+          "unique_rules_observed": [
+            "single_node_root_link_rule",
+            "split_node_rule",
+            "triangle_closure_rule"
+          ],
+          "mean_unique_rules_per_run": 1.8
+        },
+        "mean_final_node_count": 4.8,
+        "mean_final_edge_count": 2.2,
+        "mean_final_residual_magnitude": 10.0,
+        "mean_final_unresolved_force_magnitude": 10.450279674372883,
+        "runs_with_residual_improvement": 0,
+        "runs_with_unresolved_force_improvement": 0,
+        "support_engagement": {
+          "mean_support_distance_delta": 8.643517557782147,
+          "mean_steps_closer_to_support": 1.4,
+          "mean_steps_improved_support_connectivity": 0.0
+        }
+      },
+      "representative_runs": {
+        "best": {
+          "seed": 3,
+          "run_dir": "experiments/runs/20260330_225423_3",
+          "accepted_steps": 3,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": false,
+          "plausibility_pass": true
+        },
+        "median": {
+          "seed": 2,
+          "run_dir": "experiments/runs/20260330_225423_2",
+          "accepted_steps": 1,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": false,
+          "plausibility_pass": true
+        },
+        "failed": {
+          "seed": 0,
+          "run_dir": "experiments/runs/20260330_225423",
+          "accepted_steps": 1,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": false,
+          "plausibility_pass": true
+        }
+      },
+      "runs": [
+        {
+          "policy_name": "benchmark_ranked",
+          "policy_label": "default_benchmark_policy",
+          "seed": 0,
+          "run_dir": "experiments/runs/20260330_225423",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 1,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 4,
+          "final_edge_count": 1,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.0,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 1,
+          "support_distance_delta": 8.198039027185569,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "benchmark_ranked",
+          "policy_label": "default_benchmark_policy",
+          "seed": 1,
+          "run_dir": "experiments/runs/20260330_225423_1",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 1,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 4,
+          "final_edge_count": 1,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.0,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 1,
+          "support_distance_delta": 8.198039027185569,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "benchmark_ranked",
+          "policy_label": "default_benchmark_policy",
+          "seed": 2,
+          "run_dir": "experiments/runs/20260330_225423_2",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 1,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 4,
+          "final_edge_count": 1,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.0,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 1,
+          "support_distance_delta": 8.198039027185569,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "benchmark_ranked",
+          "policy_label": "default_benchmark_policy",
+          "seed": 3,
+          "run_dir": "experiments/runs/20260330_225423_3",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 3,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 6,
+          "final_edge_count": 4,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 11.47915699096841,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule",
+            "split_node_rule",
+            "triangle_closure_rule"
+          ],
+          "unique_rule_count": 3,
+          "support_distance_delta": 9.182732610229664,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0,
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0,
+            11.47915699096841,
+            11.47915699096841
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 2,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "benchmark_ranked",
+          "policy_label": "default_benchmark_policy",
+          "seed": 4,
+          "run_dir": "experiments/runs/20260330_225423_4",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 3,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 6,
+          "final_edge_count": 4,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.772241380896004,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule",
+            "split_node_rule",
+            "triangle_closure_rule"
+          ],
+          "unique_rule_count": 3,
+          "support_distance_delta": 9.44073809712437,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0,
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0,
+            10.772241380896004,
+            10.772241380896004
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 2,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        }
+      ]
+    },
+    {
+      "policy_name": "heuristic",
+      "policy_label": "heuristic_policy",
+      "policy_settings": {},
+      "aggregate_metrics": {
+        "run_count": 5,
+        "accepted_step_count": {
+          "min": 1,
+          "max": 3,
+          "mean": 1.8
+        },
+        "equilibrium_count": 0,
+        "support_path_exists_count": 0,
+        "plausibility_pass_count": 5,
+        "termination_reason_distribution": {
+          "no_admissible_candidate": 5
+        },
+        "invalid_joint_rejection": {
+          "runs_with_invalid_joint_rejection": 5,
+          "total_count": 10,
+          "mean_per_run": 2.0
+        },
+        "action_rule_diversity": {
+          "unique_rules_observed": [
+            "single_node_root_link_rule",
+            "split_node_rule",
+            "triangle_closure_rule"
+          ],
+          "mean_unique_rules_per_run": 1.8
+        },
+        "mean_final_node_count": 4.8,
+        "mean_final_edge_count": 2.2,
+        "mean_final_residual_magnitude": 10.0,
+        "mean_final_unresolved_force_magnitude": 10.450279674372883,
+        "runs_with_residual_improvement": 0,
+        "runs_with_unresolved_force_improvement": 0,
+        "support_engagement": {
+          "mean_support_distance_delta": 8.643517557782147,
+          "mean_steps_closer_to_support": 1.4,
+          "mean_steps_improved_support_connectivity": 0.0
+        }
+      },
+      "representative_runs": {
+        "best": {
+          "seed": 3,
+          "run_dir": "experiments/runs/20260330_225423_8",
+          "accepted_steps": 3,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": false,
+          "plausibility_pass": true
+        },
+        "median": {
+          "seed": 2,
+          "run_dir": "experiments/runs/20260330_225423_7",
+          "accepted_steps": 1,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": false,
+          "plausibility_pass": true
+        },
+        "failed": {
+          "seed": 0,
+          "run_dir": "experiments/runs/20260330_225423_5",
+          "accepted_steps": 1,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": false,
+          "plausibility_pass": true
+        }
+      },
+      "runs": [
+        {
+          "policy_name": "heuristic",
+          "policy_label": "heuristic_policy",
+          "seed": 0,
+          "run_dir": "experiments/runs/20260330_225423_5",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 1,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 4,
+          "final_edge_count": 1,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.0,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 1,
+          "support_distance_delta": 8.198039027185569,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "heuristic",
+          "policy_label": "heuristic_policy",
+          "seed": 1,
+          "run_dir": "experiments/runs/20260330_225423_6",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 1,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 4,
+          "final_edge_count": 1,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.0,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 1,
+          "support_distance_delta": 8.198039027185569,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "heuristic",
+          "policy_label": "heuristic_policy",
+          "seed": 2,
+          "run_dir": "experiments/runs/20260330_225423_7",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 1,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 4,
+          "final_edge_count": 1,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.0,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 1,
+          "support_distance_delta": 8.198039027185569,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "heuristic",
+          "policy_label": "heuristic_policy",
+          "seed": 3,
+          "run_dir": "experiments/runs/20260330_225423_8",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 3,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 6,
+          "final_edge_count": 4,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 11.47915699096841,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule",
+            "split_node_rule",
+            "triangle_closure_rule"
+          ],
+          "unique_rule_count": 3,
+          "support_distance_delta": 9.182732610229664,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0,
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0,
+            11.47915699096841,
+            11.47915699096841
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 2,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "heuristic",
+          "policy_label": "heuristic_policy",
+          "seed": 4,
+          "run_dir": "experiments/runs/20260330_225423_9",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 3,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 6,
+          "final_edge_count": 4,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.772241380896004,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule",
+            "split_node_rule",
+            "triangle_closure_rule"
+          ],
+          "unique_rule_count": 3,
+          "support_distance_delta": 9.44073809712437,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0,
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0,
+            10.772241380896004,
+            10.772241380896004
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 2,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        }
+      ]
+    },
+    {
+      "policy_name": "random",
+      "policy_label": "random_policy",
+      "policy_settings": {},
+      "aggregate_metrics": {
+        "run_count": 5,
+        "accepted_step_count": {
+          "min": 1,
+          "max": 6,
+          "mean": 2.8
+        },
+        "equilibrium_count": 0,
+        "support_path_exists_count": 3,
+        "plausibility_pass_count": 5,
+        "termination_reason_distribution": {
+          "no_admissible_candidate": 5
+        },
+        "invalid_joint_rejection": {
+          "runs_with_invalid_joint_rejection": 5,
+          "total_count": 7,
+          "mean_per_run": 1.4
+        },
+        "action_rule_diversity": {
+          "unique_rules_observed": [
+            "extend_node_rule",
+            "single_node_root_link_rule",
+            "split_node_rule",
+            "triangle_closure_rule"
+          ],
+          "mean_unique_rules_per_run": 2.4
+        },
+        "mean_final_node_count": 4.8,
+        "mean_final_edge_count": 3.4,
+        "mean_final_residual_magnitude": 7.27277185135303,
+        "mean_final_unresolved_force_magnitude": 7.272771851353032,
+        "runs_with_residual_improvement": 3,
+        "runs_with_unresolved_force_improvement": 3,
+        "support_engagement": {
+          "mean_support_distance_delta": 1.3180422361460038,
+          "mean_steps_closer_to_support": 1.2,
+          "mean_steps_improved_support_connectivity": 0.6
+        }
+      },
+      "representative_runs": {
+        "best": {
+          "seed": 4,
+          "run_dir": "experiments/runs/20260330_225424",
+          "accepted_steps": 6,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": true,
+          "plausibility_pass": true
+        },
+        "median": {
+          "seed": 1,
+          "run_dir": "experiments/runs/20260330_225423_11",
+          "accepted_steps": 3,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": true,
+          "plausibility_pass": true
+        },
+        "failed": {
+          "seed": 0,
+          "run_dir": "experiments/runs/20260330_225423_10",
+          "accepted_steps": 1,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": false,
+          "plausibility_pass": true
+        }
+      },
+      "runs": [
+        {
+          "policy_name": "random",
+          "policy_label": "random_policy",
+          "seed": 0,
+          "run_dir": "experiments/runs/20260330_225423_10",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 1,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 4,
+          "final_edge_count": 1,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.0,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 1,
+          "support_distance_delta": 8.198039027185569,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "random",
+          "policy_label": "random_policy",
+          "seed": 1,
+          "run_dir": "experiments/runs/20260330_225423_11",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 3,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 5,
+          "final_edge_count": 4,
+          "final_residual_magnitude": 5.4066244763344375,
+          "final_unresolved_force_magnitude": 5.4066244763344375,
+          "support_path_exists": true,
+          "support_path": [
+            "2",
+            "4",
+            "0"
+          ],
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 1,
+          "rule_sequence": [
+            "split_node_rule",
+            "triangle_closure_rule",
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 3,
+          "support_distance_delta": -0.5639610840334743,
+          "residual_improved": true,
+          "unresolved_force_improved": true,
+          "residual_history": [
+            10.0,
+            10.0,
+            10.0,
+            5.4066244763344375
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.813248952668875,
+            10.813248952668875,
+            5.4066244763344375
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0,
+            0.0,
+            5.4066244763344375
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 1,
+            "accepted_steps_improved_support_connectivity": 1,
+            "accepted_steps_improved_residual": 1
+          }
+        },
+        {
+          "policy_name": "random",
+          "policy_label": "random_policy",
+          "seed": 2,
+          "run_dir": "experiments/runs/20260330_225423_12",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 1,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 4,
+          "final_edge_count": 1,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.0,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 1,
+          "rule_sequence": [
+            "extend_node_rule"
+          ],
+          "unique_rule_count": 1,
+          "support_distance_delta": 0.1979423783902039,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "random",
+          "policy_label": "random_policy",
+          "seed": 3,
+          "run_dir": "experiments/runs/20260330_225423_13",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 3,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 5,
+          "final_edge_count": 4,
+          "final_residual_magnitude": 5.479322822943979,
+          "final_unresolved_force_magnitude": 5.479322822943981,
+          "support_path_exists": true,
+          "support_path": [
+            "2",
+            "4",
+            "0"
+          ],
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 1,
+          "rule_sequence": [
+            "split_node_rule",
+            "triangle_closure_rule",
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 3,
+          "support_distance_delta": -0.6214330295914259,
+          "residual_improved": true,
+          "unresolved_force_improved": true,
+          "residual_history": [
+            10.0,
+            10.0,
+            10.0,
+            5.479322822943979
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.958645645887962,
+            10.958645645887962,
+            5.479322822943981
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0,
+            0.0,
+            5.479322822943981
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 1,
+            "accepted_steps_improved_support_connectivity": 1,
+            "accepted_steps_improved_residual": 1
+          }
+        },
+        {
+          "policy_name": "random",
+          "policy_label": "random_policy",
+          "seed": 4,
+          "run_dir": "experiments/runs/20260330_225424",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 6,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 6,
+          "final_edge_count": 7,
+          "final_residual_magnitude": 5.477911957486739,
+          "final_unresolved_force_magnitude": 5.47791195748674,
+          "support_path_exists": true,
+          "support_path": [
+            "2",
+            "5",
+            "0"
+          ],
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "split_node_rule",
+            "triangle_closure_rule",
+            "extend_node_rule",
+            "triangle_closure_rule",
+            "triangle_closure_rule",
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 4,
+          "support_distance_delta": -0.6203761112208532,
+          "residual_improved": true,
+          "unresolved_force_improved": true,
+          "residual_history": [
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            5.477911957486739
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.95582391497348,
+            10.95582391497348,
+            10.95582391497348,
+            10.95582391497348,
+            10.95582391497348,
+            5.47791195748674
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.47791195748674
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 2,
+            "accepted_steps_farther_from_all_supports": 1,
+            "accepted_steps_improved_support_connectivity": 1,
+            "accepted_steps_improved_residual": 1
+          }
+        }
+      ]
+    },
+    {
+      "policy_name": "weighted_random",
+      "policy_label": "weighted_random_policy",
+      "policy_settings": {
+        "rule_weights": {
+          "extend_node": 1.5,
+          "split_node": 1.0,
+          "connect_two_nodes": 1.2,
+          "extend_and_connect_two_nodes": 1.2,
+          "close_structure": 1.1
+        },
+        "operator_weights": {
+          "vector_loa_extension": 1.4,
+          "direct_two_force_connection": 1.1,
+          "triangle_closure_strategy": 1.05
+        }
+      },
+      "aggregate_metrics": {
+        "run_count": 5,
+        "accepted_step_count": {
+          "min": 1,
+          "max": 6,
+          "mean": 2.8
+        },
+        "equilibrium_count": 0,
+        "support_path_exists_count": 2,
+        "plausibility_pass_count": 5,
+        "termination_reason_distribution": {
+          "no_admissible_candidate": 5
+        },
+        "invalid_joint_rejection": {
+          "runs_with_invalid_joint_rejection": 5,
+          "total_count": 8,
+          "mean_per_run": 1.6
+        },
+        "action_rule_diversity": {
+          "unique_rules_observed": [
+            "extend_node_rule",
+            "single_node_root_link_rule",
+            "split_node_rule",
+            "triangle_closure_rule"
+          ],
+          "mean_unique_rules_per_run": 2.2
+        },
+        "mean_final_node_count": 4.8,
+        "mean_final_edge_count": 3.2,
+        "mean_final_residual_magnitude": 8.229240594363727,
+        "mean_final_unresolved_force_magnitude": 8.229240594363727,
+        "runs_with_residual_improvement": 2,
+        "runs_with_unresolved_force_improvement": 2,
+        "support_engagement": {
+          "mean_support_distance_delta": 3.039345370154532,
+          "mean_steps_closer_to_support": 1.4,
+          "mean_steps_improved_support_connectivity": 0.4
+        }
+      },
+      "representative_runs": {
+        "best": {
+          "seed": 3,
+          "run_dir": "experiments/runs/20260330_225424_4",
+          "accepted_steps": 6,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": true,
+          "plausibility_pass": true
+        },
+        "median": {
+          "seed": 1,
+          "run_dir": "experiments/runs/20260330_225424_2",
+          "accepted_steps": 3,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": true,
+          "plausibility_pass": true
+        },
+        "failed": {
+          "seed": 0,
+          "run_dir": "experiments/runs/20260330_225424_1",
+          "accepted_steps": 1,
+          "termination_reason": "no_admissible_candidate",
+          "equilibrium_reached": false,
+          "support_path_exists": false,
+          "plausibility_pass": true
+        }
+      },
+      "runs": [
+        {
+          "policy_name": "weighted_random",
+          "policy_label": "weighted_random_policy",
+          "seed": 0,
+          "run_dir": "experiments/runs/20260330_225424_1",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 1,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 4,
+          "final_edge_count": 1,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.0,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 1,
+          "support_distance_delta": 8.198039027185569,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "weighted_random",
+          "policy_label": "weighted_random_policy",
+          "seed": 1,
+          "run_dir": "experiments/runs/20260330_225424_2",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 3,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 5,
+          "final_edge_count": 4,
+          "final_residual_magnitude": 5.4066244763344375,
+          "final_unresolved_force_magnitude": 5.4066244763344375,
+          "support_path_exists": true,
+          "support_path": [
+            "2",
+            "4",
+            "0"
+          ],
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 1,
+          "rule_sequence": [
+            "split_node_rule",
+            "triangle_closure_rule",
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 3,
+          "support_distance_delta": -0.5639610840334743,
+          "residual_improved": true,
+          "unresolved_force_improved": true,
+          "residual_history": [
+            10.0,
+            10.0,
+            10.0,
+            5.4066244763344375
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.813248952668875,
+            10.813248952668875,
+            5.4066244763344375
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0,
+            0.0,
+            5.4066244763344375
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 1,
+            "accepted_steps_improved_support_connectivity": 1,
+            "accepted_steps_improved_residual": 1
+          }
+        },
+        {
+          "policy_name": "weighted_random",
+          "policy_label": "weighted_random_policy",
+          "seed": 2,
+          "run_dir": "experiments/runs/20260330_225424_3",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 1,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 4,
+          "final_edge_count": 1,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.0,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 1,
+          "support_distance_delta": 8.198039027185569,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 1,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        },
+        {
+          "policy_name": "weighted_random",
+          "policy_label": "weighted_random_policy",
+          "seed": 3,
+          "run_dir": "experiments/runs/20260330_225424_4",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 6,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 6,
+          "final_edge_count": 7,
+          "final_residual_magnitude": 5.739578495484205,
+          "final_unresolved_force_magnitude": 5.739578495484205,
+          "support_path_exists": true,
+          "support_path": [
+            "2",
+            "5",
+            "0"
+          ],
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 2,
+          "rule_sequence": [
+            "extend_node_rule",
+            "split_node_rule",
+            "triangle_closure_rule",
+            "triangle_closure_rule",
+            "triangle_closure_rule",
+            "single_node_root_link_rule"
+          ],
+          "unique_rule_count": 4,
+          "support_distance_delta": -0.8276774897335208,
+          "residual_improved": true,
+          "unresolved_force_improved": true,
+          "residual_history": [
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            5.739578495484205
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0,
+            11.47915699096841,
+            11.47915699096841,
+            11.47915699096841,
+            11.47915699096841,
+            5.739578495484205
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            5.739578495484205
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 2,
+            "accepted_steps_farther_from_all_supports": 1,
+            "accepted_steps_improved_support_connectivity": 1,
+            "accepted_steps_improved_residual": 1
+          }
+        },
+        {
+          "policy_name": "weighted_random",
+          "policy_label": "weighted_random_policy",
+          "seed": 4,
+          "run_dir": "experiments/runs/20260330_225424_5",
+          "scenario_name": "mitchell_planar_benchmark_v1",
+          "accepted_steps": 3,
+          "equilibrium_reached": false,
+          "termination_reason": "no_admissible_candidate",
+          "final_node_count": 5,
+          "final_edge_count": 3,
+          "final_residual_magnitude": 10.0,
+          "final_unresolved_force_magnitude": 10.0,
+          "support_path_exists": false,
+          "support_path": null,
+          "plausibility_pass": true,
+          "invalid_joint_rejection_count": 1,
+          "rule_sequence": [
+            "extend_node_rule",
+            "extend_node_rule",
+            "triangle_closure_rule"
+          ],
+          "unique_rule_count": 2,
+          "support_distance_delta": 0.1922873701685166,
+          "residual_improved": false,
+          "unresolved_force_improved": false,
+          "residual_history": [
+            10.0,
+            10.0,
+            10.0,
+            10.0
+          ],
+          "unresolved_force_magnitude_history": [
+            10.0,
+            10.0,
+            10.0,
+            10.0
+          ],
+          "absorbed_magnitude_history": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "support_trend": {
+            "accepted_steps_closer_to_support": 2,
+            "accepted_steps_farther_from_all_supports": 0,
+            "accepted_steps_improved_support_connectivity": 0,
+            "accepted_steps_improved_residual": 0
+          }
+        }
+      ]
+    }
+  ]
+}

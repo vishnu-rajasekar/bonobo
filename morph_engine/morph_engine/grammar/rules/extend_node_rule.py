@@ -3,9 +3,10 @@ import random
 from morph_engine.grammar.actions import Action
 from morph_engine.grammar.operators.base import clone_graph
 from morph_engine.grammar.operators.base import next_node_key
-from morph_engine.grammar.operators.force_ops import get_line_of_action
-from morph_engine.grammar.operators.force_ops import get_temp_force
 from morph_engine.grammar.operators.node_ops import get_active_nodes
+from morph_engine.semantics import build_structural_node_view
+from morph_engine.semantics import create_member_force_record
+from morph_engine.semantics import set_member_force_record
 
 
 class ExtendNodeRule:
@@ -26,11 +27,12 @@ class ExtendNodeRule:
     def apply(self, graph, payload):
         node_key = payload["node"]
         new_graph = clone_graph(graph)
-        loa = get_line_of_action(new_graph, node_key, tolerance=1e-12)
+        node_view = build_structural_node_view(new_graph, node_key)
+        loa = node_view.active_line_of_action
         if loa is None:
             return new_graph
 
-        x, y, z = new_graph.network.node_attribute(node_key, "xyz")
+        x, y, z = node_view.xyz
         length = float(payload.get("length", (self.lmin + self.lmax) * 0.5))
         new_xyz = [
             x + length * loa["direction"][0],
@@ -39,9 +41,24 @@ class ExtendNodeRule:
         ]
 
         new_key = next_node_key(new_graph.network)
-        original_force = get_temp_force(new_graph, node_key)
+        original_force = list(node_view.unresolved_force_vector)
         new_graph.add_node(new_key, new_xyz, fixed=[0, 0, 0])
         new_graph.add_edge(node_key, new_key, family="bar")
+        set_member_force_record(
+            new_graph,
+            node_key,
+            new_key,
+            create_member_force_record(
+                original_force,
+                source_node=node_key,
+                target_edge=(node_key, new_key),
+                metadata={
+                    "semantic_origin": "extend_node",
+                    "source_node_kind": node_view.node_kind,
+                    "incident_member_count_before": len(node_view.incident_member_ids),
+                },
+            ),
+        )
         new_graph.set_temp_force(node_key, [0.0, 0.0, 0.0])
         new_graph.set_temp_force(new_key, original_force)
         return new_graph

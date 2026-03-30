@@ -1,0 +1,32 @@
+{
+  "rule_sequence": [
+    "extend_node_rule"
+  ],
+  "rule_counts": {
+    "extend_node_rule": 1
+  },
+  "residual_history": [
+    10.0,
+    10.0
+  ],
+  "node_count_history": [
+    3,
+    4
+  ],
+  "edge_count_history": [
+    0,
+    1
+  ],
+  "temp_force_count_history": [
+    1,
+    1
+  ],
+  "support_distance_history": [
+    10.198039027185569,
+    10.001210154790414
+  ],
+  "support_connectivity_history": [
+    null,
+    null
+  ]
+}

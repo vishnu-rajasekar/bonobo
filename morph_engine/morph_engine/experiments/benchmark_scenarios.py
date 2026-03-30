@@ -23,6 +23,7 @@ DEFAULT_MITCHELL_PLANAR_BENCHMARK = {
         "extend_node_rule",
         "triangle_closure_rule",
         "loa_intersection_rule",
+        "single_node_root_link_rule",
     ],
     "rule_settings": {
         "split_node_rule": {"theta_min": 0.35, "theta_max": 0.65, "length": 2.0},
@@ -34,6 +35,8 @@ DEFAULT_MITCHELL_PLANAR_BENCHMARK = {
         "unbalanced_force_eps": 1e-6,
         "global_equilibrium_tolerance": 1e-6,
     },
+    "policy_name": "benchmark_ranked",
+    "policy_settings": {},
     "selection_policy": "benchmark_ranked",
 }
 
@@ -70,21 +73,29 @@ def get_benchmark_scenario(name="mitchell_planar_benchmark_v1"):
 
 
 def get_benchmark_recovery_modes():
+    legacy_rules = [
+        "split_node_rule",
+        "extend_node_rule",
+        "triangle_closure_rule",
+        "loa_intersection_rule",
+    ]
+
     mode_a = deepcopy(DEFAULT_MITCHELL_PLANAR_BENCHMARK)
     mode_a["scenario_name"] = "mitchell_planar_benchmark_v1_mode_a"
     mode_a["comparison_mode"] = "A"
-    mode_a["comparison_label"] = "current_active_rules"
+    mode_a["comparison_label"] = "legacy_active_rules"
+    mode_a["enabled_rules"] = list(legacy_rules)
 
     mode_b = deepcopy(DEFAULT_MITCHELL_PLANAR_BENCHMARK)
     mode_b["scenario_name"] = "mitchell_planar_benchmark_v1_mode_b"
     mode_b["comparison_mode"] = "B"
-    mode_b["comparison_label"] = "current_rules_plus_resolve_two_forces"
-    mode_b["enabled_rules"] = list(DEFAULT_MITCHELL_PLANAR_BENCHMARK["enabled_rules"]) + ["resolve_two_forces_rule"]
+    mode_b["comparison_label"] = "legacy_rules_plus_resolve_two_forces"
+    mode_b["enabled_rules"] = list(legacy_rules) + ["resolve_two_forces_rule"]
 
     mode_c = deepcopy(DEFAULT_MITCHELL_PLANAR_BENCHMARK)
     mode_c["scenario_name"] = "mitchell_planar_benchmark_v1_mode_c"
     mode_c["comparison_mode"] = "C"
-    mode_c["comparison_label"] = "current_rules_plus_bidirectional_loa"
+    mode_c["comparison_label"] = "legacy_rules_plus_bidirectional_loa"
     mode_c["enabled_rules"] = [
         "split_node_rule",
         "extend_node_rule",
@@ -95,7 +106,7 @@ def get_benchmark_recovery_modes():
     mode_d = deepcopy(DEFAULT_MITCHELL_PLANAR_BENCHMARK)
     mode_d["scenario_name"] = "mitchell_planar_benchmark_v1_mode_d"
     mode_d["comparison_mode"] = "D"
-    mode_d["comparison_label"] = "current_rules_plus_single_node_root_link"
-    mode_d["enabled_rules"] = list(DEFAULT_MITCHELL_PLANAR_BENCHMARK["enabled_rules"]) + ["single_node_root_link_rule"]
+    mode_d["comparison_label"] = "legacy_rules_plus_single_node_root_link"
+    mode_d["enabled_rules"] = list(legacy_rules) + ["single_node_root_link_rule"]
 
     return [mode_a, mode_b, mode_c, mode_d]

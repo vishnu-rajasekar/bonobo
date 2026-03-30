@@ -1,0 +1,91 @@
+{
+  "valid": false,
+  "channels": {
+    "reaction_absorption_v1": {
+      "valid": true,
+      "metrics": {
+        "reaction_count": 1,
+        "total_reaction": [
+          2.8182904935128184,
+          5.0,
+          0.0
+        ],
+        "absorbed_magnitude": 5.739578495484205
+      },
+      "signals": {
+        "reactions_by_node": {
+          "0": [
+            2.8182904935128184,
+            5.0,
+            -0.0
+          ]
+        }
+      }
+    },
+    "unbalanced_force_v1": {
+      "valid": true,
+      "metrics": {
+        "global_imbalance": 5.739578495484205,
+        "max_node_imbalance": 5.739578495484205
+      },
+      "signals": {
+        "node_imbalance": {
+          "0": 0.0,
+          "1": 0.0,
+          "2": 0.0,
+          "3": 0.0,
+          "4": 5.739578495484205,
+          "5": 0.0
+        },
+        "done": false
+      }
+    },
+    "global_equilibrium_v1": {
+      "valid": false,
+      "metrics": {
+        "residual_vector": [
+          2.8182904935128184,
+          -5.0,
+          0.0
+        ],
+        "residual_magnitude": 5.739578495484205
+      },
+      "signals": {}
+    }
+  },
+  "metrics": {
+    "reaction_count": 1,
+    "total_reaction": [
+      2.8182904935128184,
+      5.0,
+      0.0
+    ],
+    "absorbed_magnitude": 5.739578495484205,
+    "global_imbalance": 5.739578495484205,
+    "max_node_imbalance": 5.739578495484205,
+    "residual_vector": [
+      2.8182904935128184,
+      -5.0,
+      0.0
+    ],
+    "residual_magnitude": 5.739578495484205
+  },
+  "signals": {
+    "reactions_by_node": {
+      "0": [
+        2.8182904935128184,
+        5.0,
+        -0.0
+      ]
+    },
+    "node_imbalance": {
+      "0": 0.0,
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.0,
+      "4": 5.739578495484205,
+      "5": 0.0
+    },
+    "done": false
+  }
+}

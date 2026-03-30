@@ -1,3 +1,10 @@
+"""Provisional compatibility module for a vector-GS connection strategy.
+
+This file remains in `grammar/rules/` to avoid churn in the current runtime and
+tests. Architecturally it is a method-specific realization/strategy backing the
+`ConnectTwoNodes` intent, not a frozen top-level grammar rule in its own right.
+"""
+
 from morph_engine.grammar.actions import Action
 from morph_engine.grammar.operators.base import clone_graph
 from morph_engine.grammar.operators.node_ops import get_active_nodes

@@ -29,6 +29,22 @@ VECTOR_GS_OPERATOR_REGISTRY = [
         notes="Vector GS temp-force propagation helper. Not a frozen abstract grammar rule.",
     ),
     VectorGSOperatorSpec(
+        operator_id="local_node_equilibration",
+        current_symbol="equilibrate_node",
+        current_module="morph_engine.grammar.operators.node_ops",
+        role="vector_gs_operator",
+        provisional=True,
+        notes="Graph-derived local node balance helper used by enriched vector-GS rule realizations.",
+    ),
+    VectorGSOperatorSpec(
+        operator_id="member_force_transfer",
+        current_symbol="transfer_member_force",
+        current_module="morph_engine.grammar.operators.force_ops",
+        role="vector_gs_operator",
+        provisional=True,
+        notes="Translates member-force semantics between local rule contexts without introducing a second engine state.",
+    ),
+    VectorGSOperatorSpec(
         operator_id="triangle_closure_strategy",
         current_symbol="TriangleClosureRule",
         current_module="morph_engine.grammar.rules.triangle_closure_rule",
@@ -61,6 +77,8 @@ VECTOR_GS_NON_RULE_OPERATORS = [
     "closest_projection",
     "closest_link",
     "node_equilibration",
+    "local_node_equilibration",
+    "member_force_transfer",
     "resolve_two_forces_strategy",
     "triangle_closure_strategy",
 ]
