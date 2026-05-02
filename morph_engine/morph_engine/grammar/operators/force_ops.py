@@ -3,7 +3,6 @@ from .base import node_xyz
 from .base import normalize_vector
 from .base import vector_magnitude
 from morph_engine.semantics import build_structural_node_view
-from morph_engine.semantics import build_structural_member_view
 
 
 GET_TEMP_FORCE = GSOperator("get_temp_force", notes="Read the unresolved nodal imbalance vector.")
@@ -46,15 +45,11 @@ def get_line_of_action(graph, node_key, tolerance=1e-12):
 
 
 def transfer_member_force(graph, u, v, to_point=None):
-    member_view = build_structural_member_view(graph, (u, v))
-    record = member_view.force_record or {}
-    vector = record.get("vector")
-    if vector is None:
-        start = node_xyz(graph, u)
-        end = node_xyz(graph, v)
-        vector = [end[0] - start[0], end[1] - start[1], end[2] - start[2]]
+    start = node_xyz(graph, u)
+    end = node_xyz(graph, v)
+    vector = [end[0] - start[0], end[1] - start[1], end[2] - start[2]]
     if to_point is None:
-        translated_start = node_xyz(graph, u)
+        translated_start = start
     else:
         translated_start = [float(to_point[0]), float(to_point[1]), float(to_point[2])]
     translated_end = [
@@ -66,9 +61,8 @@ def transfer_member_force(graph, u, v, to_point=None):
         "member": [str(u), str(v)],
         "start": translated_start,
         "end": translated_end,
-        "vector": [float(vector[0]), float(vector[1]), float(vector[2])],
+        "vector": vector,
         "magnitude": vector_magnitude(vector),
-        "force_record": dict(record),
     }
 
 
