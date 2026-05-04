@@ -21,7 +21,7 @@ def run_kernel_episode(
     scenario_name = assembly.metadata.get("scenario_name", "kernel_scenario")
     resolved_problem_id = problem_id or scenario_name
 
-    kernel = VectorGSKernelV1(seed=int(seed))
+    kernel = VectorGSKernelV1(seed=int(seed), policy_id=policy_id)
     final_assembly, trace = kernel.run(assembly, max_steps=int(max_steps))
     final_metrics = compute_kernel_metrics(final_assembly, trace=trace)
 

@@ -7,6 +7,7 @@ from morph_engine.vector_gs_kernel_v1.model import GenerationState
 from morph_engine.vector_gs_kernel_v1.model import Node
 from morph_engine.vector_gs_kernel_v1.model import NodeType
 from morph_engine.vector_gs_kernel_v1.operators import equilibrate_node
+from morph_engine.vector_gs_kernel_v1.rules import RuleProposal
 from morph_engine.vector_gs_kernel_v1.rules import ExtendNodeRule
 
 
@@ -51,3 +52,19 @@ def test_kernel_smoke_run_generates_nontrivial_structure():
     assert trace
     assert len(final_assembly.members) >= 1
     assert any(step["rule"] != "StartGeneration" for step in trace)
+
+
+def test_kernel_policy_controls_proposal_selection_mode():
+    proposals = [
+        RuleProposal("HeavyRule", ["1"], {}, 30),
+        RuleProposal("LightRule", ["2"], {}, 1),
+    ]
+
+    weighted_kernel = VectorGSKernelV1(seed=0, policy_id="rule_weighted_random_v1")
+    uniform_kernel = VectorGSKernelV1(seed=0, policy_id="rule_uniform_random_v1")
+
+    weighted_pick = weighted_kernel._select_proposal(proposals)
+    uniform_pick = uniform_kernel._select_proposal(proposals)
+
+    assert weighted_pick.rule_name == "HeavyRule"
+    assert uniform_pick.rule_name == "LightRule"

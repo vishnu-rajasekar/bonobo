@@ -5,9 +5,10 @@ from .rules import default_rules
 
 
 class VectorGSKernelV1:
-    def __init__(self, rules=None, seed=0):
+    def __init__(self, rules=None, seed=0, policy_id="rule_weighted_random_v1"):
         self.rules = rules or default_rules()
         self.rng = random.Random(seed)
+        self.policy_id = str(policy_id)
 
     def _pick_node(self, assembly):
         active = assembly.active_nodes()
@@ -40,6 +41,10 @@ class VectorGSKernelV1:
     def _select_proposal(self, proposals):
         if not proposals:
             return None
+        if self.policy_id == "rule_uniform_random_v1":
+            return proposals[self.rng.randrange(0, len(proposals))]
+        if self.policy_id != "rule_weighted_random_v1":
+            raise ValueError("Unsupported kernel policy_id: {0}".format(self.policy_id))
         total = sum(max(1, proposal.weight) for proposal in proposals)
         pick = self.rng.uniform(0.0, total)
         running = 0.0
@@ -84,4 +89,3 @@ class VectorGSKernelV1:
             if assembly.state == GenerationState.END:
                 break
         return assembly, trace
-
