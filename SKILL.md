@@ -102,13 +102,13 @@ Diversity, search, and learning remain downstream of benchmark validation.
 
 ## How To Use Existing Docs
 Consult and keep consistent with:
-- `docs/RL_INTERFACE_FREEZE_V1.md`
-- `docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md`
+- `docs/RUNTIME_CONTROL_PATH_HISTORY_V1.md`
+- `docs/RUNTIME_SEMANTICS_HISTORY_V1.md`
 - `ARCHITECTURE.md`
 - `ROADMAP.md`
 - `docs/SEMANTIC_CONTRACT_V1.md`
 
-If those newer interface docs disagree with older runtime code, treat the runtime mapping as provisional and prefer the frozen interface docs.
+If those runtime-history docs disagree with older runtime code, treat the runtime mapping as provisional and prefer the consolidated reference docs.
 
 ## Stability Rule
 Preserve semantic stability first. Avoid redefining loads, `temp_force`, supports, reactions, evaluator contracts, or benchmark meanings during routine implementation unless the user explicitly requests that change.

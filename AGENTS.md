@@ -11,14 +11,15 @@ Bonobo is a layered structural generation engine for equilibrium-oriented struct
 Its purpose is to generate structures from the ground up using a small grammar and GS-guided transformations while remaining open to future guidance layers and future GS backends.
 
 ## Current Research Priority
-The immediate project priority is benchmark validation on a 2D Michell-style planar problem.
+The immediate project priority is vector GS kernel MVP validation through reproducible seeded experiments.
 
 This means:
-- validate equilibrium-informed, support-seeking growth before expanding scope
-- preserve admissible intermediate states as an explicit concern
-- treat material efficiency as the first benchmark performance target
-- distinguish clearly between current benchmark goals and later ambitions
-- do not introduce ML/search complexity before benchmark evidence justifies it
+- stabilise `vector_gs_kernel_v1` as the active technical nucleus
+- preserve artifact and trace clarity so generated runs remain inspectable
+- validate equilibrium-informed, support-seeking growth before broad reintegration
+- use compact benchmark/problem definitions as validators, not as architecture
+- distinguish clearly between the active MVP path and the long-term Bonobo runtime target
+- do not introduce ML/search complexity before generator evidence justifies it
 
 Important:
 - the benchmark is a validator, regression check, and proving ground
@@ -72,19 +73,22 @@ Rules:
 
 ## Current Phase
 The project is currently in:
-- runtime grammar alignment
-- vector GS structuring
-- policy-readiness preparation
+- vector GS kernel MVP validation
+- reproducible seeded kernel experiment work
+- artifact and viewer support for kernel runs
+- long-term runtime reintegration planning
 - not yet RL training
 
 Near-term implementation priority is:
-- architecture alignment
-- semantic strengthening
-- `GrammarAction`-ready runtime paths
-- non-learning policy baselines over grammar actions
+- kernel semantic strengthening
+- reproducible kernel experiments
+- artifact and trace clarity
+- simple policy or heuristic comparison only where it directly helps kernel evaluation
+- adapter thinking for later reintegration, not reintegration itself
 
 Not current priority:
 - immediate RL implementation
+- full runtime reintegration immediately
 - broad search/archive work
 - polyhedral or Airy implementation yet
 - benchmark-specific patching as architectural truth
@@ -97,6 +101,7 @@ Not current priority:
 
 ## Package Rules
 - Canonical semantics live in `morph_engine/morph_engine/{model,grammar,evaluator}`.
+- The active MVP implementation nucleus currently lives in `morph_engine/morph_engine/vector_gs_kernel_v1`.
 - The intended layer stack is:
   1. canonical structural state / structural graph
   2. structural semantic views / semantics layer
@@ -106,6 +111,7 @@ Not current priority:
   6. policy / guidance layer
   7. experiment harness
 - Benchmark scenarios, acceptance policies, traces, descriptors, summaries, and derived ML exports belong in `morph_engine/morph_engine/experiments`.
+- Kernel-specific generation logic, operators, and direct semantic objects belong in `morph_engine/morph_engine/vector_gs_kernel_v1` until reintegration is explicitly requested.
 - Visualization/debug logic belongs in `bonobo/visual` and viewer scripts.
 - Integration protocols belong in `morph-rhino-mcp` only.
 
@@ -164,11 +170,11 @@ Do not flatten policy around raw geometry or benchmark-specific quirks.
   - later ambitions
 
 Codex should optimize for:
-- architecture alignment
-- clarity of interfaces
+- kernel MVP clarity
+- artifact and trace readability
 - preserving the abstract rule vocabulary
-- converting legacy runtime behavior into operator-backed realizations
-- thin adapters and incremental refactors
+- preparing future adapters between kernel artifacts and layered Bonobo concepts
+- thin adapters and incremental refactors when reintegration work is explicitly requested
 
 Codex should avoid:
 - benchmark-specific patching presented as architecture
@@ -197,13 +203,15 @@ Do not blindly transplant:
 
 ## How To Use Existing Docs
 When architectural guidance is needed, consult and keep consistent with:
-- `docs/RL_INTERFACE_FREEZE_V1.md`
-- `docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md`
+- `docs/CURRENT_STATUS.md`
+- `docs/VECTOR_GS_KERNEL_V1.md`
+- `docs/RUNTIME_CONTROL_PATH_HISTORY_V1.md`
+- `docs/RUNTIME_SEMANTICS_HISTORY_V1.md`
 - `ARCHITECTURE.md`
 - `ROADMAP.md`
 - `docs/SEMANTIC_CONTRACT_V1.md`
 
-If newer frozen-interface docs disagree with older runtime code, prefer the newer interface docs and mark the runtime mapping as provisional rather than silently treating the old runtime as architectural truth.
+If the active MVP kernel path and older runtime docs diverge, preserve the long-term architecture but treat the kernel docs as the immediate implementation truth for MVP work. Mark older runtime guidance as transitional rather than silently treating it as the current implementation center.
 
 ## Stop Conditions
 Agents must stop and ask for guidance when:
@@ -222,7 +230,7 @@ For Class A bug fixes:
 For Class B feature work:
 - maintain narrow scope
 - preserve compatibility
-- explain how the change fits the current benchmark priority rather than later-stage ambitions
+- explain how the change fits the current kernel MVP priority rather than later-stage ambitions
 
 For Class C work:
 - do not proceed without explicit approval

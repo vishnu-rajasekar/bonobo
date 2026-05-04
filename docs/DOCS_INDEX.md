@@ -19,10 +19,14 @@ The goal is to keep a small canonical doc set, preserve useful project history, 
   - naming, testing, and serialization conventions
 - [README.md](/Users/apple/Desktop/DEV/bonobo/README.md)
   - project-facing overview
+- [docs/CURRENT_STATUS.md](/Users/apple/Desktop/DEV/bonobo/docs/CURRENT_STATUS.md)
+  - current strategic decision, active MVP path, and immediate work focus
 - [ARCHITECTURE.md](/Users/apple/Desktop/DEV/bonobo/ARCHITECTURE.md)
   - current architecture truth
 - [ROADMAP.md](/Users/apple/Desktop/DEV/bonobo/ROADMAP.md)
   - project direction and phase ordering
+- [docs/VECTOR_GS_KERNEL_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/VECTOR_GS_KERNEL_V1.md)
+  - active MVP kernel description and usage
 - [docs/BENCHMARK_MITCHELL_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/BENCHMARK_MITCHELL_V1.md)
   - canonical benchmark definition
 - [docs/PROJECT_EVOLUTION.md](/Users/apple/Desktop/DEV/bonobo/docs/PROJECT_EVOLUTION.md)
@@ -31,16 +35,14 @@ The goal is to keep a small canonical doc set, preserve useful project history, 
 ## Transitional / Reference Docs
 - [docs/SEMANTIC_CONTRACT_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/SEMANTIC_CONTRACT_V1.md)
   - benchmark semantics contract; useful but still benchmark-stage and narrower than architecture docs
-- [docs/NEXT_STEPS_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/NEXT_STEPS_V1.md)
-  - immediate benchmark implementation brief
-- [docs/GENERATION_CORE_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/GENERATION_CORE_V1.md)
-  - GS-operator refactor summary
-- [docs/RL_INTERFACE_FREEZE_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RL_INTERFACE_FREEZE_V1.md)
-  - Step 1 interface freeze
-- [docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md)
-  - Step 2 runtime/action alignment
-- [docs/RESEARCH_LOG.md](/Users/apple/Desktop/DEV/bonobo/docs/RESEARCH_LOG.md)
-  - terse research milestones
+- [docs/PAPER_EXPERIMENT_PLAN_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/PAPER_EXPERIMENT_PLAN_V1.md)
+  - conference-paper-oriented experiment plan for the kernel MVP
+- [docs/RUNTIME_CONTROL_PATH_HISTORY_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_CONTROL_PATH_HISTORY_V1.md)
+  - consolidated history of the original runtime control path, interface freeze, and policy study work
+- [docs/RUNTIME_SEMANTICS_HISTORY_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_SEMANTICS_HISTORY_V1.md)
+  - consolidated history of the original runtime semantics strengthening work
+- [docs/VECTOR_GS_MIGRATION_MAP_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/VECTOR_GS_MIGRATION_MAP_V1.md)
+  - bridge mapping from Juney-style vector GS concepts into Bonobo runtime concepts
 - [abstract.md](/Users/apple/Desktop/DEV/bonobo/abstract.md)
   - research-facing abstract, not implementation authority
 
@@ -49,11 +51,9 @@ Stored in `docs/archive/`.
 
 These are preserved because they contain useful historical context, but they are not authoritative for the current repo state.
 
-- [ARCHITECTURE_legacy.md](/Users/apple/Desktop/DEV/bonobo/docs/archive/ARCHITECTURE_legacy.md)
 - [PROJECT_STATE_2026-03.md](/Users/apple/Desktop/DEV/bonobo/docs/archive/PROJECT_STATE_2026-03.md)
 - [project_outline_reference.md](/Users/apple/Desktop/DEV/bonobo/docs/archive/project_outline_reference.md)
 - [notes_brainstorm.md](/Users/apple/Desktop/DEV/bonobo/docs/archive/notes_brainstorm.md)
-- [test_prompt_dump.md](/Users/apple/Desktop/DEV/bonobo/docs/archive/test_prompt_dump.md)
 
 ## Package Readmes
 - [morph_engine/README.md](/Users/apple/Desktop/DEV/bonobo/morph_engine/README.md)
@@ -71,13 +71,15 @@ These are preserved because they contain useful historical context, but they are
 2. [SKILL.md](/Users/apple/Desktop/DEV/bonobo/SKILL.md)
 3. [CONVENTIONS.md](/Users/apple/Desktop/DEV/bonobo/CONVENTIONS.md)
 4. [README.md](/Users/apple/Desktop/DEV/bonobo/README.md)
-5. [ARCHITECTURE.md](/Users/apple/Desktop/DEV/bonobo/ARCHITECTURE.md)
-6. [ROADMAP.md](/Users/apple/Desktop/DEV/bonobo/ROADMAP.md)
-7. [docs/BENCHMARK_MITCHELL_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/BENCHMARK_MITCHELL_V1.md)
-8. [docs/RL_INTERFACE_FREEZE_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RL_INTERFACE_FREEZE_V1.md)
-9. [docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md)
-10. other transitional/reference docs
-11. `docs/archive/` historical material
+5. [docs/CURRENT_STATUS.md](/Users/apple/Desktop/DEV/bonobo/docs/CURRENT_STATUS.md)
+6. [ARCHITECTURE.md](/Users/apple/Desktop/DEV/bonobo/ARCHITECTURE.md)
+7. [ROADMAP.md](/Users/apple/Desktop/DEV/bonobo/ROADMAP.md)
+8. [docs/VECTOR_GS_KERNEL_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/VECTOR_GS_KERNEL_V1.md)
+9. [docs/BENCHMARK_MITCHELL_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/BENCHMARK_MITCHELL_V1.md)
+10. [docs/RUNTIME_CONTROL_PATH_HISTORY_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_CONTROL_PATH_HISTORY_V1.md)
+11. [docs/RUNTIME_SEMANTICS_HISTORY_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_SEMANTICS_HISTORY_V1.md)
+12. other transitional/reference docs
+13. `docs/archive/` historical material
 
 ## Archive / Retire Policy
 - If a doc is still useful but no longer authoritative, move it to `docs/archive/` and make its status explicit.

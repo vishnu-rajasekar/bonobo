@@ -10,15 +10,18 @@ PACKAGE_ROOT = REPO_ROOT / "morph_engine"
 if str(PACKAGE_ROOT) not in sys.path:
     sys.path.insert(0, str(PACKAGE_ROOT))
 
-from morph_engine.vector_gs_kernel_v1 import VectorGSKernelV1
 from morph_engine.vector_gs_kernel_v1.export import export_run
-from morph_engine.vector_gs_kernel_v1.scenarios import make_default_cantilever_scenario
+from morph_engine.vector_gs_kernel_v1.export import export_batch_summary
+from morph_engine.vector_gs_kernel_v1.experiments import DEFAULT_POLICY_ID
+from morph_engine.vector_gs_kernel_v1.experiments import run_kernel_batch
 
 
 def main():
     parser = argparse.ArgumentParser(description="Run the standalone vector graphic statics kernel.")
     parser.add_argument("--runs", type=int, default=3, help="Number of seeded episodes to run.")
     parser.add_argument("--steps", type=int, default=12, help="Maximum steps per episode.")
+    parser.add_argument("--policy-id", default=DEFAULT_POLICY_ID, help="Policy label recorded in kernel artifacts.")
+    parser.add_argument("--problem-id", default=None, help="Problem id recorded in kernel artifacts.")
     parser.add_argument(
         "--output-dir",
         default=str(REPO_ROOT / "experiments" / "vector_gs_kernel_v1_runs"),
@@ -28,25 +31,42 @@ def main():
 
     base_dir = Path(args.output_dir)
     base_dir.mkdir(parents=True, exist_ok=True)
+    batch_stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    payload = run_kernel_batch(
+        seeds=list(range(int(args.runs))),
+        max_steps=int(args.steps),
+        problem_id=args.problem_id,
+        policy_id=args.policy_id,
+    )
 
-    for seed in range(int(args.runs)):
-        assembly = make_default_cantilever_scenario()
-        kernel = VectorGSKernelV1(seed=seed)
-        final_assembly, trace = kernel.run(assembly, max_steps=int(args.steps))
-        stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-        run_dir = base_dir / f"{stamp}_seed_{seed}"
-        artifact = export_run(run_dir, final_assembly, trace, final_assembly.metadata.get("scenario_name", "kernel_scenario"), seed)
+    for record in payload["runs"]:
+        run_dir = base_dir / f"{batch_stamp}_seed_{record['seed']}"
+        artifact = export_run(
+            run_dir,
+            record["assembly"],
+            record["trace"],
+            record["scenario_name"],
+            record["seed"],
+            problem_id=record["problem_id"],
+            policy_id=record["policy_id"],
+            final_metrics=record["final_metrics"],
+        )
         print(
             {
-                "seed": seed,
+                "seed": record["seed"],
                 "artifact": str(artifact),
-                "state": final_assembly.state,
-                "node_count": len(final_assembly.nodes),
-                "member_count": len(final_assembly.members),
-                "residual_magnitude": final_assembly.residual_magnitude(),
-                "rule_sequence": [step["rule"] for step in trace],
+                "problem_id": record["problem_id"],
+                "policy_id": record["policy_id"],
+                "state": record["assembly"].state,
+                "node_count": len(record["assembly"].nodes),
+                "member_count": len(record["assembly"].members),
+                "residual_magnitude": record["final_metrics"]["final_residual_magnitude"],
+                "rule_sequence": [step["rule"] for step in record["trace"]],
             }
         )
+
+    summary_path = export_batch_summary(base_dir / f"{batch_stamp}_batch_summary.json", payload)
+    print({"batch_summary": str(summary_path), "aggregate_metrics": payload["aggregate_metrics"]})
 
 
 if __name__ == "__main__":

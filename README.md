@@ -8,23 +8,30 @@ The project is organized around explicit layers:
 - evaluator channels for structural signals and validity checks
 - experiment harnesses for benchmark scenarios, traces, descriptors, and derived exports
 
-Bonobo is not currently presented as a general search platform or learned design-space engine. The immediate proof target is a 2D Michell-style planar benchmark in which growth remains interpretable, benchmarked, and tied to equilibrium-related signals.
+Bonobo is not currently presented as a general search platform or learned design-space engine. The long-term architectural target remains the layered Bonobo runtime, but the current MVP implementation path is kernel-first:
+- active technical nucleus: `morph_engine/morph_engine/vector_gs_kernel_v1`
+- long-term reintegration target: the layered Bonobo runtime centered on `StructuralGraph`, grammar, evaluator, and experiments
+- future bridge: adapters between kernel assemblies, traces, and metrics and Bonobo runtime concepts
+
+The immediate proof target is a compact, inspectable vector graphic statics generator that can be evaluated through seeded runs before broader reintegration work begins.
 
 ## Current Focus
-- Benchmark validation before learning, search expansion, or large-scale diversity machinery
-- Equilibrium-informed, support-seeking growth on a Michell-style planar problem
-- Admissible intermediate states, not only final-state evaluation
-- Machine-readable traces, descriptors, and summaries that explain what the generator actually did
-- Material efficiency as the first benchmark performance goal
+- Stabilize and evaluate `vector_gs_kernel_v1` through reproducible seeded experiments
+- Preserve the layered Bonobo runtime as the long-term architectural target
+- Keep kernel artifacts, traces, and viewers inspectable and machine-readable
+- Use small benchmark/problem definitions to validate generation behavior without overclaiming general structural design capability
+- Delay reintegration, broad search expansion, and learned guidance until the kernel is technically credible
 
 ## Longer-Term Direction
+- Adapter-based reintegration of the kernel into the layered Bonobo runtime
 - Goal steering and diversity across multiple valid solutions to the same problem
-- Broader static schemes such as truss, branching compression systems, tensegrity, cable-net, gridshell, and shells
-- Construction-aware growth including staged stability, scaffold-free growth, and curved-surface conformance
-- Learned guidance, latent-space structure, and policy support only after benchmark grounding is credible
+- Broader static schemes such as truss, branching compression systems, cable-net, gridshell, and shells
+- Construction-aware growth and richer domain handling only after the generator core is credible
+- Learned guidance and policy support only after benchmark grounding and kernel evaluation are credible
 
 ## Repository Map
 - `morph_engine/`: core package and unit tests
+- `morph_engine/morph_engine/vector_gs_kernel_v1/`: active standalone vector GS kernel MVP
 - `morph-rhino-mcp/`: Rhino MCP server integration
 - `scripts/`: experiments and runnable demos
 - `research/`: source reference material
@@ -39,7 +46,13 @@ Run unit tests from the repository root:
 conda run -n morph-engine python -m pytest
 ```
 
-Run the current benchmark entrypoint:
+Run the current kernel MVP entrypoint:
+
+```bash
+python scripts/run_vector_gs_kernel_v1.py --runs 3 --steps 12
+```
+
+Run the current layered-runtime benchmark entrypoint:
 
 ```bash
 conda run -n morph-engine python scripts/run_experiment.py

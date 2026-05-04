@@ -6,8 +6,8 @@ This file records only a minimal version/history summary.
 For current architecture and interface truth, prefer:
 - [README.md](/Users/apple/Desktop/DEV/bonobo/README.md)
 - [ARCHITECTURE.md](/Users/apple/Desktop/DEV/bonobo/ARCHITECTURE.md)
-- [docs/RL_INTERFACE_FREEZE_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RL_INTERFACE_FREEZE_V1.md)
-- [docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md)
+- [docs/RUNTIME_CONTROL_PATH_HISTORY_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_CONTROL_PATH_HISTORY_V1.md)
+- [docs/RUNTIME_SEMANTICS_HISTORY_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_SEMANTICS_HISTORY_V1.md)
 
 ## 0.4.0
 ### Added

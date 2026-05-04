@@ -1,0 +1,53 @@
+import json
+
+from morph_engine.vector_gs_kernel_v1.experiments import run_kernel_batch
+from morph_engine.vector_gs_kernel_v1.experiments import run_kernel_episode
+from morph_engine.vector_gs_kernel_v1.export import export_batch_summary
+from morph_engine.vector_gs_kernel_v1.export import export_run
+
+
+def test_run_kernel_episode_is_reproducible_for_same_seed():
+    episode_a = run_kernel_episode(seed=0, max_steps=8)
+    episode_b = run_kernel_episode(seed=0, max_steps=8)
+
+    assert episode_a["problem_id"] == episode_b["problem_id"]
+    assert episode_a["policy_id"] == episode_b["policy_id"]
+    assert episode_a["trace"] == episode_b["trace"]
+    assert episode_a["final_metrics"] == episode_b["final_metrics"]
+    assert episode_a["assembly"].to_data() == episode_b["assembly"].to_data()
+
+
+def test_export_run_writes_enriched_kernel_payload(tmp_path):
+    episode = run_kernel_episode(seed=1, max_steps=8, problem_id="paper_case_v1", policy_id="random_v1")
+    out_path = export_run(
+        tmp_path / "seed_1",
+        episode["assembly"],
+        episode["trace"],
+        episode["scenario_name"],
+        episode["seed"],
+        problem_id=episode["problem_id"],
+        policy_id=episode["policy_id"],
+        final_metrics=episode["final_metrics"],
+    )
+
+    payload = json.loads(out_path.read_text())
+    assert payload["seed"] == 1
+    assert payload["problem_id"] == "paper_case_v1"
+    assert payload["policy_id"] == "random_v1"
+    assert "final_metrics" in payload
+    assert "accepted_step_count" in payload["final_metrics"]
+    assert "support_connectivity" in payload["final_metrics"]
+
+
+def test_run_kernel_batch_and_summary_shape(tmp_path):
+    payload = run_kernel_batch(seeds=[0, 1], max_steps=8, problem_id="kernel_case_v1", policy_id="rule_weighted_random_v1")
+    out_path = export_batch_summary(tmp_path / "batch_summary.json", payload)
+    exported = json.loads(out_path.read_text())
+
+    assert exported["study_name"] == "vector_gs_kernel_batch_v1"
+    assert exported["problem_id"] == "kernel_case_v1"
+    assert exported["policy_id"] == "rule_weighted_random_v1"
+    assert exported["seeds"] == [0, 1]
+    assert len(exported["runs"]) == 2
+    assert "aggregate_metrics" in exported
+    assert "completion_rate" in exported["aggregate_metrics"]

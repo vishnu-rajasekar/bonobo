@@ -5,8 +5,8 @@ This snapshot preserves an earlier understanding of the repo state and should no
 Superseded by:
 - [README.md](/Users/apple/Desktop/DEV/bonobo/README.md)
 - [ARCHITECTURE.md](/Users/apple/Desktop/DEV/bonobo/ARCHITECTURE.md)
-- [docs/RL_INTERFACE_FREEZE_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RL_INTERFACE_FREEZE_V1.md)
-- [docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md)
+- [docs/RUNTIME_CONTROL_PATH_HISTORY_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_CONTROL_PATH_HISTORY_V1.md)
+- [docs/RUNTIME_SEMANTICS_HISTORY_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_SEMANTICS_HISTORY_V1.md)
 
 # Bonobo Project State (March 2026)
 

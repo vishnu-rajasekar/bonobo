@@ -18,6 +18,30 @@ Bonobo is a layered structural generation engine for sequential, equilibrium-inf
    - Benchmark acceptance policies
    - Trace logging, descriptors, summaries, and derived ML exports
 
+## Current MVP Implementation Strategy
+The long-term canonical architecture remains:
+
+`StructuralGraph -> Grammar -> Evaluator -> Experiment Harness`
+
+The current MVP implementation path is intentionally more direct:
+- `morph_engine/morph_engine/vector_gs_kernel_v1` is the active technical nucleus
+- the kernel is being used to prove the vector-GS growth mechanism and local structural semantics more quickly than the full runtime currently allows
+- the kernel is not a replacement for the layered Bonobo architecture
+
+The expected future bridge is adapter-based:
+- kernel `Assembly` -> `StructuralGraph`
+- kernel rule/operator trace -> `GrammarAction` and experiment trace concepts
+- kernel metrics -> evaluator and experiment metrics
+
+This means the project should preserve separation between:
+- grammar intent
+- GS operators and transformations
+- evaluator semantics
+- policy or guidance layers
+- experiment and artifact logic
+
+The kernel may be more direct internally, but it should not become a pretext for collapsing the long-term architecture.
+
 ## Layer Responsibilities
 - Equilibrium should guide growth through evaluator-derived signals and experiment-layer benchmark acceptance, not by collapsing evaluator semantics into grammar rules.
 - Visualization is interpretive only. It may expose traces, labels, and diagnostics, but it is not a source of canonical semantics.
@@ -36,6 +60,8 @@ Changes in these zones affect canonical behavior and must be minimal, explicit, 
 - `bonobo/visual/`
 - `scripts/run_experiment.py`
 - `scripts/view_last_run.py`
+- `scripts/run_vector_gs_kernel_v1.py`
+- `scripts/view_vector_gs_kernel_run.py`
 
 These are the correct places for benchmark scenarios, acceptance criteria, traceability tooling, descriptors, derived exports, and interpretive rendering.
 

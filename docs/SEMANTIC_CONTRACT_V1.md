@@ -6,8 +6,8 @@ This document is benchmark-facing and narrower than the canonical architecture d
 
 For current benchmark geometry and scenario truth, prefer:
 - [BENCHMARK_MITCHELL_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/BENCHMARK_MITCHELL_V1.md)
-- [RL_INTERFACE_FREEZE_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RL_INTERFACE_FREEZE_V1.md)
-- [RUNTIME_GRAMMAR_ALIGNMENT_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_GRAMMAR_ALIGNMENT_V1.md)
+- [RUNTIME_CONTROL_PATH_HISTORY_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_CONTROL_PATH_HISTORY_V1.md)
+- [RUNTIME_SEMANTICS_HISTORY_V1.md](/Users/apple/Desktop/DEV/bonobo/docs/RUNTIME_SEMANTICS_HISTORY_V1.md)
 
 ## Purpose of the Contract
 Freeze benchmark-level meanings for the Michell-style planar benchmark so implementation work can remain bounded, comparable across runs, and explicit about what is canonical versus interpretive.

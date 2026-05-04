@@ -23,7 +23,7 @@ Since the premise of this research is to create a transtypological structural mo
 ## Grammar engine:
 if the grammar based generative method is embeded with not only adding and removing elements (node, edges and faces) but is empowered with adding restrains to its nodes then we are able to control the static and kinematic attributes of the structure. 
 
-## Analytical enginer:
+## Analytical engine:
 Using graphic statics as an analysis engine we are able to not just measure the forces and stress within the members but also determine the determinacy of structures as we are building the structure piece by piece. Refer the pdf: The Geometry of Equilibrium_ James Clerk Maxwell, to extract meaning elements that can be applied to this research project. Use this a bible for this poject. 
 
 ## Feasibility 

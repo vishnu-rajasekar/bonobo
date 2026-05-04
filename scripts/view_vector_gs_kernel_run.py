@@ -27,7 +27,7 @@ else:
     VIEWER_IMPORT_ERROR = None
 
 
-RUNS_SOURCE_SELECTOR = None
+RUNS_SOURCE_SELECTOR = "20260504_160402_*"
 
 
 def _vector_magnitude(vec3):
