@@ -4,11 +4,16 @@ from morph_engine.vector_gs_kernel_v1.model import Force
 from morph_engine.vector_gs_kernel_v1.model import ForceDirection
 from morph_engine.vector_gs_kernel_v1.model import ForceKind
 from morph_engine.vector_gs_kernel_v1.model import GenerationState
+from morph_engine.vector_gs_kernel_v1.model import Member
 from morph_engine.vector_gs_kernel_v1.model import Node
 from morph_engine.vector_gs_kernel_v1.model import NodeType
+from morph_engine.vector_gs_kernel_v1.metrics import compute_kernel_metrics
 from morph_engine.vector_gs_kernel_v1.operators import equilibrate_node
 from morph_engine.vector_gs_kernel_v1.rules import RuleProposal
 from morph_engine.vector_gs_kernel_v1.rules import ExtendNodeRule
+
+
+BOUNDARY = {"min": [-1.0, -1.0, 0.0], "max": [6.0, 6.0, 0.0]}
 
 
 def test_equilibrate_node_adds_temp_force():
@@ -68,3 +73,60 @@ def test_kernel_policy_controls_proposal_selection_mode():
 
     assert weighted_pick.rule_name == "HeavyRule"
     assert uniform_pick.rule_name == "LightRule"
+
+
+def test_kernel_benchmark_completion_requires_support_connectivity():
+    assembly = make_default_cantilever_scenario()
+    load = assembly.node("2")
+    load.remove_temp_forces()
+    load.active = False
+
+    metrics = compute_kernel_metrics(assembly)
+
+    assert metrics["equilibrium_reached"] is True
+    assert metrics["support_connectivity"]["support_connected"] is False
+    assert metrics["benchmark_validity"]["geometrically_valid"] is True
+    assert metrics["benchmark_complete"] is False
+
+
+def test_kernel_benchmark_completion_requires_geometric_validity():
+    support = Node("support", [0.0, 0.0, 0.0], NodeType.SUPPORT, active=False)
+    load = Node("load", [1.0, 1.0, 0.0], NodeType.LOAD, forces=[], active=False)
+    far = Node("far", [10.0, 1.0, 0.0], NodeType.FLOAT, forces=[], active=False)
+    assembly = make_default_cantilever_scenario()
+    assembly.nodes = [support, load, far]
+    assembly.members = [
+        Member("m0", "support", "load"),
+        Member("m1", "load", "far"),
+    ]
+    assembly.boundary = BOUNDARY
+
+    metrics = compute_kernel_metrics(assembly)
+
+    assert metrics["equilibrium_reached"] is True
+    assert metrics["support_connectivity"]["support_connected"] is True
+    assert metrics["benchmark_validity"]["geometrically_valid"] is False
+    assert metrics["benchmark_validity"]["out_of_bounds_node_count"] == 1
+    assert metrics["benchmark_validity"]["invalid_reasons"] == ["nodes_outside_bounds"]
+    assert metrics["benchmark_complete"] is False
+
+
+def test_kernel_validity_reports_crossing_members():
+    assembly = make_default_cantilever_scenario()
+    assembly.boundary = BOUNDARY
+    assembly.nodes = [
+        Node("a", [0.0, 0.0, 0.0], NodeType.SUPPORT, active=False),
+        Node("b", [4.0, 4.0, 0.0], NodeType.LOAD, active=False),
+        Node("c", [0.0, 4.0, 0.0], NodeType.FLOAT, active=False),
+        Node("d", [4.0, 0.0, 0.0], NodeType.FLOAT, active=False),
+    ]
+    assembly.members = [
+        Member("m0", "a", "b"),
+        Member("m1", "c", "d"),
+    ]
+
+    metrics = compute_kernel_metrics(assembly)
+
+    assert metrics["benchmark_validity"]["crossing_member_count"] == 1
+    assert metrics["benchmark_validity"]["invalid_reasons"] == ["crossing_members"]
+    assert metrics["benchmark_complete"] is False

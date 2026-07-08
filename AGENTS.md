@@ -169,6 +169,13 @@ Do not flatten policy around raw geometry or benchmark-specific quirks.
   - immediate benchmark target
   - later ambitions
 
+## GitHub Publication Rules
+- Do not automatically commit, push, open pull requests, or publish artifacts to GitHub after completing a task or milestone.
+- When a milestone such as M1, M2, or M3 reaches its exit gate, report the exact changed files, test output, `git status --short`, and `git diff --stat`.
+- Ask for explicit user approval before creating a commit or pushing to GitHub.
+- If the user approves publication, create a focused milestone commit, push the current branch, and report the commit SHA and remote branch.
+- Never include unrelated dirty worktree changes in a milestone commit unless the user explicitly confirms they belong to that milestone.
+
 Codex should optimize for:
 - kernel MVP clarity
 - artifact and trace readability

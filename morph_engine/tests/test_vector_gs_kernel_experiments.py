@@ -56,9 +56,17 @@ def test_run_kernel_batch_and_summary_shape(tmp_path):
     assert exported["problem_id"] == "kernel_case_v1"
     assert exported["policy_id"] == "rule_weighted_random_v1"
     assert exported["seeds"] == [0, 1]
+    assert exported["seed_count"] == 2
+    assert exported["step_budget"] == 8
     assert len(exported["runs"]) == 2
+    assert all(record["step_budget"] == 8 for record in exported["runs"])
     assert "aggregate_metrics" in exported
     assert "completion_rate" in exported["aggregate_metrics"]
+    assert "benchmark_completion_rate" in exported["aggregate_metrics"]
+    assert "benchmark_complete_run_count" in exported["aggregate_metrics"]
+    assert "support_connected_run_count" in exported["aggregate_metrics"]
+    assert "geometrically_valid_run_count" in exported["aggregate_metrics"]
+    assert "invalidity_reason_counts" in exported["aggregate_metrics"]
 
 
 def test_run_kernel_episode_threads_policy_id_to_engine(monkeypatch):

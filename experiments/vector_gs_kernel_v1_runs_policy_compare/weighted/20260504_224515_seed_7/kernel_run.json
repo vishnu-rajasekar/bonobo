@@ -1,0 +1,632 @@
+{
+  "scenario_name": "kernel_cantilever_v1",
+  "problem_id": "default_cantilever_v1",
+  "policy_id": "rule_weighted_random_v1",
+  "seed": 7,
+  "assembly": {
+    "state": "go",
+    "boundary": {
+      "min": [
+        -6.0,
+        -1.0,
+        0.0
+      ],
+      "max": [
+        6.0,
+        6.0,
+        0.0
+      ]
+    },
+    "metadata": {
+      "scenario_name": "kernel_cantilever_v1"
+    },
+    "nodes": [
+      {
+        "node_id": "0",
+        "coordinate": [
+          -5.0,
+          0.0,
+          0.0
+        ],
+        "type": "support",
+        "active": false,
+        "metadata": {},
+        "forces": []
+      },
+      {
+        "node_id": "1",
+        "coordinate": [
+          -5.0,
+          4.0,
+          0.0
+        ],
+        "type": "support",
+        "active": false,
+        "metadata": {},
+        "forces": []
+      },
+      {
+        "node_id": "2",
+        "coordinate": [
+          5.0,
+          2.0,
+          0.0
+        ],
+        "type": "corner",
+        "active": false,
+        "metadata": {},
+        "forces": [
+          {
+            "point": [
+              5.0,
+              2.0,
+              0.0
+            ],
+            "vector": [
+              0.0,
+              -10.0,
+              0.0
+            ],
+            "kind": "applied",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {
+              "semantic_origin": "scenario"
+            }
+          },
+          {
+            "point": [
+              5.0,
+              2.0,
+              0.0
+            ],
+            "vector": [
+              1.5065549482556535,
+              -3.0453939766267655,
+              0.0
+            ],
+            "kind": "member",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {
+              "semantic_origin": "split_node",
+              "branch": "a"
+            }
+          },
+          {
+            "point": [
+              5.0,
+              2.0,
+              0.0
+            ],
+            "vector": [
+              -1.5065549482556537,
+              -6.954606023373234,
+              0.0
+            ],
+            "kind": "member",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {
+              "semantic_origin": "split_node",
+              "branch": "b"
+            }
+          }
+        ]
+      },
+      {
+        "node_id": "3",
+        "coordinate": [
+          5.987375018464796,
+          0.004091429000987468,
+          0.0
+        ],
+        "type": "end",
+        "active": true,
+        "metadata": {
+          "semantic_origin": "split_node"
+        },
+        "forces": [
+          {
+            "point": [
+              5.987375018464796,
+              0.004091429000987468,
+              0.0
+            ],
+            "vector": [
+              -1.5065549482556535,
+              3.0453939766267655,
+              -0.0
+            ],
+            "kind": "member",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {
+              "semantic_origin": "split_node",
+              "branch": "a"
+            }
+          },
+          {
+            "point": [
+              5.987375018464796,
+              0.004091429000987468,
+              0.0
+            ],
+            "vector": [
+              5.996323879237382,
+              -0.3111989987377841,
+              -0.0
+            ],
+            "kind": "temporary",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {
+              "semantic_origin": "equilibrate_node"
+            }
+          },
+          {
+            "point": [
+              5.987375018464796,
+              0.004091429000987468,
+              0.0
+            ],
+            "vector": [
+              -4.489768930981729,
+              -2.7341949778889814,
+              0.0
+            ],
+            "kind": "member",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {
+              "semantic_origin": "connect_two_nodes"
+            }
+          }
+        ]
+      },
+      {
+        "node_id": "4",
+        "coordinate": [
+          4.351873467479434,
+          -0.9919019496729615,
+          0.0
+        ],
+        "type": "end",
+        "active": true,
+        "metadata": {
+          "semantic_origin": "split_node"
+        },
+        "forces": [
+          {
+            "point": [
+              4.351873467479434,
+              -0.9919019496729615,
+              0.0
+            ],
+            "vector": [
+              1.5065549482556537,
+              6.954606023373234,
+              -0.0
+            ],
+            "kind": "member",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {
+              "semantic_origin": "split_node",
+              "branch": "b"
+            }
+          },
+          {
+            "point": [
+              4.351873467479434,
+              -0.9919019496729615,
+              0.0
+            ],
+            "vector": [
+              4.489768930981729,
+              2.7341949778889814,
+              0.0
+            ],
+            "kind": "member",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {
+              "semantic_origin": "connect_two_nodes"
+            }
+          },
+          {
+            "point": [
+              4.351873467479434,
+              -0.9919019496729615,
+              0.0
+            ],
+            "vector": [
+              -5.996323879237383,
+              -9.688801001262215,
+              -0.0
+            ],
+            "kind": "temporary",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {
+              "semantic_origin": "equilibrate_node"
+            }
+          }
+        ]
+      }
+    ],
+    "members": [
+      {
+        "member_id": "m0",
+        "start_node": "2",
+        "end_node": "3",
+        "force": {
+          "point": [
+            5.0,
+            2.0,
+            0.0
+          ],
+          "vector": [
+            1.5065549482556535,
+            -3.0453939766267655,
+            0.0
+          ],
+          "kind": "member",
+          "direction": -1,
+          "related_member": null,
+          "metadata": {
+            "semantic_origin": "split_node",
+            "branch": "a"
+          }
+        },
+        "metadata": {
+          "semantic_origin": "split_node",
+          "branch": "a"
+        }
+      },
+      {
+        "member_id": "m1",
+        "start_node": "2",
+        "end_node": "4",
+        "force": {
+          "point": [
+            5.0,
+            2.0,
+            0.0
+          ],
+          "vector": [
+            -1.5065549482556537,
+            -6.954606023373234,
+            0.0
+          ],
+          "kind": "member",
+          "direction": -1,
+          "related_member": null,
+          "metadata": {
+            "semantic_origin": "split_node",
+            "branch": "b"
+          }
+        },
+        "metadata": {
+          "semantic_origin": "split_node",
+          "branch": "b"
+        }
+      },
+      {
+        "member_id": "m2",
+        "start_node": "3",
+        "end_node": "4",
+        "force": {
+          "point": [
+            5.987375018464796,
+            0.004091429000987468,
+            0.0
+          ],
+          "vector": [
+            -4.489768930981729,
+            -2.7341949778889814,
+            0.0
+          ],
+          "kind": "member",
+          "direction": -1,
+          "related_member": null,
+          "metadata": {
+            "semantic_origin": "connect_two_nodes"
+          }
+        },
+        "metadata": {
+          "semantic_origin": "connect_two_nodes"
+        }
+      }
+    ],
+    "history": [
+      {
+        "step_index": 0,
+        "rule_name": "StartGeneration",
+        "target_node_ids": [],
+        "params": {},
+        "summary": {
+          "state": "go"
+        }
+      },
+      {
+        "step_index": 1,
+        "rule_name": "SplitNode",
+        "target_node_ids": [
+          "2"
+        ],
+        "params": {
+          "length_a": 2.2267825333596627,
+          "length_b": 3.061297972856285,
+          "angle_a": 0.4593982436352133,
+          "angle_b": -0.21333068640237596
+        },
+        "summary": {
+          "new_nodes": [
+            "3",
+            "4"
+          ]
+        }
+      },
+      {
+        "step_index": 2,
+        "rule_name": "ConnectTwoNodes",
+        "target_node_ids": [
+          "3",
+          "4"
+        ],
+        "params": {
+          "factor": 0.5
+        },
+        "summary": {
+          "member_added": true
+        }
+      }
+    ],
+    "residual_magnitude": 17.398636419030115
+  },
+  "trace": [
+    {
+      "step": 0,
+      "state": "go",
+      "rule": "StartGeneration",
+      "targets": [],
+      "params": {},
+      "node_count": 3,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 10.0
+    },
+    {
+      "step": 1,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length_a": 4.053185729978271,
+        "length_b": 2.235325104849206,
+        "angle_a": 0.3739758020661743,
+        "angle_b": -0.4883964221000858
+      },
+      "node_count": 3,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 10.0
+    },
+    {
+      "step": 2,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length_a": 2.2267825333596627,
+        "length_b": 3.061297972856285,
+        "angle_a": 0.4593982436352133,
+        "angle_b": -0.21333068640237596
+      },
+      "node_count": 5,
+      "member_count": 2,
+      "added_nodes": 2,
+      "added_members": 2,
+      "residual_magnitude": 10.513581165468244
+    },
+    {
+      "step": 3,
+      "state": "go",
+      "rule": "ExtendNode",
+      "targets": [
+        "3"
+      ],
+      "params": {
+        "length": 2.96438265838938
+      },
+      "node_count": 5,
+      "member_count": 2,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 10.513581165468244
+    },
+    {
+      "step": 4,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "4"
+      ],
+      "params": {
+        "length_a": 3.4280109785294806,
+        "length_b": 2.469677566967859,
+        "angle_a": 0.2041007015981567,
+        "angle_b": -0.4192387680111538
+      },
+      "node_count": 5,
+      "member_count": 2,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 10.513581165468244
+    },
+    {
+      "step": 5,
+      "state": "go",
+      "rule": "ExtendNode",
+      "targets": [
+        "3"
+      ],
+      "params": {
+        "length": 2.6658431624712104
+      },
+      "node_count": 5,
+      "member_count": 2,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 10.513581165468244
+    },
+    {
+      "step": 6,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "3"
+      ],
+      "params": {
+        "length_a": 2.858689224895933,
+        "length_b": 3.122085476069483,
+        "angle_a": 0.3831356566627413,
+        "angle_b": -0.1956203036108838
+      },
+      "node_count": 5,
+      "member_count": 2,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 10.513581165468244
+    },
+    {
+      "step": 7,
+      "state": "go",
+      "rule": "ConnectTwoNodes",
+      "targets": [
+        "3",
+        "4"
+      ],
+      "params": {
+        "factor": 0.5
+      },
+      "node_count": 5,
+      "member_count": 3,
+      "added_nodes": 0,
+      "added_members": 1,
+      "residual_magnitude": 17.398636419030115
+    },
+    {
+      "step": 8,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "4"
+      ],
+      "params": {
+        "length_a": 3.9922299395539858,
+        "length_b": 2.1719073735171515,
+        "angle_a": 0.2027585986304163,
+        "angle_b": -0.2644787469948412
+      },
+      "node_count": 5,
+      "member_count": 3,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 17.398636419030115
+    },
+    {
+      "step": 9,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "3"
+      ],
+      "params": {
+        "length_a": 4.4827398486665855,
+        "length_b": 4.054811966524287,
+        "angle_a": 0.2696084362329522,
+        "angle_b": -0.3050270048563488
+      },
+      "node_count": 5,
+      "member_count": 3,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 17.398636419030115
+    },
+    {
+      "step": 10,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "3"
+      ],
+      "params": {
+        "length_a": 3.234232486392454,
+        "length_b": 2.5455194370491987,
+        "angle_a": 0.2706011742746016,
+        "angle_b": -0.42842718285817794
+      },
+      "node_count": 5,
+      "member_count": 3,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 17.398636419030115
+    },
+    {
+      "step": 11,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "4"
+      ],
+      "params": {
+        "length_a": 4.208459566103781,
+        "length_b": 4.048199594589353,
+        "angle_a": 0.47239456439448035,
+        "angle_b": -0.267447372579864
+      },
+      "node_count": 5,
+      "member_count": 3,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 17.398636419030115
+    }
+  ],
+  "final_metrics": {
+    "accepted_step_count": 12,
+    "final_state": "go",
+    "final_residual_magnitude": 17.398636419030115,
+    "final_node_count": 5,
+    "final_member_count": 3,
+    "material_proxy_total_member_length": 7.202987327353173,
+    "member_length_stats": {
+      "min": 1.914906821137225,
+      "max": 3.061297972856285,
+      "mean": 2.400995775784391
+    },
+    "valence_stats": {
+      "min": 0,
+      "max": 2,
+      "mean": 1.2
+    },
+    "support_connectivity": {
+      "support_connected": false,
+      "support_path_count": 0
+    },
+    "equilibrium_reached": false,
+    "rule_counts": {
+      "StartGeneration": 1,
+      "SplitNode": 8,
+      "ExtendNode": 2,
+      "ConnectTwoNodes": 1
+    }
+  }
+}

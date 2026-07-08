@@ -17,6 +17,17 @@ from morph_engine.semantics import enrich_member_force_record
 from morph_engine.semantics import set_member_force_record
 
 
+def _ensure_edge_for_write(graph, source_node, target_node):
+    for u, v in ((source_node, target_node), (target_node, source_node)):
+        try:
+            graph.network.edge_attribute((u, v), "attributes")
+            return u, v
+        except KeyError:
+            continue
+    graph.add_edge(source_node, target_node, family="bar")
+    return source_node, target_node
+
+
 class SingleNodeRootLinkRule:
     name = "single_node_root_link_rule"
 
@@ -37,16 +48,16 @@ class SingleNodeRootLinkRule:
 
         if payload["target_kind"] == "support_node":
             target_node = payload["target_node"]
-            new_graph.add_edge(source_node, target_node, family="bar")
+            edge_u, edge_v = _ensure_edge_for_write(new_graph, source_node, target_node)
             set_member_force_record(
                 new_graph,
-                source_node,
-                target_node,
+                edge_u,
+                edge_v,
                 enrich_member_force_record(
                     create_member_force_record(
                         original_force,
                         source_node=source_node,
-                        target_edge=(source_node, target_node),
+                        target_edge=(edge_u, edge_v),
                         metadata={
                             "semantic_origin": "single_node_root_link",
                             "target_kind": "support_node",

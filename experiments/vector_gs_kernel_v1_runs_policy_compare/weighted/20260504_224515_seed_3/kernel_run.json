@@ -1,0 +1,513 @@
+{
+  "scenario_name": "kernel_cantilever_v1",
+  "problem_id": "default_cantilever_v1",
+  "policy_id": "rule_weighted_random_v1",
+  "seed": 3,
+  "assembly": {
+    "state": "go",
+    "boundary": {
+      "min": [
+        -6.0,
+        -1.0,
+        0.0
+      ],
+      "max": [
+        6.0,
+        6.0,
+        0.0
+      ]
+    },
+    "metadata": {
+      "scenario_name": "kernel_cantilever_v1"
+    },
+    "nodes": [
+      {
+        "node_id": "0",
+        "coordinate": [
+          -5.0,
+          0.0,
+          0.0
+        ],
+        "type": "support",
+        "active": false,
+        "metadata": {},
+        "forces": []
+      },
+      {
+        "node_id": "1",
+        "coordinate": [
+          -5.0,
+          4.0,
+          0.0
+        ],
+        "type": "support",
+        "active": false,
+        "metadata": {},
+        "forces": []
+      },
+      {
+        "node_id": "2",
+        "coordinate": [
+          5.0,
+          2.0,
+          0.0
+        ],
+        "type": "load",
+        "active": true,
+        "metadata": {},
+        "forces": [
+          {
+            "point": [
+              5.0,
+              2.0,
+              0.0
+            ],
+            "vector": [
+              0.0,
+              -10.0,
+              0.0
+            ],
+            "kind": "applied",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {
+              "semantic_origin": "scenario"
+            }
+          },
+          {
+            "point": [
+              5.0,
+              2.0,
+              0.0
+            ],
+            "vector": [
+              0.0,
+              -10.0,
+              0.0
+            ],
+            "kind": "temporary",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {
+              "semantic_origin": "scenario"
+            }
+          }
+        ]
+      },
+      {
+        "node_id": "3",
+        "coordinate": [
+          5.213702664353462,
+          -0.08150370955140351,
+          0.0
+        ],
+        "type": "float",
+        "active": true,
+        "metadata": {
+          "semantic_origin": "create_node"
+        },
+        "forces": [
+          {
+            "point": [
+              5.213702664353462,
+              -0.08150370955140351,
+              0.0
+            ],
+            "vector": [
+              -0.8660254037844384,
+              0.5000000000000004,
+              0.0
+            ],
+            "kind": "temporary",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {}
+          },
+          {
+            "point": [
+              5.213702664353462,
+              -0.08150370955140351,
+              0.0
+            ],
+            "vector": [
+              0.8660254037844388,
+              0.4999999999999998,
+              0.0
+            ],
+            "kind": "temporary",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {}
+          },
+          {
+            "point": [
+              5.213702664353462,
+              -0.08150370955140351,
+              0.0
+            ],
+            "vector": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "kind": "temporary",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {}
+          }
+        ]
+      },
+      {
+        "node_id": "4",
+        "coordinate": [
+          5.332538111156379,
+          -0.3023865524650091,
+          0.0
+        ],
+        "type": "float",
+        "active": true,
+        "metadata": {
+          "semantic_origin": "create_node"
+        },
+        "forces": [
+          {
+            "point": [
+              5.332538111156379,
+              -0.3023865524650091,
+              0.0
+            ],
+            "vector": [
+              -0.8660254037844384,
+              0.5000000000000004,
+              0.0
+            ],
+            "kind": "temporary",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {}
+          },
+          {
+            "point": [
+              5.332538111156379,
+              -0.3023865524650091,
+              0.0
+            ],
+            "vector": [
+              0.8660254037844388,
+              0.4999999999999998,
+              0.0
+            ],
+            "kind": "temporary",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {}
+          },
+          {
+            "point": [
+              5.332538111156379,
+              -0.3023865524650091,
+              0.0
+            ],
+            "vector": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "kind": "temporary",
+            "direction": -1,
+            "related_member": null,
+            "metadata": {}
+          }
+        ]
+      }
+    ],
+    "members": [],
+    "history": [
+      {
+        "step_index": 0,
+        "rule_name": "StartGeneration",
+        "target_node_ids": [],
+        "params": {},
+        "summary": {
+          "state": "go"
+        }
+      },
+      {
+        "step_index": 1,
+        "rule_name": "CreateNode",
+        "target_node_ids": [
+          "2"
+        ],
+        "params": {
+          "length": 2.092445106001116,
+          "angle": 0.1023089821349776
+        },
+        "summary": {
+          "new_node": "3"
+        }
+      },
+      {
+        "step_index": 2,
+        "rule_name": "CreateNode",
+        "target_node_ids": [
+          "2"
+        ],
+        "params": {
+          "length": 2.3262771615487186,
+          "angle": 0.14343999515038844
+        },
+        "summary": {
+          "new_node": "4"
+        }
+      }
+    ],
+    "residual_magnitude": 12.0
+  },
+  "trace": [
+    {
+      "step": 0,
+      "state": "go",
+      "rule": "StartGeneration",
+      "targets": [],
+      "params": {},
+      "node_count": 3,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 10.0
+    },
+    {
+      "step": 1,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length_a": 3.564300760270135,
+        "length_b": 2.1638221480995328,
+        "angle_a": 0.17460879704420595,
+        "angle_b": -0.46311417873376104
+      },
+      "node_count": 3,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 10.0
+    },
+    {
+      "step": 2,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length_a": 3.352434714072597,
+        "length_b": 3.3740779175675137,
+        "angle_a": 0.3089971019601363,
+        "angle_b": -0.4713577379488628
+      },
+      "node_count": 3,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 10.0
+    },
+    {
+      "step": 3,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length_a": 3.8531296405037256,
+        "length_b": 3.6785286884239814,
+        "angle_a": 0.19241100337944905,
+        "angle_b": -0.4353805862003861
+      },
+      "node_count": 3,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 10.0
+    },
+    {
+      "step": 4,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length_a": 2.673579172654992,
+        "length_b": 3.486873789109735,
+        "angle_a": 0.4920548168389832,
+        "angle_b": -0.30566300496418264
+      },
+      "node_count": 3,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 10.0
+    },
+    {
+      "step": 5,
+      "state": "go",
+      "rule": "CreateNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length": 2.092445106001116,
+        "angle": 0.1023089821349776
+      },
+      "node_count": 4,
+      "member_count": 0,
+      "added_nodes": 1,
+      "added_members": 0,
+      "residual_magnitude": 11.0
+    },
+    {
+      "step": 6,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length_a": 3.9474314642445796,
+        "length_b": 4.138063950483244,
+        "angle_a": 0.31740197939824344,
+        "angle_b": -0.46171699199865157
+      },
+      "node_count": 4,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 11.0
+    },
+    {
+      "step": 7,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length_a": 3.7049553415874166,
+        "length_b": 4.322364003000042,
+        "angle_a": 0.4697401982388645,
+        "angle_b": -0.5168463757040853
+      },
+      "node_count": 4,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 11.0
+    },
+    {
+      "step": 8,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length_a": 3.354414856148809,
+        "length_b": 3.429889007827407,
+        "angle_a": 0.20642653338488903,
+        "angle_b": -0.39942891548494797
+      },
+      "node_count": 4,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 11.0
+    },
+    {
+      "step": 9,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length_a": 4.134856221056701,
+        "length_b": 4.474515037303953,
+        "angle_a": 0.20098133258840495,
+        "angle_b": -0.45020836244012563
+      },
+      "node_count": 4,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 11.0
+    },
+    {
+      "step": 10,
+      "state": "go",
+      "rule": "SplitNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length_a": 3.037993261083346,
+        "length_b": 2.2972930678015584,
+        "angle_a": 0.38174595329974875,
+        "angle_b": -0.43657208514011714
+      },
+      "node_count": 4,
+      "member_count": 0,
+      "added_nodes": 0,
+      "added_members": 0,
+      "residual_magnitude": 11.0
+    },
+    {
+      "step": 11,
+      "state": "go",
+      "rule": "CreateNode",
+      "targets": [
+        "2"
+      ],
+      "params": {
+        "length": 2.3262771615487186,
+        "angle": 0.14343999515038844
+      },
+      "node_count": 5,
+      "member_count": 0,
+      "added_nodes": 1,
+      "added_members": 0,
+      "residual_magnitude": 12.0
+    }
+  ],
+  "final_metrics": {
+    "accepted_step_count": 12,
+    "final_state": "go",
+    "final_residual_magnitude": 12.0,
+    "final_node_count": 5,
+    "final_member_count": 0,
+    "material_proxy_total_member_length": 0.0,
+    "member_length_stats": {
+      "min": 0.0,
+      "max": 0.0,
+      "mean": 0.0
+    },
+    "valence_stats": {
+      "min": 0,
+      "max": 0,
+      "mean": 0.0
+    },
+    "support_connectivity": {
+      "support_connected": false,
+      "support_path_count": 0
+    },
+    "equilibrium_reached": false,
+    "rule_counts": {
+      "StartGeneration": 1,
+      "SplitNode": 9,
+      "CreateNode": 2
+    }
+  }
+}

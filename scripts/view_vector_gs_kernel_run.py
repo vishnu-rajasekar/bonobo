@@ -27,7 +27,14 @@ else:
     VIEWER_IMPORT_ERROR = None
 
 
-RUNS_SOURCE_SELECTOR = "20260504_160402_*"
+RUNS_SOURCE_SELECTOR = None
+RUNS_SOURCE_DIRS = (
+    ("experiments", "vector_gs_kernel_v1_runs"),
+    ("experiments", "vector_gs_kernel_v1_runs_policy_compare", "weighted"),
+    ("experiments", "vector_gs_kernel_v1_runs_policy_compare", "uniform"),
+    ("experiments", "vector_gs_kernel_v1_runs_benchmark_hardened", "weighted"),
+    ("experiments", "vector_gs_kernel_v1_runs_benchmark_hardened", "uniform"),
+)
 
 
 def _vector_magnitude(vec3):
@@ -73,25 +80,29 @@ def _safe_text(viewer, position, label, color):
 
 
 def _load_kernel_runs(repo_root):
-    runs_dir = repo_root / "experiments" / "vector_gs_kernel_v1_runs"
-    if not runs_dir.exists():
-        raise FileNotFoundError("Missing kernel runs directory: {0}".format(runs_dir))
-
     run_dirs = []
     selector = None if RUNS_SOURCE_SELECTOR in (None, "", "None") else str(RUNS_SOURCE_SELECTOR)
-    for path in sorted([p for p in runs_dir.iterdir() if p.is_dir()]):
-        if selector and not fnmatch(path.name, selector):
+    searched_roots = []
+    for parts in RUNS_SOURCE_DIRS:
+        runs_dir = repo_root.joinpath(*parts)
+        searched_roots.append(str(runs_dir))
+        if not runs_dir.exists():
             continue
-        if (path / "kernel_run.json").exists():
-            run_dirs.append(path)
+        for path in sorted([p for p in runs_dir.iterdir() if p.is_dir()]):
+            if selector and not fnmatch(path.name, selector):
+                continue
+            if (path / "kernel_run.json").exists():
+                run_dirs.append(path)
 
     if not run_dirs:
         if selector:
             raise FileNotFoundError(
-                "No kernel run directories with kernel_run.json matched selector '{0}' in: {1}".format(selector, runs_dir)
+                "No kernel run directories with kernel_run.json matched selector '{0}' in: {1}".format(
+                    selector, searched_roots
+                )
             )
-        raise FileNotFoundError("No kernel run directories with kernel_run.json found in: {0}".format(runs_dir))
-    return run_dirs
+        raise FileNotFoundError("No kernel run directories with kernel_run.json found in: {0}".format(searched_roots))
+    return sorted(run_dirs)
 
 
 def _load_payload(run_dir):
@@ -112,6 +123,21 @@ def _scene_counts(payload):
         "members": len(payload["assembly"]["members"]),
         "supports": len([node for node in nodes if node["type"] == "support"]),
         "active": len([node for node in nodes if node.get("active")]),
+    }
+
+
+def _metric_summary(payload):
+    metrics = payload.get("final_metrics") or {}
+    support = metrics.get("support_connectivity") or {}
+    validity = metrics.get("benchmark_validity") or {}
+    invalid_reasons = list(validity.get("invalid_reasons") or [])
+    return {
+        "equilibrium_reached": bool(metrics.get("equilibrium_reached", False)),
+        "benchmark_complete": bool(metrics.get("benchmark_complete", False)),
+        "support_connected": bool(support.get("support_connected", False)),
+        "geometrically_valid": bool(validity.get("geometrically_valid", False)),
+        "invalid_reasons": invalid_reasons,
+        "invalid_reason_label": ",".join(invalid_reasons) if invalid_reasons else "none",
     }
 
 
@@ -228,7 +254,11 @@ class KernelRunViewer:
         if self._statusbar is None:
             return
         counts = _scene_counts(payload)
-        message = "{0} ({1}/{2}) | nodes={3} members={4} active={5} residual={6}".format(
+        metrics = _metric_summary(payload)
+        message = (
+            "{0} ({1}/{2}) | nodes={3} members={4} active={5} residual={6} "
+            "| benchmark_complete={7} valid={8} support_connected={9}"
+        ).format(
             payload["run_dir"].name,
             self.current_index + 1,
             len(self.run_dirs),
@@ -236,16 +266,25 @@ class KernelRunViewer:
             counts["members"],
             counts["active"],
             payload["assembly"]["residual_magnitude"],
+            metrics["benchmark_complete"],
+            metrics["geometrically_valid"],
+            metrics["support_connected"],
         )
         self._statusbar.showMessage(message)
 
     def _print_summary(self, payload):
         counts = _scene_counts(payload)
+        metrics = _metric_summary(payload)
         print("run_dir:", payload["run_dir"], flush=True)
         print("nodes:", counts["nodes"], flush=True)
         print("members:", counts["members"], flush=True)
         print("active_nodes:", counts["active"], flush=True)
         print("residual_magnitude:", payload["assembly"]["residual_magnitude"], flush=True)
+        print("equilibrium_reached:", metrics["equilibrium_reached"], flush=True)
+        print("benchmark_complete:", metrics["benchmark_complete"], flush=True)
+        print("support_connected:", metrics["support_connected"], flush=True)
+        print("geometrically_valid:", metrics["geometrically_valid"], flush=True)
+        print("invalid_reasons:", metrics["invalid_reasons"], flush=True)
         print("rule_sequence:", [step["rule"] for step in payload["trace"]], flush=True)
 
     def _draw_payload(self, payload):
@@ -277,15 +316,24 @@ class KernelRunViewer:
 
         coords = [node["coordinate"] for node in payload["assembly"]["nodes"]]
         if coords:
+            metrics = _metric_summary(payload)
             cx = sum(point[0] for point in coords) / len(coords)
             cy = sum(point[1] for point in coords) / len(coords)
             cz = sum(point[2] for point in coords) / len(coords)
             run_label = "Kernel Run {0}/{1}: {2}".format(self.current_index + 1, len(self.run_dirs), payload["run_dir"].name)
             state_label = "state={0} residual={1}".format(payload["assembly"]["state"], payload["assembly"]["residual_magnitude"])
+            completion_label = "benchmark_complete={0} valid={1} support_connected={2}".format(
+                metrics["benchmark_complete"],
+                metrics["geometrically_valid"],
+                metrics["support_connected"],
+            )
+            invalid_label = "invalid_reasons={0}".format(metrics["invalid_reason_label"])
             rule_label = "rules: {0}".format(", ".join(step["rule"] for step in payload["trace"][:5]))
             _safe_text(self.viewer, (cx + 0.5, cy + 0.5, cz + 0.5), run_label, (0.0, 0.0, 0.0))
             _safe_text(self.viewer, (cx + 0.5, cy + 1.0, cz + 0.5), state_label, (0.1, 0.1, 0.1))
-            _safe_text(self.viewer, (cx + 0.5, cy + 1.5, cz + 0.5), rule_label, (0.1, 0.1, 0.1))
+            _safe_text(self.viewer, (cx + 0.5, cy + 1.5, cz + 0.5), completion_label, (0.1, 0.1, 0.1))
+            _safe_text(self.viewer, (cx + 0.5, cy + 2.0, cz + 0.5), invalid_label, (0.45, 0.05, 0.05))
+            _safe_text(self.viewer, (cx + 0.5, cy + 2.5, cz + 0.5), rule_label, (0.1, 0.1, 0.1))
 
         _frame_scene(self.viewer, payload)
 

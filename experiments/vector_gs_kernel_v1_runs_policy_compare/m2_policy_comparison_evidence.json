@@ -1,0 +1,1071 @@
+{
+  "study": {
+    "problem_id": "default_cantilever_v1",
+    "expected_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49
+    ],
+    "expected_max_steps": 12,
+    "policy_labels": {
+      "weighted": "rule_weighted_random_v1",
+      "uniform": "rule_uniform_random_v1"
+    }
+  },
+  "integrity": {
+    "weighted": {
+      "summary_path": "experiments/vector_gs_kernel_v1_runs_policy_compare/weighted/20260504_224515_batch_summary.json",
+      "run_file_count": 50,
+      "summary_run_count": 50,
+      "seeds_match_expected": true,
+      "trace_budget_ok": true,
+      "problem_ids_ok": true,
+      "policy_ids_ok": true,
+      "trace_len_matches_accepted_steps": true,
+      "issues": []
+    },
+    "uniform": {
+      "summary_path": "experiments/vector_gs_kernel_v1_runs_policy_compare/uniform/20260504_224525_batch_summary.json",
+      "run_file_count": 50,
+      "summary_run_count": 50,
+      "seeds_match_expected": true,
+      "trace_budget_ok": true,
+      "problem_ids_ok": true,
+      "policy_ids_ok": true,
+      "trace_len_matches_accepted_steps": true,
+      "issues": []
+    }
+  },
+  "aggregate": {
+    "weighted": {
+      "residual_completion_rate": {
+        "mean": 0.44,
+        "sd": 0.501426536422407,
+        "ci95_mean": [
+          0.2974943990915244,
+          0.5825056009084756
+        ]
+      },
+      "structural_completion_rate": {
+        "mean": 0.18,
+        "sd": 0.3880879344916036,
+        "ci95_mean": [
+          0.06970527027818525,
+          0.29029472972181475
+        ]
+      },
+      "support_connectivity_rate": {
+        "mean": 0.2,
+        "sd": 0.4040610178208843,
+        "ci95_mean": [
+          0.08516571428571432,
+          0.31483428571428573
+        ]
+      },
+      "mean_accepted_steps": {
+        "mean": 10.76,
+        "sd": 2.2638237473760348,
+        "ci95_mean": [
+          10.116620481691198,
+          11.403379518308801
+        ]
+      },
+      "mean_final_residual_magnitude": {
+        "mean": 6.643518903041662,
+        "sd": 6.538509861716862,
+        "ci95_mean": [
+          4.785272062860435,
+          8.50176574322289
+        ]
+      },
+      "mean_material_proxy_total_member_length": {
+        "mean": 10.655774193382115,
+        "sd": 6.04795352386665,
+        "ci95_mean": [
+          8.93694363978911,
+          12.37460474697512
+        ]
+      },
+      "mean_node_count": {
+        "mean": 5.56,
+        "sd": 1.2480188381623745,
+        "ci95_mean": [
+          5.205312600034386,
+          5.914687399965613
+        ]
+      },
+      "mean_member_count": {
+        "mean": 3.12,
+        "sd": 1.721887905522213,
+        "ci95_mean": [
+          2.630638841685136,
+          3.609361158314864
+        ]
+      },
+      "count_residual_completed": 22,
+      "count_structurally_complete": 9,
+      "count_support_connected": 10
+    },
+    "uniform": {
+      "residual_completion_rate": {
+        "mean": 0.5,
+        "sd": 0.5050762722761054,
+        "ci95_mean": [
+          0.35645714285714286,
+          0.6435428571428572
+        ]
+      },
+      "structural_completion_rate": {
+        "mean": 0.28,
+        "sd": 0.4535573676110727,
+        "ci95_mean": [
+          0.15109883398067012,
+          0.4089011660193299
+        ]
+      },
+      "support_connectivity_rate": {
+        "mean": 0.4,
+        "sd": 0.4948716593053935,
+        "ci95_mean": [
+          0.25935729751151215,
+          0.5406427024884879
+        ]
+      },
+      "mean_accepted_steps": {
+        "mean": 10.1,
+        "sd": 2.950268061151912,
+        "ci95_mean": [
+          9.26153276231603,
+          10.93846723768397
+        ]
+      },
+      "mean_final_residual_magnitude": {
+        "mean": 5.371425924051981,
+        "sd": 7.097202938843247,
+        "ci95_mean": [
+          3.3543983116217344,
+          7.388453536482228
+        ]
+      },
+      "mean_material_proxy_total_member_length": {
+        "mean": 14.651322399734578,
+        "sd": 9.04214217313039,
+        "ci95_mean": [
+          12.081542361614853,
+          17.221102437854306
+        ]
+      },
+      "mean_node_count": {
+        "mean": 5.92,
+        "sd": 1.5231546211727816,
+        "ci95_mean": [
+          5.4871189121433,
+          6.3528810878567
+        ]
+      },
+      "mean_member_count": {
+        "mean": 3.6,
+        "sd": 1.873553864086286,
+        "ci95_mean": [
+          3.067535322041481,
+          4.132464677958519
+        ]
+      },
+      "count_residual_completed": 25,
+      "count_structurally_complete": 14,
+      "count_support_connected": 20
+    }
+  },
+  "paired_stats_uniform_minus_weighted": {
+    "completion_delta_uniform_minus_weighted": {
+      "mean": 0.06,
+      "sd": 0.7398289929270887,
+      "ci95_mean": [
+        -0.1502596642746724,
+        0.2702596642746724
+      ],
+      "positive_count": 15,
+      "negative_count": 12,
+      "zero_count": 23
+    },
+    "structural_completion_delta_uniform_minus_weighted": {
+      "mean": 0.1,
+      "sd": 0.6144518047887592,
+      "ci95_mean": [
+        -0.07462742258410432,
+        0.27462742258410433
+      ],
+      "positive_count": 12,
+      "negative_count": 7,
+      "zero_count": 31
+    },
+    "support_connected_delta_uniform_minus_weighted": {
+      "mean": 0.2,
+      "sd": 0.67005939426049,
+      "ci95_mean": [
+        0.009568880608622543,
+        0.3904311193913775
+      ],
+      "positive_count": 17,
+      "negative_count": 7,
+      "zero_count": 26
+    },
+    "accepted_steps_delta_uniform_minus_weighted": {
+      "mean": -0.66,
+      "sd": 3.750428546941574,
+      "ci95_mean": [
+        -1.725873133798363,
+        0.4058731337983629
+      ],
+      "positive_count": 14,
+      "negative_count": 16,
+      "zero_count": 20
+    },
+    "residual_delta_uniform_minus_weighted": {
+      "mean": -1.2720929789896807,
+      "sd": 10.46418576768388,
+      "ci95_mean": [
+        -4.246018315054268,
+        1.7018323570749074
+      ],
+      "positive_count": 16,
+      "negative_count": 20,
+      "zero_count": 14
+    },
+    "material_delta_uniform_minus_weighted": {
+      "mean": 3.9955482063524626,
+      "sd": 10.486184576882794,
+      "ci95_mean": [
+        1.0153708008490905,
+        6.975725611855834
+      ],
+      "positive_count": 35,
+      "negative_count": 13,
+      "zero_count": 2
+    },
+    "node_count_delta_uniform_minus_weighted": {
+      "mean": 0.36,
+      "sd": 1.8709377764279886,
+      "ci95_mean": [
+        -0.17172118491079402,
+        0.891721184910794
+      ],
+      "positive_count": 25,
+      "negative_count": 13,
+      "zero_count": 12
+    },
+    "member_count_delta_uniform_minus_weighted": {
+      "mean": 0.48,
+      "sd": 2.41796001047265,
+      "ci95_mean": [
+        -0.2071850993837253,
+        1.1671850993837252
+      ],
+      "positive_count": 22,
+      "negative_count": 16,
+      "zero_count": 12
+    }
+  },
+  "paired_rows_uniform_minus_weighted": [
+    {
+      "seed": 0,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": 0.0,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 1,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": -1,
+      "support_connected_delta_uniform_minus_weighted": -1,
+      "accepted_steps_delta_uniform_minus_weighted": 3,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": -20.17837367003421,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 1
+    },
+    {
+      "seed": 2,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": -0.660544992115053,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 3,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": -3,
+      "residual_delta_uniform_minus_weighted": -12.0,
+      "material_delta_uniform_minus_weighted": 4.0500497446282475,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 4
+    },
+    {
+      "seed": 4,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": -1,
+      "support_connected_delta_uniform_minus_weighted": -1,
+      "accepted_steps_delta_uniform_minus_weighted": 2,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": 7.925965978741832,
+      "node_count_delta_uniform_minus_weighted": 4,
+      "member_count_delta_uniform_minus_weighted": 4
+    },
+    {
+      "seed": 5,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": -3,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": -7.470398840846472,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 6,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": -10.0,
+      "material_delta_uniform_minus_weighted": 0.0813520647424344,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 2
+    },
+    {
+      "seed": 7,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": -2,
+      "residual_delta_uniform_minus_weighted": -17.398636419030115,
+      "material_delta_uniform_minus_weighted": -3.9940110185574196,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 1
+    },
+    {
+      "seed": 8,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": -1,
+      "support_connected_delta_uniform_minus_weighted": -1,
+      "accepted_steps_delta_uniform_minus_weighted": 1,
+      "residual_delta_uniform_minus_weighted": 31.952940111554977,
+      "material_delta_uniform_minus_weighted": 21.426671322179935,
+      "node_count_delta_uniform_minus_weighted": 4,
+      "member_count_delta_uniform_minus_weighted": 3
+    },
+    {
+      "seed": 9,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 16.10680481826327,
+      "material_delta_uniform_minus_weighted": 17.943240010003592,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 10,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": 1,
+      "residual_delta_uniform_minus_weighted": 5.5,
+      "material_delta_uniform_minus_weighted": -2.397525411088713,
+      "node_count_delta_uniform_minus_weighted": -4,
+      "member_count_delta_uniform_minus_weighted": -4
+    },
+    {
+      "seed": 11,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 9.539392014169456,
+      "material_delta_uniform_minus_weighted": -13.314829827784356,
+      "node_count_delta_uniform_minus_weighted": -1,
+      "member_count_delta_uniform_minus_weighted": -2
+    },
+    {
+      "seed": 12,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 6.102756141365957,
+      "material_delta_uniform_minus_weighted": 9.378649900268703,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 2
+    },
+    {
+      "seed": 13,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": -1,
+      "residual_delta_uniform_minus_weighted": -11.68433206308825,
+      "material_delta_uniform_minus_weighted": 17.169005443330505,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 3
+    },
+    {
+      "seed": 14,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": 1,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": 9.268524303211663,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 1
+    },
+    {
+      "seed": 15,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": -4.500000000000001,
+      "material_delta_uniform_minus_weighted": 9.014250340258055,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": 1
+    },
+    {
+      "seed": 16,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": -9.0,
+      "material_delta_uniform_minus_weighted": -0.30716889755714405,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 1
+    },
+    {
+      "seed": 17,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": 3,
+      "residual_delta_uniform_minus_weighted": 4.893772338310224,
+      "material_delta_uniform_minus_weighted": 11.466666084277119,
+      "node_count_delta_uniform_minus_weighted": 3,
+      "member_count_delta_uniform_minus_weighted": 3
+    },
+    {
+      "seed": 18,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": -10.894673448004337,
+      "material_delta_uniform_minus_weighted": 7.235305945300011,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 2
+    },
+    {
+      "seed": 19,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 1.0,
+      "material_delta_uniform_minus_weighted": 0.8731269221996367,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 20,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": -1,
+      "support_connected_delta_uniform_minus_weighted": -1,
+      "accepted_steps_delta_uniform_minus_weighted": 7,
+      "residual_delta_uniform_minus_weighted": 10.0,
+      "material_delta_uniform_minus_weighted": 0.27677441171092987,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 21,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": -7,
+      "residual_delta_uniform_minus_weighted": -10.0,
+      "material_delta_uniform_minus_weighted": -0.6560522005897695,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": 1
+    },
+    {
+      "seed": 22,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": -3,
+      "residual_delta_uniform_minus_weighted": -10.0,
+      "material_delta_uniform_minus_weighted": 0.403180388059738,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 2
+    },
+    {
+      "seed": 23,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": -4,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": 10.436037883263614,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 24,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": -8,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": -0.9657396376910672,
+      "node_count_delta_uniform_minus_weighted": -4,
+      "member_count_delta_uniform_minus_weighted": -3
+    },
+    {
+      "seed": 25,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": 0.0,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 26,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 0.46060798583054385,
+      "material_delta_uniform_minus_weighted": 0.32484242711529987,
+      "node_count_delta_uniform_minus_weighted": -1,
+      "member_count_delta_uniform_minus_weighted": -1
+    },
+    {
+      "seed": 27,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": -1,
+      "support_connected_delta_uniform_minus_weighted": -1,
+      "accepted_steps_delta_uniform_minus_weighted": 5,
+      "residual_delta_uniform_minus_weighted": 10.0,
+      "material_delta_uniform_minus_weighted": 0.48629230379479793,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 28,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": -1,
+      "support_connected_delta_uniform_minus_weighted": -1,
+      "accepted_steps_delta_uniform_minus_weighted": 7,
+      "residual_delta_uniform_minus_weighted": 9.539392014169456,
+      "material_delta_uniform_minus_weighted": -9.591099456246042,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 29,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 3,
+      "residual_delta_uniform_minus_weighted": 9.539392014169456,
+      "material_delta_uniform_minus_weighted": -24.109198760218884,
+      "node_count_delta_uniform_minus_weighted": -1,
+      "member_count_delta_uniform_minus_weighted": -2
+    },
+    {
+      "seed": 30,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 2,
+      "residual_delta_uniform_minus_weighted": 9.539392014169456,
+      "material_delta_uniform_minus_weighted": -19.25208970485245,
+      "node_count_delta_uniform_minus_weighted": -2,
+      "member_count_delta_uniform_minus_weighted": -5
+    },
+    {
+      "seed": 31,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 3,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": 23.682936837665327,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 32,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": 9.423255774332855,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 1
+    },
+    {
+      "seed": 33,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": -8,
+      "residual_delta_uniform_minus_weighted": -16.945508146638048,
+      "material_delta_uniform_minus_weighted": 6.139103963882693,
+      "node_count_delta_uniform_minus_weighted": -2,
+      "member_count_delta_uniform_minus_weighted": -1
+    },
+    {
+      "seed": 34,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": -7,
+      "residual_delta_uniform_minus_weighted": -14.968490378437785,
+      "material_delta_uniform_minus_weighted": 5.715911536658718,
+      "node_count_delta_uniform_minus_weighted": -1,
+      "member_count_delta_uniform_minus_weighted": -1
+    },
+    {
+      "seed": 35,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": 0.5428738240556825,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": 0
+    },
+    {
+      "seed": 36,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": -8,
+      "residual_delta_uniform_minus_weighted": -16.7867514207695,
+      "material_delta_uniform_minus_weighted": 4.950981206750127,
+      "node_count_delta_uniform_minus_weighted": -1,
+      "member_count_delta_uniform_minus_weighted": -1
+    },
+    {
+      "seed": 37,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": -2.460607985830544,
+      "material_delta_uniform_minus_weighted": 12.771920262178954,
+      "node_count_delta_uniform_minus_weighted": 2,
+      "member_count_delta_uniform_minus_weighted": 4
+    },
+    {
+      "seed": 38,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": -6.650235491000501,
+      "material_delta_uniform_minus_weighted": 4.58315322590102,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": -1
+    },
+    {
+      "seed": 39,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": -7.029283753991518,
+      "material_delta_uniform_minus_weighted": 7.171186618532522,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": -1
+    },
+    {
+      "seed": 40,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 1,
+      "residual_delta_uniform_minus_weighted": 20.975222613602323,
+      "material_delta_uniform_minus_weighted": 9.7424814968442,
+      "node_count_delta_uniform_minus_weighted": 0,
+      "member_count_delta_uniform_minus_weighted": -1
+    },
+    {
+      "seed": 41,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": -11.021503524460716,
+      "material_delta_uniform_minus_weighted": 0.5879478683945756,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 1
+    },
+    {
+      "seed": 42,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": -8,
+      "residual_delta_uniform_minus_weighted": -18.01044343884257,
+      "material_delta_uniform_minus_weighted": 5.620545772999602,
+      "node_count_delta_uniform_minus_weighted": -1,
+      "member_count_delta_uniform_minus_weighted": -1
+    },
+    {
+      "seed": 43,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 11.6148233610504,
+      "material_delta_uniform_minus_weighted": 25.491695535216678,
+      "node_count_delta_uniform_minus_weighted": 5,
+      "member_count_delta_uniform_minus_weighted": 5
+    },
+    {
+      "seed": 44,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": -8,
+      "residual_delta_uniform_minus_weighted": -15.587507906972915,
+      "material_delta_uniform_minus_weighted": 6.7467209439013995,
+      "node_count_delta_uniform_minus_weighted": -1,
+      "member_count_delta_uniform_minus_weighted": -1
+    },
+    {
+      "seed": 45,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": -1,
+      "support_connected_delta_uniform_minus_weighted": -1,
+      "accepted_steps_delta_uniform_minus_weighted": 6,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": 25.59219373526181,
+      "node_count_delta_uniform_minus_weighted": 3,
+      "member_count_delta_uniform_minus_weighted": 3
+    },
+    {
+      "seed": 46,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": -1,
+      "residual_delta_uniform_minus_weighted": -10.0,
+      "material_delta_uniform_minus_weighted": 12.679933119096315,
+      "node_count_delta_uniform_minus_weighted": 4,
+      "member_count_delta_uniform_minus_weighted": 8
+    },
+    {
+      "seed": 47,
+      "completion_delta_uniform_minus_weighted": 1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 0,
+      "accepted_steps_delta_uniform_minus_weighted": -1,
+      "residual_delta_uniform_minus_weighted": -10.931170399072752,
+      "material_delta_uniform_minus_weighted": 9.521334713463503,
+      "node_count_delta_uniform_minus_weighted": 1,
+      "member_count_delta_uniform_minus_weighted": 3
+    },
+    {
+      "seed": 48,
+      "completion_delta_uniform_minus_weighted": -1,
+      "structural_completion_delta_uniform_minus_weighted": 0,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": 0,
+      "residual_delta_uniform_minus_weighted": 5.5,
+      "material_delta_uniform_minus_weighted": 7.334855175342696,
+      "node_count_delta_uniform_minus_weighted": -3,
+      "member_count_delta_uniform_minus_weighted": -4
+    },
+    {
+      "seed": 49,
+      "completion_delta_uniform_minus_weighted": 0,
+      "structural_completion_delta_uniform_minus_weighted": 1,
+      "support_connected_delta_uniform_minus_weighted": 1,
+      "accepted_steps_delta_uniform_minus_weighted": -6,
+      "residual_delta_uniform_minus_weighted": 0.0,
+      "material_delta_uniform_minus_weighted": -3.3845243483600793,
+      "node_count_delta_uniform_minus_weighted": -3,
+      "member_count_delta_uniform_minus_weighted": -3
+    }
+  ],
+  "representative_runs": {
+    "weighted": {
+      "structural_success_lowest_material": {
+        "seed": 0,
+        "path": "experiments/vector_gs_kernel_v1_runs_policy_compare/weighted/20260504_224515_seed_0/kernel_run.json",
+        "problem_id": "default_cantilever_v1",
+        "policy_id": "rule_weighted_random_v1",
+        "trace_len": 5,
+        "accepted_steps": 5,
+        "residual": 0.0,
+        "material": 12.0,
+        "support_connected": true,
+        "support_path_count": 1,
+        "residual_completed": true,
+        "structurally_complete": true,
+        "node_count": 4,
+        "member_count": 2,
+        "final_state": "end",
+        "rule_counts": {
+          "StartGeneration": 1,
+          "SplitNode": 1,
+          "ExtendAndConnectTwoNodes": 2,
+          "EndGeneration": 1
+        }
+      },
+      "residual_complete_but_not_support_connected_lowest_material": {
+        "seed": 14,
+        "path": "experiments/vector_gs_kernel_v1_runs_policy_compare/weighted/20260504_224515_seed_14/kernel_run.json",
+        "problem_id": "default_cantilever_v1",
+        "policy_id": "rule_weighted_random_v1",
+        "trace_len": 11,
+        "accepted_steps": 11,
+        "residual": 0.0,
+        "material": 2.844528494531767,
+        "support_connected": false,
+        "support_path_count": 0,
+        "residual_completed": true,
+        "structurally_complete": false,
+        "node_count": 6,
+        "member_count": 4,
+        "final_state": "end",
+        "rule_counts": {
+          "StartGeneration": 1,
+          "SplitNode": 4,
+          "CreateNode": 2,
+          "ExtendAndConnectTwoNodes": 1,
+          "ConnectTwoNodes": 1,
+          "CloseStructure": 1,
+          "EndGeneration": 1
+        }
+      },
+      "failure_lowest_residual": {
+        "seed": 19,
+        "path": "experiments/vector_gs_kernel_v1_runs_policy_compare/weighted/20260504_224515_seed_19/kernel_run.json",
+        "problem_id": "default_cantilever_v1",
+        "policy_id": "rule_weighted_random_v1",
+        "trace_len": 12,
+        "accepted_steps": 12,
+        "residual": 1.0,
+        "material": 12.025218039623795,
+        "support_connected": true,
+        "support_path_count": 1,
+        "residual_completed": false,
+        "structurally_complete": false,
+        "node_count": 6,
+        "member_count": 3,
+        "final_state": "go",
+        "rule_counts": {
+          "StartGeneration": 1,
+          "SplitNode": 1,
+          "ExtendAndConnectTwoNodes": 6,
+          "CreateNode": 1,
+          "ExtendNode": 3
+        }
+      },
+      "median_by_residual": {
+        "seed": 43,
+        "path": "experiments/vector_gs_kernel_v1_runs_policy_compare/weighted/20260504_224515_seed_43/kernel_run.json",
+        "problem_id": "default_cantilever_v1",
+        "policy_id": "rule_weighted_random_v1",
+        "trace_len": 12,
+        "accepted_steps": 12,
+        "residual": 9.539392014169456,
+        "material": 2.621705656238075,
+        "support_connected": false,
+        "support_path_count": 0,
+        "residual_completed": false,
+        "structurally_complete": false,
+        "node_count": 5,
+        "member_count": 2,
+        "final_state": "go",
+        "rule_counts": {
+          "StartGeneration": 1,
+          "SplitNode": 7,
+          "CreateNode": 2,
+          "ExtendAndConnectTwoNodes": 1,
+          "ExtendNode": 1
+        }
+      }
+    },
+    "uniform": {
+      "structural_success_lowest_material": {
+        "seed": 0,
+        "path": "experiments/vector_gs_kernel_v1_runs_policy_compare/uniform/20260504_224525_seed_0/kernel_run.json",
+        "problem_id": "default_cantilever_v1",
+        "policy_id": "rule_uniform_random_v1",
+        "trace_len": 5,
+        "accepted_steps": 5,
+        "residual": 0.0,
+        "material": 12.0,
+        "support_connected": true,
+        "support_path_count": 1,
+        "residual_completed": true,
+        "structurally_complete": true,
+        "node_count": 4,
+        "member_count": 2,
+        "final_state": "end",
+        "rule_counts": {
+          "StartGeneration": 1,
+          "SplitNode": 1,
+          "ExtendAndConnectTwoNodes": 2,
+          "EndGeneration": 1
+        }
+      },
+      "residual_complete_but_not_support_connected_lowest_material": {
+        "seed": 1,
+        "path": "experiments/vector_gs_kernel_v1_runs_policy_compare/uniform/20260504_224525_seed_1/kernel_run.json",
+        "problem_id": "default_cantilever_v1",
+        "policy_id": "rule_uniform_random_v1",
+        "trace_len": 9,
+        "accepted_steps": 9,
+        "residual": 0.0,
+        "material": 2.5461851799731927,
+        "support_connected": false,
+        "support_path_count": 0,
+        "residual_completed": true,
+        "structurally_complete": false,
+        "node_count": 6,
+        "member_count": 4,
+        "final_state": "end",
+        "rule_counts": {
+          "StartGeneration": 1,
+          "CreateNode": 2,
+          "ExtendAndConnectTwoNodes": 1,
+          "ConnectTwoNodes": 2,
+          "ExtendNode": 1,
+          "CloseStructure": 1,
+          "EndGeneration": 1
+        }
+      },
+      "failure_lowest_residual": {
+        "seed": 16,
+        "path": "experiments/vector_gs_kernel_v1_runs_policy_compare/uniform/20260504_224525_seed_16/kernel_run.json",
+        "problem_id": "default_cantilever_v1",
+        "policy_id": "rule_uniform_random_v1",
+        "trace_len": 12,
+        "accepted_steps": 12,
+        "residual": 1.0,
+        "material": 12.10190327062267,
+        "support_connected": true,
+        "support_path_count": 1,
+        "residual_completed": false,
+        "structurally_complete": false,
+        "node_count": 6,
+        "member_count": 3,
+        "final_state": "go",
+        "rule_counts": {
+          "StartGeneration": 1,
+          "ExtendAndConnectTwoNodes": 5,
+          "CreateNode": 2,
+          "ExtendNode": 4
+        }
+      },
+      "median_by_residual": {
+        "seed": 16,
+        "path": "experiments/vector_gs_kernel_v1_runs_policy_compare/uniform/20260504_224525_seed_16/kernel_run.json",
+        "problem_id": "default_cantilever_v1",
+        "policy_id": "rule_uniform_random_v1",
+        "trace_len": 12,
+        "accepted_steps": 12,
+        "residual": 1.0,
+        "material": 12.10190327062267,
+        "support_connected": true,
+        "support_path_count": 1,
+        "residual_completed": false,
+        "structurally_complete": false,
+        "node_count": 6,
+        "member_count": 3,
+        "final_state": "go",
+        "rule_counts": {
+          "StartGeneration": 1,
+          "ExtendAndConnectTwoNodes": 5,
+          "CreateNode": 2,
+          "ExtendNode": 4
+        }
+      }
+    }
+  },
+  "interpretation": {
+    "residual_completion_definition": "final_residual_magnitude <= 1e-9",
+    "structural_completion_definition_used_here": "residual completion AND load-to-support connectivity",
+    "caution": "This stricter structural completion is an analysis criterion for this report, not a code change to kernel metrics."
+  }
+}
