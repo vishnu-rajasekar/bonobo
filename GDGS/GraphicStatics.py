@@ -13,6 +13,23 @@ import math
 import Assembly as assembly
 import RandomUtility as ru
 
+################################################################################
+#  ADDITIONAL DEFINITIONS
+
+def sort_points_clockwise(center_point, points, forces):
+    # Calculate polar angles for each point with respect to the center point
+    angles = [math.atan2(point.Y - center_point.Y, point.X - center_point.X) for point in points]
+
+    # Create a list of tuples containing the point and its corresponding angle
+    point_angle_pairs = list(zip(forces, angles))
+
+    # Sort the list of tuples based on the angle
+    sorted_point_angle_pairs = sorted(point_angle_pairs, key=lambda x: x[1])
+
+    # Extract the sorted points
+    sorted_forces = [pair[0] for pair in sorted_point_angle_pairs]
+
+    return sorted_forces
 
 ################################################################################
 # FORCE OPERATIONS
@@ -26,21 +43,24 @@ def TranslateForce (force, coordinate):
     
     #if compression
     if force.Direction == -1:
-        start = gh.EndPoints(force.Line)[1] #get ending point
+        start = force.Line.PointAt(1) #get ending point
         finish = coordinate
-        translation = gh.Vector2Pt(start, finish, False)[0]
-        movedline = gh.Move(force.Line, translation)[0]
-        force.Line = movedline
+        translation = finish - start
+        transform = rg.Transform.Translation(translation)
+        force.Line.Transform(transform)
+
         return force
     
     #if tension
     else:
-        start = gh.EndPoints(force.Line)[0] #get starting point
+        start = force.Line.PointAt(0) #get starting point
         finish = coordinate
-        translation = gh.Vector2Pt(start, finish, False)[0]
-        movedline = gh.Move(force.Line, translation)[0]
-        force.Line = movedline
+        translation = finish - start
+        transform = rg.Transform.Translation(translation)
+        force.Line.Transform(transform)
+
         return force
+
 
 def ReverseForce (force):
     
@@ -49,9 +69,9 @@ def ReverseForce (force):
     # INPUT : assembly.force instance  
     # OUTPUT : assembly.force instance
 
-    start = gh.EndPoints(force.Line)[0]
-    end = gh.EndPoints(force.Line)[1]
-    force.Line = gh.Line(end, start)
+    start = force.Line.From
+    end = force.Line.To
+    force.Line = rg.Line(end, start)
     force.Direction = force.Direction*-1
     return force
 
@@ -75,11 +95,12 @@ def FlipTempForceDir (node):
     for i in range(0, len(node.Forces)):
         if node.Forces[i].Type != 3: #if the force is not a temporary force
             NodeForces.append(node.Forces[i])
-    TempForce = GetTempForce (node)[0]
-    TempForce.Direction = TempForce.Direction*-1
-    NodeForces.append(TempForce)
-    node.Forces = NodeForces
-    node = RearrangeForces(node)
+    if len(GetTempForce(node))>0:
+        TempForce = GetTempForce (node)[0]
+        TempForce.Direction = TempForce.Direction*-1
+        NodeForces.append(TempForce)
+        node.Forces = NodeForces
+        node = RearrangeForces(node)
     return node
 
 def GetLineOfAction (node):
@@ -95,16 +116,17 @@ def GetLineOfAction (node):
     # Determine Line of Action
     LOA = []
     for force in TempForces:
+
         circle = gh.Circle(node.Coordinate, 0.1)
         circle = gh.Scale(circle, node.Coordinate, 0.1)[0]
         intersection = gh.CurveXCurve(force.Line, circle)
-        LOA.append(gh.Vector2Pt(node.Coordinate, intersection, False)[0])
+        LOA.append(gh.Vector2Pt(node.Coordinate, intersection)[0])
     return LOA
 
 def LineToVector (line):
     startpoint = gh.EndPoints(line)[0]
     endpoint = gh.EndPoints(line)[1]
-    vector = gh.Vector2Pt(startpoint, endpoint, False)
+    vector = gh.Vector2Pt(startpoint, endpoint)
     return vector
 
 def TransferMemberForce (force, nodecoordinate):
@@ -120,10 +142,10 @@ def TransferMemberForce (force, nodecoordinate):
     ForceLineEnd = gh.EndPoints(InitialForceLine)[1]
     
     if force.Direction == -1: #if member is in compression
-        translation = gh.Vector2Pt(ForceLineStart, nodecoordinate, False)[0]
+        translation = gh.Vector2Pt(ForceLineStart, nodecoordinate)[0]
         
     else:
-        translation = gh.Vector2Pt(ForceLineEnd, nodecoordinate, False)[0]
+        translation = gh.Vector2Pt(ForceLineEnd, nodecoordinate)[0]
     
     TransferedForceLine = gh.Move(InitialForceLine, translation)[0]
     TransferedForceLine = gh.FlipCurve(TransferedForceLine)[0]
@@ -197,10 +219,27 @@ def RearrangeForces (node):
     for force in forcelist:
         force = TranslateForce(force, node.Coordinate)
     
-    #rearrange
+
+    if len(forcelist) == 1:
+        return node
+    
+    else:
+        points = []
+        for force in node.Forces:
+            if force.Line.From == node.Coordinate:
+                points.append(force.Line.To)
+            else:
+                points.append(force.Line.From)
+        
+        node.Forcelist = sort_points_clockwise(node.Coordinate, points)
+        return node
+
+
+"""     #rearrange
     Intersections = []
-    circle = gh.Circle(node.Coordinate, 0.1)
-    circle = gh.Scale(circle, node.Coordinate, 0.1)[0]
+    circle = rg.Circle(node.Coordinate, 0.1)
+    transform = rg.Transform.Scale(node.Coordinate, 0.1)
+    circle.Transform(transform)
     circle2 = gh.FlipCurve(circle)[0] # to sort clockwise
     
     if len(forcelist) == 1:
@@ -218,7 +257,7 @@ def RearrangeForces (node):
         SortOrder = SortedPointList[1]
         SortedList = [forcelist[j] for j in SortOrder]
         node.Forcelist = SortedList #reassemble node forcelist
-        return node
+        return node """
 
 def TempNodeEquilibrium (floatnode):
     
@@ -268,26 +307,28 @@ def EquilibrateNode (node):
         for i in range(1,len(forcelist)):
             
             line1 = polygon[-1]
-            startpoint1 = gh.EndPoints(line1)[0]
-            endpoint1 = gh.EndPoints(line1)[1]
+            #startpoint1 = gh.EndPoints(line1)[0]
+            endpoint1 = line1.To
             
             line2 = forcelist[i].Line
-            startpoint2 = gh.EndPoints(line2)[0]
-            endpoint2 = gh.EndPoints(line2)[1]
+            startpoint2 = line2.From
+            #endpoint2 = gh.EndPoints(line2)[1]
             
-            translation = gh.Vector2Pt(startpoint2, endpoint1, False)
+            translation = gh.Vector2Pt(startpoint2, endpoint1)
+
             movedline = gh.Move(line2, translation)[0]
             polygon.append(movedline)
+
+    curves = [line.ToNurbsCurve() for line in polygon]
+    polygonjoined = rg.Curve.JoinCurves(curves,0.001,True)
+    polygonstart = polygonjoined[0].PointAtStart
+    polygonend = polygonjoined[0].PointAtEnd
     
-    polygonjoined = gh.JoinCurves(polygon, True)
-    polygonstart = gh.EndPoints(polygonjoined)[0]
-    polygonend = gh.EndPoints(polygonjoined)[1]
-    
-    closingline = gh.Line(polygonend, polygonstart)
+    closingline = rg.Line(polygonend, polygonstart)
     polygon.append(closingline)
     
-    center = gh.EndPoints(forcelist[0].Line)[1] #endpoint of any force line should be at the center
-    translation = gh.Vector2Pt(polygonstart, center, False)
+    center = forcelist[0].Line.To #endpoint of any force line should be at the center
+    translation = center-polygonstart
     movedline = gh.Move(closingline, translation)[0]
     
     TempForce = assembly.Force(movedline, assembly.ForceType.Temporary, assembly.ForceDirection.Compression)
@@ -317,7 +358,7 @@ def DrawNodeForcePolygon (node, drawlocation):
         startpoint2 = gh.EndPoints(line2)[0]
         endpoint2 = gh.EndPoints(line2)[1]
         
-        translation = gh.Vector2Pt(startpoint2, endpoint1, False)[0]
+        translation = gh.Vector2Pt(startpoint2, endpoint1)[0]
         movedline1 = gh.Move(line1, translation)[0]
         movedline2 = gh.Move(line2, translation)[0]
         
@@ -351,7 +392,7 @@ def DrawNodeForcePolygon (node, drawlocation):
         centroid = gh.Area(polygonjoined)[1]
     
     movedpolygoncenter = drawlocation
-    translation = gh.Vector2Pt(centroid, movedpolygoncenter, False)[0]
+    translation = gh.Vector2Pt(centroid, movedpolygoncenter)[0]
     
     for force in polygon:
         force.Line = gh.Move(force.Line, translation)[0]
@@ -490,9 +531,9 @@ def FindClosestLink (node, assembly):
     # OUTPUT : 1) assembly.node instance  2)coordinate of the closest projection
     
     nodeLOA = GetLineOfAction(node)[0]
-    
+
     # list of closest nodes
-    closestnodes = FindClosestNodes(node, assembly, 6)
+    closestnodes = FindClosestNodes(node, assembly, 6) #6
     
     # find projection of the current node and the cloesest node... SAME ORDER AS closestnodes
     projections = []
@@ -503,7 +544,7 @@ def FindClosestLink (node, assembly):
             point = rg.Point3d(10000,0,0)
         projections.append(point)
     
-    closestprojection = gh.ClosestPoints(node.Coordinate, projections, 6)
+    closestprojection = gh.ClosestPoints(node.Coordinate, projections, 6) #6
     
     if closestprojection[1] == None:
         return (None, None, None)
@@ -659,7 +700,7 @@ def ConnectTwoForces (node1, node2, currentshape):
 def ConnectTwoForcesDirect (node1, node2, currentshape):
     
     projection = UniDirVectorIntersection (node1.Coordinate, GetLineOfAction(node1), node2.Coordinate, GetLineOfAction(node2))
-    print projection
+    print (projection)
     
     # Reconstruct Node1
     node1tf = GetTempForce(node1)[0]
@@ -824,17 +865,17 @@ def GetMemberForce (member, assembly):
         if force.Type == 4:
             
             vector = LineToVector(force.Line)[0]
-            crossproduct = gh.CrossProduct(membervector, vector, False)[1]
+            crossproduct = gh.CrossProduct(membervector, vector)[1]
 
             if crossproduct < 0.001 :
-                print crossproduct
+                print (crossproduct)
                 amplitude = gh.VectorLength(vector)
 
                 direction = force.Direction
                 
-            else:
-                amplitude = None
-                direction = None
+            #else:
+                #amplitude = None
+                #direction = None
     return (amplitude, direction)
     
     

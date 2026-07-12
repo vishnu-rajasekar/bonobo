@@ -89,6 +89,25 @@ def test_kernel_benchmark_completion_requires_support_connectivity():
     assert metrics["benchmark_complete"] is False
 
 
+def test_default_cantilever_reports_closed_boundary_force_polygon():
+    assembly = make_default_cantilever_scenario()
+
+    metrics = compute_kernel_metrics(assembly)
+    polygon = metrics["boundary_force_polygon"]
+
+    assert polygon["force_convention"] == "tail_to_head_vectors_head_to_tail_polygon"
+    assert polygon["total_applied_force"] == [0.0, -10.0, 0.0]
+    assert polygon["total_reaction_force"] == [0.0, 10.0, 0.0]
+    assert polygon["polygon_residual"] == [0.0, 0.0, 0.0]
+    assert polygon["polygon_residual_magnitude"] == 0.0
+    assert polygon["externally_balanced"] is True
+    assert [reaction["node_id"] for reaction in polygon["solved_reactions"]] == ["0", "1"]
+    assert [reaction["vector"] for reaction in polygon["solved_reactions"]] == [
+        [0.0, 5.0, 0.0],
+        [0.0, 5.0, 0.0],
+    ]
+
+
 def test_kernel_benchmark_completion_requires_geometric_validity():
     support = Node("support", [0.0, 0.0, 0.0], NodeType.SUPPORT, active=False)
     load = Node("load", [1.0, 1.0, 0.0], NodeType.LOAD, forces=[], active=False)

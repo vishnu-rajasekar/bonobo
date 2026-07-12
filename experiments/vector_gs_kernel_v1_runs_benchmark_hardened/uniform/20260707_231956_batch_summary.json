@@ -463,7 +463,8 @@
           "ExtendAndConnectTwoNodes": 2,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -1133,7 +1134,8 @@
           "CloseStructure": 1,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -1697,7 +1699,8 @@
           "SplitNode": 4,
           "CreateNode": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -2370,7 +2373,8 @@
           "CloseStructure": 1,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -3389,7 +3393,8 @@
           "CloseStructure": 3,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -4066,7 +4071,8 @@
           "CloseStructure": 1,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -4776,7 +4782,8 @@
           "ExtendNode": 3,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -5472,7 +5479,8 @@
           "CloseStructure": 1,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -6464,7 +6472,8 @@
           "ExtendAndConnectTwoNodes": 2,
           "CloseStructure": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -7228,7 +7237,8 @@
           "ConnectTwoNodes": 3,
           "ExtendNode": 3
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -7979,7 +7989,8 @@
           "ExtendAndConnectTwoNodes": 7,
           "ExtendNode": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -8528,7 +8539,8 @@
           "ExtendNode": 1,
           "SplitNode": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -9275,7 +9287,8 @@
           "ConnectTwoNodes": 2,
           "CreateNode": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -10073,7 +10086,8 @@
           "CloseStructure": 1,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -10878,7 +10892,8 @@
           "ExtendNode": 2,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -11519,7 +11534,8 @@
           "ConnectTwoNodes": 2,
           "ExtendNode": 5
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -12188,7 +12204,8 @@
           "CreateNode": 2,
           "ExtendNode": 4
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -13237,7 +13254,8 @@
           "ExtendNode": 2,
           "ConnectTwoNodes": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -13950,7 +13968,8 @@
           "ExtendNode": 2,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -14643,7 +14662,8 @@
           "CloseStructure": 1,
           "ExtendNode": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -15209,7 +15229,8 @@
           "ExtendNode": 1,
           "CreateNode": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -15706,7 +15727,8 @@
           "ExtendNode": 1,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -16365,7 +16387,8 @@
           "SplitNode": 1,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -17010,7 +17033,8 @@
           "ExtendNode": 1,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -17400,7 +17424,8 @@
           "ExtendAndConnectTwoNodes": 2,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -17968,7 +17993,8 @@
           "ExtendNode": 3,
           "CreateNode": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -18529,7 +18555,8 @@
           "CreateNode": 4,
           "SplitNode": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -19093,7 +19120,8 @@
           "ExtendNode": 3,
           "CreateNode": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -19644,7 +19672,8 @@
           "ExtendNode": 3,
           "SplitNode": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -20192,7 +20221,8 @@
           "SplitNode": 2,
           "ExtendNode": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -20748,7 +20778,8 @@
           "SplitNode": 4,
           "ExtendNode": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -21843,7 +21874,8 @@
           "CloseStructure": 2,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -22508,7 +22540,8 @@
           "ExtendAndConnectTwoNodes": 2,
           "ExtendNode": 3
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -22898,7 +22931,8 @@
           "ExtendAndConnectTwoNodes": 2,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -23308,7 +23342,8 @@
           "ExtendAndConnectTwoNodes": 2,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -23862,7 +23897,8 @@
           "ExtendAndConnectTwoNodes": 2,
           "ExtendNode": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -24252,7 +24288,8 @@
           "ExtendAndConnectTwoNodes": 2,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -24987,7 +25024,8 @@
           "CreateNode": 1,
           "ExtendNode": 4
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -25540,7 +25578,8 @@
           "CreateNode": 4,
           "SplitNode": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -26097,7 +26136,8 @@
           "ExtendNode": 4,
           "CreateNode": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -26774,7 +26814,8 @@
           "SplitNode": 3,
           "ConnectTwoNodes": 2
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -27523,7 +27564,8 @@
           "CloseStructure": 1,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -27913,7 +27955,8 @@
           "ExtendAndConnectTwoNodes": 2,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -28966,7 +29009,8 @@
           "ExtendAndConnectTwoNodes": 4,
           "ExtendNode": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -29356,7 +29400,8 @@
           "ExtendAndConnectTwoNodes": 2,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -30152,7 +30197,8 @@
           "CloseStructure": 1,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -31347,7 +31393,8 @@
           "CloseStructure": 3,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -32145,7 +32192,8 @@
           "CloseStructure": 1,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -32905,7 +32953,8 @@
           "ExtendAndConnectTwoNodes": 5,
           "ExtendNode": 3
         }
-      }
+      },
+      "step_budget": 12
     },
     {
       "problem_id": "default_cantilever_v1",
@@ -33295,7 +33344,8 @@
           "ExtendAndConnectTwoNodes": 2,
           "EndGeneration": 1
         }
-      }
+      },
+      "step_budget": 12
     }
   ],
   "aggregate_metrics": {
@@ -33307,6 +33357,13 @@
     "mean_material_proxy_total_member_length": 14.651322399734575,
     "support_connected_run_count": 20,
     "geometrically_valid_run_count": 38,
-    "benchmark_complete_run_count": 13
-  }
+    "benchmark_complete_run_count": 13,
+    "invalidity_reason_counts": {
+      "crossing_members": 7,
+      "duplicate_members": 4,
+      "duplicate_nodes": 1
+    }
+  },
+  "seed_count": 50,
+  "step_budget": 12
 }

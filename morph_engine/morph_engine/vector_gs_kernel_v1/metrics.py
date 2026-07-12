@@ -2,6 +2,9 @@ from collections import Counter
 
 from .geometry import distance
 from .geometry import inside_rect
+from .geometry import magnitude
+from .geometry import unit
+from .model import ForceKind
 from .model import NodeType
 
 
@@ -65,6 +68,136 @@ def _valence_stats(assembly):
         "min": min(valences),
         "max": max(valences),
         "mean": sum(valences) / float(len(valences)),
+    }
+
+
+def _vector_sum(vectors):
+    total = [0.0, 0.0, 0.0]
+    for vector in vectors:
+        total[0] += float(vector[0])
+        total[1] += float(vector[1])
+        total[2] += float(vector[2])
+    return total
+
+
+def _scale(vector, factor):
+    return [float(vector[0]) * factor, float(vector[1]) * factor, float(vector[2]) * factor]
+
+
+def _dot_2d(a, b):
+    return float(a[0]) * float(b[0]) + float(a[1]) * float(b[1])
+
+
+def _cross_2d(a, b):
+    return float(a[0]) * float(b[1]) - float(a[1]) * float(b[0])
+
+
+def _solve_reaction_coefficients_2d(directions, target, tolerance):
+    if not directions:
+        return []
+
+    if len(directions) == 1:
+        denom = _dot_2d(directions[0], directions[0])
+        if denom <= tolerance:
+            return [0.0]
+        return [_dot_2d(target, directions[0]) / denom]
+
+    first = directions[0]
+    if all(abs(_cross_2d(first, direction)) <= tolerance for direction in directions[1:]):
+        denom = sum(_dot_2d(direction, first) for direction in directions)
+        if abs(denom) <= tolerance:
+            return [0.0 for _ in directions]
+        shared = _dot_2d(target, first) / denom
+        return [shared for _ in directions]
+
+    s_xx = sum(float(direction[0]) * float(direction[0]) for direction in directions)
+    s_xy = sum(float(direction[0]) * float(direction[1]) for direction in directions)
+    s_yy = sum(float(direction[1]) * float(direction[1]) for direction in directions)
+    det = s_xx * s_yy - s_xy * s_xy
+    if abs(det) <= tolerance:
+        return [0.0 for _ in directions]
+
+    lambda_x = (float(target[0]) * s_yy - s_xy * float(target[1])) / det
+    lambda_y = (s_xx * float(target[1]) - s_xy * float(target[0])) / det
+    return [float(direction[0]) * lambda_x + float(direction[1]) * lambda_y for direction in directions]
+
+
+def _reaction_direction_for_node(assembly, node):
+    by_node = assembly.metadata.get("reaction_directions_by_node", {})
+    direction = by_node.get(node.node_id) or node.metadata.get("reaction_direction")
+    if direction is None:
+        return None
+    if magnitude(direction) <= DEFAULT_TOLERANCE:
+        return None
+    return unit(direction)
+
+
+def _boundary_force_polygon(assembly, tolerance=DEFAULT_TOLERANCE):
+    applied_forces = []
+    for node in assembly.nodes:
+        for force in node.forces:
+            if force.kind == ForceKind.APPLIED:
+                applied_forces.append(
+                    {
+                        "node_id": node.node_id,
+                        "point": list(force.point),
+                        "vector": list(force.vector),
+                    }
+                )
+
+    reaction_directions = []
+    for node in assembly.support_nodes():
+        direction = _reaction_direction_for_node(assembly, node)
+        if direction is not None:
+            reaction_directions.append(
+                {
+                    "node_id": node.node_id,
+                    "point": list(node.coordinate),
+                    "direction": direction,
+                }
+            )
+
+    total_applied = _vector_sum([force["vector"] for force in applied_forces])
+    target = [-total_applied[0], -total_applied[1], -total_applied[2]]
+    coefficients = _solve_reaction_coefficients_2d(
+        [item["direction"] for item in reaction_directions],
+        target,
+        tolerance,
+    )
+
+    reactions = []
+    for item, coefficient in zip(reaction_directions, coefficients):
+        reactions.append(
+            {
+                "node_id": item["node_id"],
+                "point": list(item["point"]),
+                "direction": list(item["direction"]),
+                "magnitude": float(coefficient),
+                "vector": _scale(item["direction"], float(coefficient)),
+            }
+        )
+
+    total_reaction = _vector_sum([reaction["vector"] for reaction in reactions])
+    residual = [
+        total_applied[0] + total_reaction[0],
+        total_applied[1] + total_reaction[1],
+        total_applied[2] + total_reaction[2],
+    ]
+    residual_magnitude = magnitude(residual)
+
+    return {
+        "force_convention": assembly.metadata.get(
+            "force_convention",
+            "tail_to_head_vectors_head_to_tail_polygon",
+        ),
+        "applied_forces": applied_forces,
+        "reaction_directions": reaction_directions,
+        "solved_reactions": reactions,
+        "total_applied_force": total_applied,
+        "total_reaction_force": total_reaction,
+        "polygon_residual": residual,
+        "polygon_residual_magnitude": residual_magnitude,
+        "externally_balanced": residual_magnitude <= tolerance,
     }
 
 
@@ -230,6 +363,7 @@ def compute_kernel_metrics(assembly, trace=None):
     residual_magnitude = float(assembly.residual_magnitude())
     equilibrium_reached = residual_magnitude <= DEFAULT_TOLERANCE
     validity = compute_kernel_validity(assembly)
+    boundary_force_polygon = _boundary_force_polygon(assembly)
     benchmark_complete = equilibrium_reached and support["support_connected"] and validity["geometrically_valid"]
 
     return {
@@ -248,6 +382,7 @@ def compute_kernel_metrics(assembly, trace=None):
         "support_connectivity": support,
         "equilibrium_reached": equilibrium_reached,
         "benchmark_complete": benchmark_complete,
+        "boundary_force_polygon": boundary_force_polygon,
         "benchmark_validity": validity,
         "rule_counts": dict(rule_counts),
     }

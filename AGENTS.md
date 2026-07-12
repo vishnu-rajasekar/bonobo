@@ -176,6 +176,13 @@ Do not flatten policy around raw geometry or benchmark-specific quirks.
 - If the user approves publication, create a focused milestone commit, push the current branch, and report the commit SHA and remote branch.
 - Never include unrelated dirty worktree changes in a milestone commit unless the user explicitly confirms they belong to that milestone.
 
+## Viewer Inspection Rules
+- When implementation changes affect VectorGS geometry, forces, reactions, validity, or viewer output, generate one focused inspection run if doing so is safe and report its exact `kernel_run.json` path.
+- The default VectorGS viewer command should open only the latest primary kernel run batch from `experiments/vector_gs_kernel_v1_runs`, not every historical policy or benchmark run.
+- Keep older runs accessible through explicit selectors, but do not make the normal viewer workflow browse hundreds of unrelated artifacts.
+- Tell the user when a change is visually worth inspecting and provide the exact command:
+  `conda run -n morph-engine python scripts/view_vector_gs_kernel_run.py`
+
 Codex should optimize for:
 - kernel MVP clarity
 - artifact and trace readability

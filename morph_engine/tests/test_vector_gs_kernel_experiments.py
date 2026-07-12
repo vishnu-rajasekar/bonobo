@@ -45,6 +45,8 @@ def test_export_run_writes_enriched_kernel_payload(tmp_path):
     assert "final_metrics" in payload
     assert "accepted_step_count" in payload["final_metrics"]
     assert "support_connectivity" in payload["final_metrics"]
+    assert "boundary_force_polygon" in payload["final_metrics"]
+    assert payload["final_metrics"]["boundary_force_polygon"]["externally_balanced"] is True
 
 
 def test_run_kernel_batch_and_summary_shape(tmp_path):

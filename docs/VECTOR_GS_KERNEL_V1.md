@@ -21,6 +21,10 @@ The current Bonobo runtime was accumulating too much adaptation overhead while s
 - local node force lists
 - temporary force driven line of action
 - member-force transfer between nodes
+- force vectors interpreted tail-to-head, with force polygons assembled
+  head-to-tail
+- applied loads and support reactions treated as upfront boundary forces whose
+  external force polygon must close before generation claims global equilibrium
 - `CreateNode`, `ExtendNode`, `SplitNode`, connection, projection, and close-system rule ideas
 - weighted random rule application over active nodes
 
@@ -59,7 +63,19 @@ Implemented kernel pieces:
 - seedable runner
 
 Still missing before reintegration:
-- stronger support/reaction semantics
+- GDGS-style support/reaction semantics: derive reaction vectors from applied
+  loads and support reaction directions, then verify external force-polygon
+  closure
 - richer close-system behavior across more scenarios
 - more faithful force-sign handling in some connect cases
 - a viewer adapter for kernel runs
+
+## Force convention target
+The kernel should use one force convention everywhere: vectors point from tail
+to head in the stored vector direction, and force polygons are checked by placing
+vectors head-to-tail. For global equilibrium, authored loads plus solved support
+reactions must sum to zero within tolerance. For local equilibrium, member,
+load, and reaction forces at a node should close under the same convention.
+
+Until this is implemented completely, artifacts and reports must not imply
+GDGS-equivalent equilibrium merely because residual metrics are small.

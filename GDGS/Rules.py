@@ -1,3 +1,5 @@
+import importlib
+
 import rhinoscriptsyntax as rs
 import Rhino.Geometry as rg
 import Rhino.DocObjects as rd
@@ -17,8 +19,8 @@ import Assembly as assembly
 import RandomUtility as ru
 import GraphicStatics as gs
 
-reload (assembly)
-reload (gs)
+importlib.reload (assembly)
+importlib.reload (gs)
 
 #2015 04 29
 
@@ -26,9 +28,11 @@ reload (gs)
 ################################################################################
 #  Rule Parameters
 ################################################################################
-# Angle in radians
+#numnodes = 7
 
-cutoff = 4
+
+# Juney's Params
+""" cutoff = 4
 loopcount = 4
 
 rule0weight = 1
@@ -42,8 +46,8 @@ rule1minA2 = 0*(math.pi/180)
 rule1maxA2 = 359*(math.pi/180)
 
 rule2weight = 1
-rule2minL = 2
-rule2maxL = 5
+rule2minL = 3
+rule2maxL = 6
 
 rule3weight = 5
 rule3minL = 4
@@ -59,7 +63,43 @@ rule5radius = 10
 
 rule6weight = 30
 
+rule7weight = 0 """
+
+# 's Params
+
+cutoff = 4
+loopcount = 4
+
+rule0weight = 1
+
+rule1weight = 1
+rule1minL = 1
+rule1maxL = 10
+rule1minA1 = -10*(math.pi/180)
+rule1maxA1 = 10*(math.pi/180)
+rule1minA2 = 0*(math.pi/180)
+rule1maxA2 = 359*(math.pi/180)
+
+rule2weight = 1
+rule2minL = 1
+rule2maxL = 10
+
+rule3weight = 1
+rule3minL = 1
+rule3maxL = 10
+rule3minA = 10*(math.pi/180)
+rule3maxA = 30*(math.pi/180)
+
+rule4weight = 1
+rule4radius = 20
+
+rule5weight = 1
+rule5radius = 10
+
+rule6weight = 1
+
 rule7weight = 0
+
 
 
 ################################################################################
@@ -123,8 +163,6 @@ class RuleParam:
     def GetRandomValue(self):
         val = ru.MyRandom.Float(self.Min, self.Max)
         return val
-    
-
 
 
 ################################################################################
@@ -189,6 +227,7 @@ class Rule1(BaseRule):
             #Temp Force / Line of Action
             LOA = gs.GetLineOfAction(node)[0]
             
+            
             #Create Point... within reasonable bounds from LOA
             #amplitude1 = ru.MyRandom.Float (MinL, MaxL)
             translation1 = gh.Amplitude(LOA, amplitude1)
@@ -234,7 +273,7 @@ class Rule2(BaseRule):
         self.Weight = rule2weight
 
 
-    def CanApply(self, assembly): 
+    def CanApply(self, assembly):  
         if assembly.MyState == State.Go:
             return True
         else:
@@ -353,13 +392,14 @@ class Rule3(BaseRule):
             # Temp Force / Line of Action
             LOA = gs.GetLineOfAction(node)[0]
             
+            
             # First Arm
             #amplitude1 = ru.MyRandom.Float (MinL, MaxL)
             translation1 = gh.Amplitude(LOA, amplitude1)
             movedpoint1 = gh.Move(node.Coordinate, translation1)[0]
             #angle1 = ru.MyRandom.Float (MinA, MaxA)
             rotatedpoint1 = gh.Rotate(movedpoint1, angle1, node.Coordinate)[0]
-            vector1 = gh.Vector2Pt(rotatedpoint1, node.Coordinate, False)[0]
+            vector1 = gh.Vector2Pt(rotatedpoint1, node.Coordinate)[0]
             
             # Second Arm
             #amplitude2 = ru.MyRandom.Float (MinL, MaxL)
@@ -367,7 +407,7 @@ class Rule3(BaseRule):
             movedpoint2 = gh.Move(node.Coordinate, translation2)[0]
             #angle2 = ru.MyRandom.Float (-MaxA, -MinA)
             rotatedpoint2 = gh.Rotate(movedpoint2, angle2, node.Coordinate)[0]
-            vector2 = gh.Vector2Pt(rotatedpoint2, node.Coordinate, False)[0]
+            vector2 = gh.Vector2Pt(rotatedpoint2, node.Coordinate)[0]
             
             # Determine New Forces
             TempForce = gs.GetTempForce(node)[0]
@@ -379,11 +419,11 @@ class Rule3(BaseRule):
             intersection = gs.BiDirVectorIntersection(TempForceStart, vector1, TempForceEnd, vector2)
             
             forceline1 = gh.Line(TempForceStart, intersection)
-            forceline1 = gh.Move(forceline1, gh.Vector2Pt(intersection, node.Coordinate, False)[0])[0]
+            forceline1 = gh.Move(forceline1, gh.Vector2Pt(intersection, node.Coordinate)[0])[0]
             force1 = assembly.Force(forceline1, 4, TempForce.Direction)
             
             forceline2 = gh.Line(intersection, TempForceEnd)
-            forceline2 = gh.Move(forceline2, gh.Vector2Pt(TempForceEnd, node.Coordinate, False)[0])[0]
+            forceline2 = gh.Move(forceline2, gh.Vector2Pt(TempForceEnd, node.Coordinate)[0])[0]
             force2 = assembly.Force(forceline2, 4, TempForce.Direction)
             
             # Reconstruct Input Node
@@ -490,11 +530,11 @@ class Rule4(BaseRule):
             newmemberforceamplitude = min(node1forceamplitude,node2forceamplitude) + amplitudedifference*factor
             
             # Distribute New Force to Nodes
-            newforce1dir = gh.Vector2Pt(node2.Coordinate, node1.Coordinate, False)
+            newforce1dir = gh.Vector2Pt(node2.Coordinate, node1.Coordinate)
             newforce1line = gh.LineSDL(node2.Coordinate, newforce1dir, newmemberforceamplitude)
             newforce1 = assembly.Force(newforce1line, 4, -1)
             
-            newforce2dir = gh.Vector2Pt(node1.Coordinate,node2.Coordinate, False)
+            newforce2dir = gh.Vector2Pt(node1.Coordinate,node2.Coordinate)
             newforce2line = gh.LineSDL(node1.Coordinate, newforce2dir, newmemberforceamplitude)
             newforce2 = assembly.Force(newforce2line, 4, -1)
             
@@ -631,9 +671,9 @@ class Rule6(BaseRule):
     def Apply(self, currentshape, params, node):
         #currentshape.MyState = State.End
         #self.UpdateHistory(currentshape, params, node)
-        
+
+        """ if len(gs.GetActiveNodes(currentshape)) == numnodes:""" 
         if len(currentshape.History.Rules) > loopcount:
-            
             activenodes = gs.GetActiveNodes(currentshape)
             otheractivenodes =[]
             for activenode in activenodes:
@@ -804,7 +844,7 @@ class Rule7(BaseRule):
         #self.UpdateHistory(currentshape, params, node)
         
         if len(currentshape.History.Rules) > 10:
-            print len(currentshape.History.Rules)
+            print (len(currentshape.History.Rules))
             currentshape.MyState = State.End
             self.UpdateHistory(currentshape, params, node)
         else: 

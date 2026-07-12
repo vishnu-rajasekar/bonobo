@@ -35,6 +35,7 @@ RUNS_SOURCE_DIRS = (
     ("experiments", "vector_gs_kernel_v1_runs_benchmark_hardened", "weighted"),
     ("experiments", "vector_gs_kernel_v1_runs_benchmark_hardened", "uniform"),
 )
+PRIMARY_RUNS_SOURCE_DIR = RUNS_SOURCE_DIRS[0]
 
 
 def _vector_magnitude(vec3):
@@ -79,20 +80,48 @@ def _safe_text(viewer, position, label, color):
     _add(viewer, Point(*position), pointsize=6, name=label, show_name=True, color=color)
 
 
+def _kernel_run_dirs(runs_dir, selector=None):
+    if not runs_dir.exists():
+        return []
+    run_dirs = []
+    for path in sorted([p for p in runs_dir.iterdir() if p.is_dir()]):
+        if selector and not fnmatch(path.name, selector):
+            continue
+        if (path / "kernel_run.json").exists():
+            run_dirs.append(path)
+    return run_dirs
+
+
+def _run_group_key(run_dir):
+    name = run_dir.name
+    if "_seed_" in name:
+        return name.split("_seed_", 1)[0]
+    return name
+
+
+def _latest_group(run_dirs):
+    if not run_dirs:
+        return []
+    latest_key = max(_run_group_key(run_dir) for run_dir in run_dirs)
+    return sorted([run_dir for run_dir in run_dirs if _run_group_key(run_dir) == latest_key])
+
+
 def _load_kernel_runs(repo_root):
     run_dirs = []
     selector = None if RUNS_SOURCE_SELECTOR in (None, "", "None") else str(RUNS_SOURCE_SELECTOR)
     searched_roots = []
+
+    if selector is None:
+        primary_dir = repo_root.joinpath(*PRIMARY_RUNS_SOURCE_DIR)
+        searched_roots.append(str(primary_dir))
+        latest_primary = _latest_group(_kernel_run_dirs(primary_dir))
+        if latest_primary:
+            return latest_primary
+
     for parts in RUNS_SOURCE_DIRS:
         runs_dir = repo_root.joinpath(*parts)
         searched_roots.append(str(runs_dir))
-        if not runs_dir.exists():
-            continue
-        for path in sorted([p for p in runs_dir.iterdir() if p.is_dir()]):
-            if selector and not fnmatch(path.name, selector):
-                continue
-            if (path / "kernel_run.json").exists():
-                run_dirs.append(path)
+        run_dirs.extend(_kernel_run_dirs(runs_dir, selector=selector))
 
     if not run_dirs:
         if selector:
@@ -102,6 +131,8 @@ def _load_kernel_runs(repo_root):
                 )
             )
         raise FileNotFoundError("No kernel run directories with kernel_run.json found in: {0}".format(searched_roots))
+    if selector is None:
+        return _latest_group(run_dirs)
     return sorted(run_dirs)
 
 
@@ -313,6 +344,12 @@ class KernelRunViewer:
             p1 = [float(value) for value in start_node["coordinate"]]
             p2 = [float(value) for value in end_node["coordinate"]]
             _add(self.viewer, Line(Point(*p1), Point(*p2)), name="Member", color=(0.15, 0.15, 0.15), linewidth=3)
+
+        polygon = (payload.get("final_metrics") or {}).get("boundary_force_polygon") or {}
+        for reaction in polygon.get("solved_reactions") or []:
+            point = [float(value) for value in reaction.get("point", [0.0, 0.0, 0.0])]
+            vector = [float(value) for value in reaction.get("vector", [0.0, 0.0, 0.0])]
+            _add_force_arrow(self.viewer, point, vector, color=(0.05, 0.55, 0.1), scale=0.6, name="SolvedReaction", linewidth=3)
 
         coords = [node["coordinate"] for node in payload["assembly"]["nodes"]]
         if coords:

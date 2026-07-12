@@ -8,8 +8,22 @@ from .model import NodeType
 
 def make_default_cantilever_scenario():
     boundary = {"min": [-6.0, -1.0, 0.0], "max": [6.0, 6.0, 0.0]}
-    support_a = Node("0", [-5.0, 0.0, 0.0], NodeType.SUPPORT, forces=[], active=False)
-    support_b = Node("1", [-5.0, 4.0, 0.0], NodeType.SUPPORT, forces=[], active=False)
+    support_a = Node(
+        "0",
+        [-5.0, 0.0, 0.0],
+        NodeType.SUPPORT,
+        forces=[],
+        active=False,
+        metadata={"reaction_direction": [0.0, 1.0, 0.0]},
+    )
+    support_b = Node(
+        "1",
+        [-5.0, 4.0, 0.0],
+        NodeType.SUPPORT,
+        forces=[],
+        active=False,
+        metadata={"reaction_direction": [0.0, 1.0, 0.0]},
+    )
     load = Node(
         "2",
         [5.0, 2.0, 0.0],
@@ -20,5 +34,16 @@ def make_default_cantilever_scenario():
         ],
         active=True,
     )
-    return Assembly(nodes=[support_a, support_b, load], members=[], boundary=boundary, metadata={"scenario_name": "kernel_cantilever_v1"})
-
+    return Assembly(
+        nodes=[support_a, support_b, load],
+        members=[],
+        boundary=boundary,
+        metadata={
+            "scenario_name": "kernel_cantilever_v1",
+            "force_convention": "tail_to_head_vectors_head_to_tail_polygon",
+            "reaction_directions_by_node": {
+                "0": [0.0, 1.0, 0.0],
+                "1": [0.0, 1.0, 0.0],
+            },
+        },
+    )

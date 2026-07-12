@@ -7,6 +7,18 @@ Generated after adding `benchmark_complete` and `benchmark_validity` to kernel m
 - weighted: `experiments/vector_gs_kernel_v1_runs_benchmark_hardened/weighted/20260707_231956_batch_summary.json`
 - uniform: `experiments/vector_gs_kernel_v1_runs_benchmark_hardened/uniform/20260707_231956_batch_summary.json`
 
+## Reproducibility Fields
+
+Both batch summaries include:
+
+- `problem_id`: `default_cantilever_v1`
+- `policy_id`: `rule_weighted_random_v1` or `rule_uniform_random_v1`
+- `seeds`: explicit seed list `0..49`
+- `seed_count`: `50`
+- `step_budget`: `12`
+- per-run `step_budget`: `12`
+- aggregate `invalidity_reason_counts`
+
 ## Aggregate Metrics
 
 | Metric | Weighted | Uniform |

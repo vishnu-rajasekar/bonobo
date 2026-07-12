@@ -66,6 +66,10 @@ Known semantic gaps:
 - Support and reaction behavior needs stronger definition and validation.
 - Close-system behavior is incomplete across scenarios.
 - Some connect operations have provisional force-sign handling.
+- GDGS force head/tail and global force-polygon conventions are documented as
+  targets but not yet fully enforced.
+- Reactions are not yet initialized from applied loads and support directions
+  before generation.
 - Kernel and layered-runtime semantics currently overlap without adapters.
 
 Exit gate:
@@ -140,6 +144,13 @@ Work:
   approximation, bounds, and the 12-step budget.
 - Strengthen support-seeking, support connectivity, reaction, residual, and
   equilibrium-completion semantics.
+- Enforce one GDGS-compatible force convention: stored force vectors are
+  tail-to-head, and force polygons are assembled head-to-tail.
+- Add reaction-first global equilibrium setup: derive or solve support reaction
+  vectors from authored applied loads plus support reaction directions, then
+  require external force-polygon closure before claiming global equilibrium.
+- Treat reaction directions and reaction-angle ranges as versioned
+  problem/benchmark parameters.
 - Resolve or explicitly bound force-sign behavior in connect operations.
 - Improve close-system behavior without adding benchmark-only grammar rules.
 - Record accepted and rejected actions with machine-readable rejection reasons.
@@ -153,6 +164,8 @@ Exit gate:
   interpretation.
 - Residual, completion, connectivity, and material metrics have stable,
   test-backed meanings.
+- Artifact schemas expose the applied loads, solved/initialized reactions,
+  reaction directions, and force-polygon residual used for global equilibrium.
 - Known semantic approximations are explicit in code-facing documentation.
 - Fixed-seed regression cases cover successful closure and representative
   failure modes.

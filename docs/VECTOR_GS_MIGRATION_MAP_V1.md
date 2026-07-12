@@ -12,6 +12,17 @@ This note maps Juney's `GDGS` vector-GS concepts into Bonobo's layered architect
 - Juney temp force -> canonical node `temp_force`, surfaced as semantic `temporary` forces
 - Juney member force transfer -> semantic member-force records on graph edges plus transfer helpers in `force_ops`
 
+## Force and reaction convention target
+- Force vectors are tail-to-head values in their stored direction.
+- Force polygons are constructed head-to-tail.
+- Applied loads are authored before generation as external boundary forces.
+- Support reactions should be solved or initialized from applied loads plus
+  support reaction directions so the external global force polygon closes.
+- Reaction angles and support reaction directions are benchmark/problem
+  parameters, not late viewer annotations.
+- Local member-force transfer must preserve this convention; endpoint ordering
+  may not silently redefine compression, tension, load, or reaction sign.
+
 ## Canonical vs derived
 - Canonical graph stores:
   - node geometry
@@ -65,4 +76,3 @@ This note maps Juney's `GDGS` vector-GS concepts into Bonobo's layered architect
 - Juney's mutable `Assembly` object as a second canonical engine
 - full global matrix-style force solve
 - non-vector GS backends
-

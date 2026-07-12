@@ -1,14 +1,17 @@
+import importlib
+
 import rhinoscriptsyntax as rs
 import Rhino.Geometry as rg
 import Rhino.DocObjects as rd
 import System.Drawing as sd
-import copy_reg as copy
+
 import ghpythonlib.components as gh
 import random
 import math
-import copy
+
 
 import scriptcontext
+
 ################################################################################
 #  IMPORT JUNEY FILES
 ################################################################################
@@ -16,7 +19,7 @@ import scriptcontext
 import Rules as rules
 import RandomUtility as ru
 import GraphicStatics as gs
-reload (gs)
+importlib.reload (gs)
 
 
 ################################################################################
@@ -87,6 +90,8 @@ class Assembly:
         self.RxnAngle = 0
         scriptcontext.sticky['initial_assembly'] = copy.deepcopy(self)
 
+        
+    
     def RandomNodePicker(self):
         gonodes = []
         for i in range (0,len(self.Nodes)):

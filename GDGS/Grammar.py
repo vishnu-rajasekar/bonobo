@@ -1,3 +1,5 @@
+import importlib
+
 import Assembly as assembly
 import RandomUtility as ru
 import Rules as rules
@@ -9,8 +11,8 @@ import GraphicStatics as gs
 
 ################################################################################
 
-reload (assembly)
-reload (gs)
+importlib.reload (assembly)
+importlib.reload (gs)
 
 
 class Grammar:
@@ -23,15 +25,16 @@ class Grammar:
 
     def LoadRules(self): 
         # STEP 1 : compile all rules into one list = MyRules
-        self.MyRules.append(rules.Rule0())
-        #self.MyRules.append(rules.Rule1())
+        #self.MyRules.append(rules.Rule0())
+        self.MyRules.append(rules.Rule1())
         self.MyRules.append(rules.Rule2())
         self.MyRules.append(rules.Rule3())
         self.MyRules.append(rules.Rule4())
-        self.MyRules.append(rules.Rule5())
+        #self.MyRules.append(rules.Rule5())
         self.MyRules.append(rules.Rule6())
         #self.MyRules.append(rules.Rule6a())
-        self.MyRules.append(rules.Rule7())
+        #self.MyRules.append(rules.Rule7())
+        return self.MyRules
 
     def SetRuleGrammar(self): 
         for r in self.MyRules:
@@ -44,6 +47,8 @@ class Grammar:
             if r.Weight > 0:
                 for i in range(r.Weight):
                     weightedRules.append(r)
+            else:
+                weightedRules.append(r)
         return weightedRules
 
     def GetPossibleRules(self, thisAssembly): 
@@ -100,7 +105,8 @@ class RandomComputation:
             else:
                 return currentshape
             
-            
+
+                
     def SelectRandomRule(self, currentshape): 
         node = currentshape.RandomNodePicker() # PICK RANDOM NODE
         
@@ -130,15 +136,13 @@ class RandomComputation:
     
     def ApplyRule(self, currentshape, selrule):
          
-        currentshape = selrule[0].Apply(currentshape, selrule[1], currentshape.Nodes[selrule[2]])
+        currentshape = selrule[0].Apply(currentshape, selrule[1], currentshape.Nodes[selrule[-1]])
         return currentshape
-    
 
     def GenerateRandomParams(self, rule):
         num = len(rule.Params)
         p = []
         for i in range(num):
             paramValue = rule.Params[i].GetRandomValue()
-
             p.append(paramValue)
         return p

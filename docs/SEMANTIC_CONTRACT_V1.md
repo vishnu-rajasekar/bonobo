@@ -22,6 +22,10 @@ Freeze benchmark-level meanings for the Michell-style planar benchmark so implem
 - A load is an externally applied force recorded in `loadcases`.
 - In the current workflow, the primary `v1` benchmark uses one point load at `(5, 2)` with vector `(0, -10)`.
 - Load is engine truth, not a viewer-only concept.
+- GDGS alignment target: applied loads are authored before generation and
+  participate in the global force polygon as boundary force vectors.
+- Force-vector direction is canonical. Viewer arrowheads must follow the stored
+  vector direction rather than redefining load sign.
 
 ## support
 - A support is a node with restrained degrees of freedom described by a support mask such as `fixed = [ux, uy, uz]`.
@@ -33,6 +37,26 @@ Freeze benchmark-level meanings for the Michell-style planar benchmark so implem
 - A reaction is currently an evaluator-derived constrained component absorbed from `temp_force` at restrained DOF.
 - Reactions are not independently authored as canonical loads in the current workflow.
 - If no constrained `temp_force` reaches a support, the evaluator may produce zero reactions.
+- GDGS alignment target: reactions should be initialized from the applied loads
+  and support reaction directions before growth, such that the external global
+  force polygon can close in equilibrium.
+- Reaction directions, including reaction-angle ranges where applicable, are
+  benchmark parameters rather than viewer-only annotations.
+- This target is not yet fully implemented. Until it is, benchmark reports must
+  distinguish current evaluator-derived reactions from GDGS-style boundary
+  reactions.
+
+## force head/tail convention
+- Force vectors are interpreted from tail to head in the stored vector
+  direction.
+- In a force polygon, consecutive vectors are placed head-to-tail. Global
+  equilibrium requires the polygon to close, meaning the vector sum of authored
+  loads and solved reactions is zero within tolerance.
+- Local nodal equilibrium should follow the same convention: member, load, and
+  reaction vectors around a node must close head-to-tail in force space.
+- Compression/tension labels, member endpoint direction, and viewer glyphs must
+  not silently invert this convention. If a display convention differs for
+  readability, the artifact must state that it is display-only.
 
 ## node_residual
 - `node_residual` is the unresolved force state that remains at a node under the current benchmark interpretation.
