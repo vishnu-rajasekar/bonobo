@@ -11,7 +11,7 @@ Bonobo is a layered structural generation engine for equilibrium-oriented struct
 Its purpose is to generate structures from the ground up using a small grammar and GS-guided transformations while remaining open to future guidance layers and future GS backends.
 
 ## Current Research Priority
-The immediate project priority is vector GS kernel MVP validation through reproducible seeded experiments.
+The immediate project priority is the IASS guidance study on `feature/guidance-study`, beginning with controlled GDGS-to-VectorGS behavioural parity.
 
 This means:
 - stabilise `vector_gs_kernel_v1` as the active technical nucleus
@@ -27,6 +27,18 @@ Important:
 - it is not the definition of long-term equilibrium semantics
 - it is not the definition of the final guidance or RL action space
 - do not optimize architecture around current benchmark quirks
+
+## Guidance Study Protocol
+- Treat the original `GDGS/` implementation as a read-only behavioural reference.
+- Port force, temporary-force, node-state, assembly-state, applicability, and rule behaviour into the headless CPython VectorGS kernel incrementally.
+- Do not copy Grasshopper component plumbing or add Rhino/Grasshopper runtime dependencies to VectorGS.
+- Keep COMPAS Viewer as an artifact consumer, never as part of generation.
+- Preserve grammar, policy, evaluator, experiment, and viewer responsibility boundaries.
+- New files are prohibited by default.
+- Do not commit, push, or open a pull request from `feature/guidance-study` without explicit approval.
+- Review every milestone through relevant diffs, tests, artifacts, and viewer evidence where visual behaviour changes.
+
+Engine correctness conditions include force-polygon closure, temporary-force propagation, member action-reaction behaviour, force/member collinearity, valid grammar-state transitions, and duplicate prevention by construction. Guidance and evaluation criteria include material/load-path efficiency, domain compliance, intersections, mechanism avoidance, stability proxies, constructability, member limits, connection complexity, architectural objectives, and policy diversity.
 
 ## Default Operating Mode
 Assume:

@@ -13,14 +13,15 @@ Bonobo is not currently presented as a general search platform or learned design
 - long-term reintegration target: the layered Bonobo runtime centered on `StructuralGraph`, grammar, evaluator, and experiments
 - future bridge: adapters between kernel assemblies, traces, and metrics and Bonobo runtime concepts
 
-The immediate proof target is a compact, inspectable vector graphic statics generator that can be evaluated through seeded runs before broader reintegration work begins.
+The immediate proof target is a compact, inspectable vector graphic statics generator that preserves the useful state and rule mechanics of GDGS and supports policy-independent guidance studies through seeded runs.
 
 ## Current Focus
 - Stabilize and evaluate `vector_gs_kernel_v1` through reproducible seeded experiments
 - Preserve the layered Bonobo runtime as the long-term architectural target
 - Keep kernel artifacts, traces, and viewers inspectable and machine-readable
 - Use small benchmark/problem definitions to validate generation behavior without overclaiming general structural design capability
-- Delay reintegration, broad search expansion, and learned guidance until the kernel is technically credible
+- Establish controlled GDGS-to-VectorGS behavioural parity before adding guidance
+- Keep engine invariants separate from policy guidance and evaluation criteria
 
 ## Longer-Term Direction
 - Adapter-based reintegration of the kernel into the layered Bonobo runtime
@@ -28,6 +29,8 @@ The immediate proof target is a compact, inspectable vector graphic statics gene
 - Broader static schemes such as truss, branching compression systems, cable-net, gridshell, and shells
 - Construction-aware growth and richer domain handling only after the generator core is credible
 - Learned guidance and policy support only after benchmark grounding and kernel evaluation are credible
+
+GDGS supplies the behavioural reference for equilibrium-aware grammar mechanics. VectorGS remains the maintained headless runtime. Engine correctness covers force closure, temporary-force propagation, member action-reaction behaviour, force/member collinearity, and valid state transitions. Guidance evaluates otherwise applicable actions using feasibility, efficiency, stability, constructability, architectural, fabrication, and diversity criteria.
 
 ## Repository Map
 - `morph_engine/`: core package and unit tests

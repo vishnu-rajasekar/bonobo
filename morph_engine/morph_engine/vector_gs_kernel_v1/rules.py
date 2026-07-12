@@ -18,16 +18,19 @@ from .operators import assembly_member_between
 from .operators import boundary_ok
 from .operators import closest_link
 from .operators import connect_two_forces
+from .operators import connection_is_non_degenerate
+from .operators import can_resolve_two_forces
 from .operators import decompose_force_along_directions
 from .operators import equilibrate_node
-from .operators import flip_temp_force_dir
 from .operators import get_line_of_action
 from .operators import get_temp_force
 from .operators import make_force
 from .operators import resolve_two_forces
+from .operators import resolve_three_forces_at_existing_node
+from .operators import segment_is_admissible
+from .operators import three_force_closure_hub
 from .operators import support_link_target
 from .operators import support_projection_target
-from .operators import temp_node_equilibrium
 from .operators import transfer_member_force
 
 
@@ -106,7 +109,6 @@ class CreateNodeRule(BaseRule):
             active=True,
             metadata={"semantic_origin": "create_node"},
         )
-        temp_node_equilibrium(new_node)
         assembly.add_node(new_node)
         assembly.add_history(self.name, [node.node_id], proposal.params, {"new_node": new_node.node_id})
         return assembly
@@ -213,9 +215,6 @@ class SplitNodeRule(BaseRule):
         node.add_force(force_a)
         node.add_force(force_b)
         node.active = False
-        rearranged_type = NodeType.CORNER if node.type in {NodeType.LOAD, NodeType.SUPPORT} else node.type
-        node.type = rearranged_type
-
         new_node_a = Node(assembly.next_node_id(), coord_a, NodeType.END, [transfer_member_force(force_a, coord_a)], True, {"semantic_origin": "split_node"})
         equilibrate_node(new_node_a)
         assembly.add_node(new_node_a)
@@ -242,7 +241,13 @@ class ConnectTwoNodesRule(BaseRule):
         others = [other for other in active_nodes(assembly) if other.node_id != node.node_id]
         proposals = []
         for other in others:
-            if distance(node.coordinate, other.coordinate) <= self.radius:
+            if distance(node.coordinate, other.coordinate) <= self.radius and segment_is_admissible(
+                assembly,
+                node.node_id,
+                other.node_id,
+                node.coordinate,
+                other.coordinate,
+            ):
                 proposals.append(RuleProposal(self.name, [node.node_id, other.node_id], {"factor": self.factor}, self.weight))
         return proposals[:1]
 
@@ -251,7 +256,13 @@ class ConnectTwoNodesRule(BaseRule):
         node2 = assembly.node(proposal.target_node_ids[1])
         temp1 = get_temp_force(node1)
         temp2 = get_temp_force(node2)
-        if temp1 is None or temp2 is None or assembly.member_between(node1.node_id, node2.node_id):
+        if temp1 is None or temp2 is None or not segment_is_admissible(
+            assembly,
+            node1.node_id,
+            node2.node_id,
+            node1.coordinate,
+            node2.coordinate,
+        ):
             return assembly
         mag1 = temp1.magnitude
         mag2 = temp2.magnitude
@@ -286,8 +297,19 @@ class ExtendAndConnectTwoNodesRule(BaseRule):
         if assembly.state != GenerationState.GO or not node.active:
             return []
         projection = closest_link(node, assembly)
-        if projection is not None and projection["distance"] <= self.radius:
-            return [RuleProposal(self.name, [node.node_id, projection["other"].node_id], {"kind": "projection"}, self.weight)]
+        if (
+            projection is not None
+            and projection["distance"] <= self.radius
+            and connection_is_non_degenerate(node, projection["other"], assembly, projection["point"])
+        ):
+            return [
+                RuleProposal(
+                    self.name,
+                    [node.node_id, projection["other"].node_id],
+                    {"kind": "projection", "point": projection["point"]},
+                    self.weight,
+                )
+            ]
         support_target = support_link_target(node, assembly)
         if support_target is not None:
             return [RuleProposal(self.name, [node.node_id, support_target["support"].node_id], {"kind": "support"}, self.weight)]
@@ -305,11 +327,11 @@ class ExtendAndConnectTwoNodesRule(BaseRule):
             loa_b = get_line_of_action(other)
             if loa_a is None or loa_b is None:
                 return assembly
-            point = directed_ray_intersection(loa_a["point"], loa_a["direction"], loa_b["point"], loa_b["direction"])
+            point = proposal.params.get("point") or directed_ray_intersection(loa_a["point"], loa_a["direction"], loa_b["point"], loa_b["direction"])
             if point is None or not boundary_ok(point, assembly):
                 return assembly
-            assembly = connect_two_forces(node, other, assembly, point)
-            assembly.add_history(self.name, [node.node_id, other.node_id], proposal.params, {"new_projection_node": True})
+            if connect_two_forces(node, other, assembly, point):
+                assembly.add_history(self.name, [node.node_id, other.node_id], proposal.params, {"new_projection_node": True})
             return assembly
         if kind == "support" and len(proposal.target_node_ids) == 2:
             support = assembly.node(proposal.target_node_ids[1])
@@ -348,7 +370,7 @@ class CloseStructureRule(BaseRule):
     name = "CloseStructure"
     weight = 30
 
-    def __init__(self, loopcount=4):
+    def __init__(self, loopcount=0):
         self.loopcount = int(loopcount)
 
     def propose(self, assembly, node, rng):
@@ -357,38 +379,66 @@ class CloseStructureRule(BaseRule):
         if not node.active:
             return []
         count = len(active_nodes(assembly))
-        if count >= 2:
-            return [RuleProposal(self.name, [node.node_id], {"active_count": count}, self.weight)]
+        if count == 2:
+            if can_resolve_two_forces(assembly):
+                return [RuleProposal(self.name, [node.node_id], {"active_count": count}, self.weight)]
+            return []
+        if count == 3:
+            hub = three_force_closure_hub(assembly)
+            if hub is not None:
+                return [
+                    RuleProposal(
+                        self.name,
+                        [hub.node_id],
+                        {"active_count": count, "kind": "reuse_existing_hub"},
+                        self.weight,
+                    )
+                ]
+        if count >= 3:
+            for other in active_nodes(assembly):
+                if other.node_id == node.node_id:
+                    continue
+                loa_a = get_line_of_action(node)
+                loa_b = get_line_of_action(other)
+                if loa_a is None or loa_b is None:
+                    continue
+                point = bidirected_ray_intersection(loa_a["point"], loa_a["direction"], loa_b["point"], loa_b["direction"])
+                if point is not None and boundary_ok(point, assembly) and connection_is_non_degenerate(node, other, assembly, point):
+                    return [
+                        RuleProposal(
+                            self.name,
+                            [node.node_id, other.node_id],
+                            {"active_count": count, "point": point},
+                            self.weight,
+                        )
+                    ]
         return []
 
     def apply(self, assembly, proposal, rng):
         nodes = active_nodes(assembly)
         if len(nodes) == 2:
-            before = len(assembly.members)
-            resolve_two_forces(assembly)
-            if len(assembly.members) > before:
-                assembly.state = GenerationState.CLOSE
+            if resolve_two_forces(assembly) and not active_nodes(assembly):
+                assembly.state = GenerationState.END
                 assembly.add_history(self.name, [candidate.node_id for candidate in nodes], proposal.params, {"resolved_two_forces": True})
             return assembly
+        if proposal.params.get("kind") == "reuse_existing_hub":
+            if resolve_three_forces_at_existing_node(assembly) and not active_nodes(assembly):
+                assembly.state = GenerationState.END
+                assembly.add_history(
+                    self.name,
+                    list(proposal.target_node_ids),
+                    proposal.params,
+                    {"resolved_three_forces_at_existing_node": True},
+                )
+            return assembly
         node = assembly.node(proposal.target_node_ids[0])
-        other_nodes = [other for other in nodes if other.node_id != node.node_id]
-        for flip_self in (False, True):
-            if flip_self:
-                flip_temp_force_dir(node)
-            for other in other_nodes:
-                for flip_other in (False, True):
-                    if flip_other:
-                        flip_temp_force_dir(other)
-                    loa_a = get_line_of_action(node)
-                    loa_b = get_line_of_action(other)
-                    if loa_a is None or loa_b is None:
-                        continue
-                    point = bidirected_ray_intersection(loa_a["point"], loa_a["direction"], loa_b["point"], loa_b["direction"])
-                    if point is not None and boundary_ok(point, assembly):
-                        assembly = connect_two_forces(node, other, assembly, point)
-                        assembly.state = GenerationState.CLOSE
-                        assembly.add_history(self.name, [node.node_id, other.node_id], proposal.params, {"closure_connection": True})
-                        return assembly
+        if len(proposal.target_node_ids) != 2:
+            return assembly
+        other = assembly.node(proposal.target_node_ids[1])
+        point = proposal.params.get("point")
+        if point is not None and connect_two_forces(node, other, assembly, point):
+            assembly.state = GenerationState.CLOSE
+            assembly.add_history(self.name, [node.node_id, other.node_id], proposal.params, {"closure_connection": True})
         return assembly
 
 

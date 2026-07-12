@@ -57,7 +57,7 @@ Delivered:
 - Standalone `Assembly`, `Node`, `Force`, and `Member` objects.
 - Core vector-GS operators and top-level rule intents.
 - Seedable generation loop.
-- Default cantilever-like problem.
+- Explicit `michell_three_point_cantilever_v1` problem.
 - Per-run JSON artifacts with assembly, trace, and final metrics.
 - Weighted-random and uniform-random rule-selection policies.
 
@@ -130,16 +130,19 @@ Exit gate:
 - Relevant kernel tests pass from a clean, identified revision.
 - No claim exceeds the single-problem, two-policy evidence.
 
-## M3 — Semantic and Benchmark Hardening
+## M3A — GDGS-to-VectorGS Parity Slice
 
-**Status: Next**
+**Status: Active**
 
-Objective: ensure measured policy differences describe meaningful structural
-behavior rather than unresolved kernel semantics.
+Objective: use GDGS as the behavioural reference while retaining VectorGS as the maintained headless implementation.
 
 Work:
 
-- Align `default_cantilever_v1` explicitly with
+- Preserve seeded policies, artifacts, tests, and COMPAS Viewer support.
+- Port one complete minimal path covering boundary-force initialization,
+  temporary-force propagation, state-derived applicability, and closure.
+- Do not add guidance or RL during this milestone.
+- Define `michell_three_point_cantilever_v1` explicitly against
   `docs/BENCHMARK_MITCHELL_V1.md`, including geometry, load, support/root
   approximation, bounds, and the 12-step budget.
 - Strengthen support-seeking, support connectivity, reaction, residual, and
@@ -169,6 +172,30 @@ Exit gate:
 - Known semantic approximations are explicit in code-facing documentation.
 - Fixed-seed regression cases cover successful closure and representative
   failure modes.
+
+## M3B — Feasibility-Aware Proposal Filtering
+
+**Status: Next**
+
+Apply definite-invalidity filters before policy selection. Initial filters may cover design-domain containment, prohibited intersections, member-length limits, node-angle limits, and rectangle, box, or surface compliance. Record masks and rejection reasons without embedding soft policy preferences in the grammar.
+
+## M3C — Heuristic Guidance Baseline
+
+**Status: Later**
+
+Add one interpretable proposal-ranking policy using a bounded set of criteria such as load-path proxy, domain clearance, mechanism diagnostics, node constructability, and compression-member length or slenderness proxy.
+
+## M3D — Tabular RL Guidance Comparison
+
+**Status: Later**
+
+Compare a minimal interpretable tabular Q-learning or equivalent policy through the same applicable-action interface. Do not introduce GNNs, deep RL, actor-critic methods, continuous learned geometry generation, or LLM control.
+
+## M3E — Held-Out Policy Study and Paper Figures
+
+**Status: Later**
+
+Separate training and evaluation seeds. Report feasible completion, material/load-path performance, dead-end rate, generation steps, diversity, constraint-mask statistics, and generalisation to controlled boundary-condition changes.
 
 ## M4 — Compact Benchmark Family
 

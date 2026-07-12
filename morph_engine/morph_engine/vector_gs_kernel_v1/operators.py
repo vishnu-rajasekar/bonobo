@@ -1,6 +1,7 @@
 from .geometry import add
 from .geometry import angle_xy
 from .geometry import bidirected_ray_intersection
+from .geometry import cross_z
 from .geometry import directed_ray_intersection
 from .geometry import distance
 from .geometry import dot
@@ -16,6 +17,47 @@ from .model import ForceDirection
 from .model import ForceKind
 from .model import Node
 from .model import NodeType
+
+
+CONNECTION_TOLERANCE = 1e-9
+
+
+def _segments_cross(p1, p2, q1, q2, tolerance):
+    o1 = cross_z(sub(p2, p1), sub(q1, p1))
+    o2 = cross_z(sub(p2, p1), sub(q2, p1))
+    o3 = cross_z(sub(q2, q1), sub(p1, q1))
+    o4 = cross_z(sub(q2, q1), sub(p2, q1))
+    if abs(o1) <= tolerance or abs(o2) <= tolerance or abs(o3) <= tolerance or abs(o4) <= tolerance:
+        return False
+    return (o1 > 0.0) != (o2 > 0.0) and (o3 > 0.0) != (o4 > 0.0)
+
+
+def _segments_overlap(p1, p2, q1, q2, tolerance):
+    if abs(cross_z(sub(p2, p1), sub(q1, p1))) > tolerance:
+        return False
+    if abs(cross_z(sub(p2, p1), sub(q2, p1))) > tolerance:
+        return False
+    axis = 0 if abs(p2[0] - p1[0]) >= abs(p2[1] - p1[1]) else 1
+    left = max(min(p1[axis], p2[axis]), min(q1[axis], q2[axis]))
+    right = min(max(p1[axis], p2[axis]), max(q1[axis], q2[axis]))
+    return right - left > tolerance
+
+
+def segment_is_admissible(assembly, start_node_id, end_node_id, start, end, tolerance=CONNECTION_TOLERANCE):
+    if start_node_id == end_node_id or distance(start, end) <= tolerance:
+        return False
+    if assembly.member_between(start_node_id, end_node_id) is not None:
+        return False
+    for member in assembly.members:
+        if start_node_id in {member.start_node, member.end_node} or end_node_id in {member.start_node, member.end_node}:
+            continue
+        member_start = assembly.node(member.start_node).coordinate
+        member_end = assembly.node(member.end_node).coordinate
+        if _segments_cross(start, end, member_start, member_end, tolerance):
+            return False
+        if _segments_overlap(start, end, member_start, member_end, tolerance):
+            return False
+    return True
 
 
 def make_force(point, vector, kind, direction=ForceDirection.COMPRESSION, **metadata):
@@ -164,11 +206,30 @@ def closest_link(node, assembly):
     return closest_projection(node, assembly, count=6, bidirectional=False)
 
 
+def connection_is_non_degenerate(node_a, node_b, assembly, intersection, tolerance=CONNECTION_TOLERANCE):
+    if node_a.node_id == node_b.node_id:
+        return False
+    if assembly.member_between(node_a.node_id, node_b.node_id) is not None:
+        return False
+    if distance(node_a.coordinate, intersection) <= tolerance:
+        return False
+    if distance(node_b.coordinate, intersection) <= tolerance:
+        return False
+    if assembly.node_exists_at(intersection, tolerance=tolerance):
+        return False
+    candidate_id = "__connection_candidate__"
+    if not segment_is_admissible(assembly, node_a.node_id, candidate_id, node_a.coordinate, intersection, tolerance):
+        return False
+    if not segment_is_admissible(assembly, node_b.node_id, candidate_id, node_b.coordinate, intersection, tolerance):
+        return False
+    return True
+
+
 def connect_two_forces(node_a, node_b, assembly, intersection):
     temp_a = get_temp_force(node_a)
     temp_b = get_temp_force(node_b)
-    if temp_a is None or temp_b is None:
-        return assembly
+    if temp_a is None or temp_b is None or not connection_is_non_degenerate(node_a, node_b, assembly, intersection):
+        return False
     force_a = make_force(node_a.coordinate, temp_a.vector, ForceKind.MEMBER, direction=temp_a.direction, semantic_origin="connect_two_forces")
     force_b = make_force(node_b.coordinate, temp_b.vector, ForceKind.MEMBER, direction=temp_b.direction, semantic_origin="connect_two_forces")
     node_a.remove_temp_forces()
@@ -187,26 +248,46 @@ def connect_two_forces(node_a, node_b, assembly, intersection):
     assembly.add_node(new_node)
     assembly.add_member(assembly_member_between(assembly, node_a.node_id, new_node.node_id, force_a))
     assembly.add_member(assembly_member_between(assembly, node_b.node_id, new_node.node_id, force_b))
-    return assembly
+    return True
 
 
-def resolve_two_forces(assembly):
+def can_resolve_two_forces(assembly, tolerance=CONNECTION_TOLERANCE):
     nodes = active_nodes(assembly)
     if len(nodes) != 2:
-        return assembly
+        return False
     node_a, node_b = nodes
+    if node_a.node_id == node_b.node_id or assembly.member_between(node_a.node_id, node_b.node_id) is not None:
+        return False
     temp_a = get_temp_force(node_a)
     temp_b = get_temp_force(node_b)
     if temp_a is None or temp_b is None:
-        return assembly
+        return False
     connector = sub(node_b.coordinate, node_a.coordinate)
     connector_dir = unit(connector)
+    temp_a_dir = unit(temp_a.vector)
+    temp_b_dir = unit(temp_b.vector)
+    if connector_dir is None or temp_a_dir is None or temp_b_dir is None:
+        return False
+    if magnitude(add(temp_a.vector, temp_b.vector)) > tolerance:
+        return False
+    if abs(abs(dot(temp_a_dir, connector_dir)) - 1.0) > tolerance:
+        return False
+    if not segment_is_admissible(assembly, node_a.node_id, node_b.node_id, node_a.coordinate, node_b.coordinate, tolerance):
+        return False
+    return True
+
+
+def resolve_two_forces(assembly):
+    if not can_resolve_two_forces(assembly):
+        return False
+    node_a, node_b = active_nodes(assembly)
+    temp_a = get_temp_force(node_a)
+    temp_b = get_temp_force(node_b)
+    connector_dir = unit(sub(node_b.coordinate, node_a.coordinate))
     temp_dir = unit(temp_a.vector)
-    if connector_dir is None or temp_dir is None:
-        return assembly
     direction = ForceDirection.TENSION if dot(temp_dir, connector_dir) >= 0.0 else ForceDirection.COMPRESSION
-    force_a = make_force(node_a.coordinate, connector, ForceKind.MEMBER, direction=direction, semantic_origin="resolve_two_forces")
-    force_b = transfer_member_force(force_a, node_b.coordinate)
+    force_a = make_force(node_a.coordinate, temp_a.vector, ForceKind.MEMBER, direction=direction, semantic_origin="resolve_two_forces")
+    force_b = make_force(node_b.coordinate, temp_b.vector, ForceKind.MEMBER, direction=direction, semantic_origin="resolve_two_forces")
     node_a.remove_temp_forces()
     node_b.remove_temp_forces()
     node_a.add_force(force_a)
@@ -216,7 +297,73 @@ def resolve_two_forces(assembly):
     rearrange_forces(node_a)
     rearrange_forces(node_b)
     assembly.add_member(assembly_member_between(assembly, node_a.node_id, node_b.node_id, force_a))
-    return assembly
+    return True
+
+
+def three_force_closure_hub(assembly, tolerance=CONNECTION_TOLERANCE):
+    nodes = active_nodes(assembly)
+    if len(nodes) != 3:
+        return None
+    temps = [get_temp_force(node) for node in nodes]
+    if any(temp is None for temp in temps):
+        return None
+    if magnitude(add(add(temps[0].vector, temps[1].vector), temps[2].vector)) > tolerance:
+        return None
+    for hub in nodes:
+        others = [node for node in nodes if node.node_id != hub.node_id]
+        admissible = True
+        for other in others:
+            member_direction = unit(sub(hub.coordinate, other.coordinate))
+            temp_direction = unit(get_temp_force(other).vector)
+            if member_direction is None or temp_direction is None:
+                admissible = False
+                break
+            if abs(abs(dot(member_direction, temp_direction)) - 1.0) > tolerance:
+                admissible = False
+                break
+            if not segment_is_admissible(
+                assembly,
+                other.node_id,
+                hub.node_id,
+                other.coordinate,
+                hub.coordinate,
+                tolerance,
+            ):
+                admissible = False
+                break
+        if admissible:
+            return hub
+    return None
+
+
+def resolve_three_forces_at_existing_node(assembly):
+    hub = three_force_closure_hub(assembly)
+    if hub is None:
+        return False
+    nodes = active_nodes(assembly)
+    others = [node for node in nodes if node.node_id != hub.node_id]
+    hub.remove_temp_forces()
+    for other in others:
+        temp = get_temp_force(other)
+        connector_direction = unit(sub(hub.coordinate, other.coordinate))
+        temp_direction = unit(temp.vector)
+        direction = ForceDirection.TENSION if dot(temp_direction, connector_direction) >= 0.0 else ForceDirection.COMPRESSION
+        member_force = make_force(
+            other.coordinate,
+            temp.vector,
+            ForceKind.MEMBER,
+            direction=direction,
+            semantic_origin="resolve_three_forces_at_existing_node",
+        )
+        other.remove_temp_forces()
+        other.add_force(member_force)
+        other.active = False
+        hub.add_force(transfer_member_force(member_force, hub.coordinate))
+        assembly.add_member(assembly_member_between(assembly, other.node_id, hub.node_id, member_force))
+        rearrange_forces(other)
+    hub.active = False
+    rearrange_forces(hub)
+    return True
 
 
 def support_projection_target(node, assembly):
