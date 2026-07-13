@@ -10,14 +10,15 @@ from .operators import decompose_force_along_directions
 from .operators import equilibrate_node
 
 
-PROBLEM_ID = "michell_three_point_cantilever_v1"
+SMOKE_PROBLEM_ID = "concurrent_three_force_smoke_v1"
+DIVERSITY_PROBLEM_ID = "michell_diversity_cantilever_v1"
 
 
 def _force_direction(vector, line_direction):
     return ForceDirection.TENSION if dot(vector, line_direction) >= 0.0 else ForceDirection.COMPRESSION
 
 
-def make_default_cantilever_scenario():
+def _make_three_force_scenario(problem_id):
     boundary = {"min": [-1.0, -2.0, 0.0], "max": [4.0, 2.0, 0.0]}
     support_a_point = [0.0, -1.0, 0.0]
     support_b_point = [0.0, 1.0, 0.0]
@@ -90,8 +91,8 @@ def make_default_cantilever_scenario():
         members=[],
         boundary=boundary,
         metadata={
-            "scenario_name": PROBLEM_ID,
-            "problem_id": PROBLEM_ID,
+            "scenario_name": problem_id,
+            "problem_id": problem_id,
             "boundary_force_initialization": "gdgs_equilibrate_node_v1",
             "force_convention": "tail_to_head_vectors_head_to_tail_polygon",
             "benchmark_geometry": {
@@ -116,3 +117,16 @@ def make_default_cantilever_scenario():
             },
         },
     )
+
+
+def make_concurrent_three_force_smoke_scenario():
+    return _make_three_force_scenario(SMOKE_PROBLEM_ID)
+
+
+def make_michell_diversity_cantilever_scenario():
+    return _make_three_force_scenario(DIVERSITY_PROBLEM_ID)
+
+
+def make_default_cantilever_scenario():
+    """Retain the original entry point as the smoke-scenario compatibility alias."""
+    return make_concurrent_three_force_smoke_scenario()

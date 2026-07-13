@@ -22,16 +22,6 @@ from .model import NodeType
 CONNECTION_TOLERANCE = 1e-9
 
 
-def _segments_cross(p1, p2, q1, q2, tolerance):
-    o1 = cross_z(sub(p2, p1), sub(q1, p1))
-    o2 = cross_z(sub(p2, p1), sub(q2, p1))
-    o3 = cross_z(sub(q2, q1), sub(p1, q1))
-    o4 = cross_z(sub(q2, q1), sub(p2, q1))
-    if abs(o1) <= tolerance or abs(o2) <= tolerance or abs(o3) <= tolerance or abs(o4) <= tolerance:
-        return False
-    return (o1 > 0.0) != (o2 > 0.0) and (o3 > 0.0) != (o4 > 0.0)
-
-
 def _segments_overlap(p1, p2, q1, q2, tolerance):
     if abs(cross_z(sub(p2, p1), sub(q1, p1))) > tolerance:
         return False
@@ -49,12 +39,8 @@ def segment_is_admissible(assembly, start_node_id, end_node_id, start, end, tole
     if assembly.member_between(start_node_id, end_node_id) is not None:
         return False
     for member in assembly.members:
-        if start_node_id in {member.start_node, member.end_node} or end_node_id in {member.start_node, member.end_node}:
-            continue
         member_start = assembly.node(member.start_node).coordinate
         member_end = assembly.node(member.end_node).coordinate
-        if _segments_cross(start, end, member_start, member_end, tolerance):
-            return False
         if _segments_overlap(start, end, member_start, member_end, tolerance):
             return False
     return True

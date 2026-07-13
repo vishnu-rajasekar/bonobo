@@ -7,6 +7,7 @@ from morph_engine.vector_gs_kernel_v1.experiments import run_kernel_batch
 from morph_engine.vector_gs_kernel_v1.experiments import run_kernel_episode
 from morph_engine.vector_gs_kernel_v1.export import export_batch_summary
 from morph_engine.vector_gs_kernel_v1.export import export_run
+from morph_engine.vector_gs_kernel_v1.scenarios import make_michell_diversity_cantilever_scenario
 
 
 def test_run_kernel_episode_is_reproducible_for_same_seed():
@@ -94,3 +95,23 @@ def test_run_kernel_episode_threads_policy_id_to_engine(monkeypatch):
 def test_run_kernel_episode_rejects_unknown_policy():
     with pytest.raises(ValueError, match="Unsupported kernel policy_id"):
         run_kernel_episode(seed=0, max_steps=4, policy_id="unknown_policy_v1")
+
+
+def test_diversity_episode_records_scenario_identity_and_is_deterministic():
+    first = run_kernel_episode(
+        seed=7,
+        max_steps=12,
+        scenario_builder=make_michell_diversity_cantilever_scenario,
+        policy_id="rule_uniform_random_v1",
+    )
+    second = run_kernel_episode(
+        seed=7,
+        max_steps=12,
+        scenario_builder=make_michell_diversity_cantilever_scenario,
+        policy_id="rule_uniform_random_v1",
+    )
+
+    assert first["problem_id"] == "michell_diversity_cantilever_v1"
+    assert first["scenario_name"] == "michell_diversity_cantilever_v1"
+    assert first["trace"] == second["trace"]
+    assert first["assembly"].to_data() == second["assembly"].to_data()

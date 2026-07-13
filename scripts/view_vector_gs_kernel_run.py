@@ -17,11 +17,17 @@ try:
     from PySide6.QtGui import QAction
 except Exception:  # pragma: no cover - environment dependent
     QAction = None
+try:
+    from PySide6.QtWidgets import QLabel
+except Exception:  # pragma: no cover - environment dependent
+    QLabel = None
 
 try:
     from compas_viewer import Viewer
+    from compas_viewer.scene import Tag
 except Exception as error:  # pragma: no cover - environment dependent
     Viewer = None
+    Tag = None
     VIEWER_IMPORT_ERROR = error
 else:
     VIEWER_IMPORT_ERROR = None
@@ -36,6 +42,7 @@ RUNS_SOURCE_DIRS = (
     ("experiments", "vector_gs_kernel_v1_runs_benchmark_hardened", "uniform"),
 )
 PRIMARY_RUNS_SOURCE_DIR = RUNS_SOURCE_DIRS[0]
+NODE_POINT_SIZE = 15.0
 
 
 def _vector_magnitude(vec3):
@@ -74,10 +81,6 @@ def _add(viewer, obj, name=None, color=None, **kwargs):
     if hasattr(viewer, "add") and callable(getattr(viewer, "add")):
         return viewer.add(obj, **params)
     return viewer.scene.add(obj, **params)
-
-
-def _safe_text(viewer, position, label, color):
-    _add(viewer, Point(*position), pointsize=6, name=label, show_name=True, color=color)
 
 
 def _kernel_run_dirs(runs_dir, selector=None):
@@ -217,12 +220,22 @@ class KernelRunViewer:
         self.viewer = viewer
         self.run_dirs = list(run_dirs)
         self.current_index = len(self.run_dirs) - 1
+        self.current_step_index = None
         self._statusbar = None
+        self._info_overlay = None
 
     def init_controls(self):
         self._statusbar = self.viewer.ui.statusbar.widget
+        if QLabel is not None:
+            self._info_overlay = QLabel(self.viewer.renderer)
+            self._info_overlay.move(12, 12)
+            self._info_overlay.setStyleSheet(
+                "background-color: rgba(255, 255, 255, 220); color: #222; padding: 8px; border: 1px solid #bbb;"
+            )
         self._add_toolbar_action("Prev", "View previous kernel run", self.show_previous_run)
         self._add_toolbar_action("Next", "View next kernel run", self.show_next_run)
+        self._add_toolbar_action("Prev Step", "View previous rule application", self.show_previous_step)
+        self._add_toolbar_action("Next Step", "View next rule application", self.show_next_step)
         self._install_key_navigation()
 
     def _add_toolbar_action(self, text, tooltip, action):
@@ -254,23 +267,85 @@ class KernelRunViewer:
                 browser.show_next_run()
                 event.accept()
                 return
+            if event.key() == Qt.Key_Up:
+                browser.show_previous_step()
+                event.accept()
+                return
+            if event.key() == Qt.Key_Down:
+                browser.show_next_step()
+                event.accept()
+                return
             original(event)
 
         renderer.keyPressEvent = keypress
 
     def show_previous_run(self):
         self.current_index = (self.current_index - 1) % len(self.run_dirs)
+        self.current_step_index = None
         self.render_current_run()
 
     def show_next_run(self):
         self.current_index = (self.current_index + 1) % len(self.run_dirs)
+        self.current_step_index = None
         self.render_current_run()
 
-    def render_current_run(self):
+    def show_previous_step(self):
         payload = _load_payload(self.run_dirs[self.current_index])
-        self._clear_scene()
-        self._draw_payload(payload)
-        if self.viewer.running:
+        final_index = len(payload["trace"])
+        current = final_index if self.current_step_index is None else self.current_step_index
+        self.current_step_index = max(0, current - 1)
+        self.render_current_run()
+
+    def show_next_step(self):
+        payload = _load_payload(self.run_dirs[self.current_index])
+        final_index = len(payload["trace"])
+        current = final_index if self.current_step_index is None else self.current_step_index
+        self.current_step_index = min(final_index, current + 1)
+        self.render_current_run()
+
+    def _playback_payload(self, payload):
+        trace = payload["trace"]
+        final_index = len(trace)
+        step_index = final_index if self.current_step_index is None else min(self.current_step_index, final_index)
+        rendered = dict(payload)
+        if trace and step_index == 0:
+            rendered["assembly"] = trace[0].get("assembly_before", payload["assembly"])
+        elif trace and step_index < final_index:
+            rendered["assembly"] = trace[step_index - 1].get("assembly_after", payload["assembly"])
+        rendered["playback_step_index"] = step_index
+        rendered["playback_step_count"] = final_index
+        rendered["playback_rule"] = "initial" if step_index == 0 else trace[step_index - 1]["rule"]
+        rendered["playback_targets"] = [] if step_index == 0 else list(trace[step_index - 1].get("targets") or [])
+        if step_index == 0:
+            rendered["playback_transition_changed"] = False
+            rendered["playback_form_changed"] = False
+        else:
+            transition = trace[step_index - 1]
+            before = transition.get("assembly_before") or {}
+            after = transition.get("assembly_after") or {}
+            rendered["playback_transition_changed"] = before != after
+            rendered["playback_form_changed"] = (
+                before.get("nodes") != after.get("nodes") or before.get("members") != after.get("members")
+            )
+        rendered["playback_is_final"] = step_index == final_index
+        if not rendered["playback_is_final"]:
+            rendered["final_metrics"] = {}
+        return rendered
+
+    def render_current_run(self):
+        payload = self._playback_payload(_load_payload(self.run_dirs[self.current_index]))
+        was_running = self.viewer.running
+        if was_running:
+            # COMPAS redraws after every dynamic add. Build the complete scene first
+            # so Tag objects can initialize before the first playback redraw.
+            self.viewer.running = False
+        try:
+            self._clear_scene()
+            self._draw_payload(payload)
+        finally:
+            self.viewer.running = was_running
+        if was_running:
+            self._initialize_node_labels()
             self.viewer.renderer.rebuild_buffers()
             self.viewer.renderer.update()
             self.viewer.ui.sidebar.update()
@@ -281,27 +356,67 @@ class KernelRunViewer:
         for sceneobject in list(self.viewer.scene.objects):
             self.viewer.scene.remove(sceneobject, rebuild_buffers=False)
 
+    def _initialize_node_labels(self):
+        for sceneobject in self.viewer.scene.objects:
+            if Tag is not None and isinstance(getattr(sceneobject, "geometry", None), Tag):
+                sceneobject.init()
+
     def _set_status(self, payload):
         if self._statusbar is None:
             return
         counts = _scene_counts(payload)
         metrics = _metric_summary(payload)
         message = (
-            "{0} ({1}/{2}) | nodes={3} members={4} active={5} residual={6} "
-            "| benchmark_complete={7} valid={8} support_connected={9}"
+            "{0} ({1}/{2}) | state={3}/{4} rule={5} | nodes={6} members={7} active={8} residual={9} "
+            "| benchmark_complete={10} valid={11} support_connected={12}"
         ).format(
             payload["run_dir"].name,
             self.current_index + 1,
             len(self.run_dirs),
+            payload["playback_step_index"],
+            payload["playback_step_count"],
+            payload["playback_rule"],
             counts["nodes"],
             counts["members"],
             counts["active"],
             payload["assembly"]["residual_magnitude"],
-            metrics["benchmark_complete"],
-            metrics["geometrically_valid"],
-            metrics["support_connected"],
+            metrics["benchmark_complete"] if payload["playback_is_final"] else "n/a",
+            metrics["geometrically_valid"] if payload["playback_is_final"] else "n/a",
+            metrics["support_connected"] if payload["playback_is_final"] else "n/a",
         )
         self._statusbar.showMessage(message)
+
+        if self._info_overlay is not None:
+            invalid_reasons = metrics["invalid_reason_label"]
+            targets = ",".join(payload["playback_targets"]) or "none"
+            transition_status = "changed" if payload["playback_transition_changed"] else "no-op"
+            self._info_overlay.setText(
+                "Kernel Run {0}/{1}: {2}\n"
+                "rule state {3}/{4}: {5} nodes={6}\n"
+                "transition={7} form_changed={8}\n"
+                "state={9} residual={10}\n"
+                "benchmark_complete={11} valid={12} support_connected={13}\n"
+                "invalid_reasons={14}".format(
+                    self.current_index + 1,
+                    len(self.run_dirs),
+                    payload["run_dir"].name,
+                    payload["playback_step_index"],
+                    payload["playback_step_count"],
+                    payload["playback_rule"],
+                    targets,
+                    transition_status,
+                    payload["playback_form_changed"],
+                    payload["assembly"]["state"],
+                    payload["assembly"]["residual_magnitude"],
+                    metrics["benchmark_complete"] if payload["playback_is_final"] else "n/a",
+                    metrics["geometrically_valid"] if payload["playback_is_final"] else "n/a",
+                    metrics["support_connected"] if payload["playback_is_final"] else "n/a",
+                    invalid_reasons if payload["playback_is_final"] else "n/a",
+                )
+            )
+            self._info_overlay.adjustSize()
+            self._info_overlay.raise_()
+            self._info_overlay.show()
 
     def _print_summary(self, payload):
         counts = _scene_counts(payload)
@@ -324,15 +439,25 @@ class KernelRunViewer:
         for node in payload["assembly"]["nodes"]:
             xyz = [float(value) for value in node["coordinate"]]
             if node["type"] == "support":
+                _add(self.viewer, Point(*xyz), name="SupportNode", color=(0.0, 0.0, 0.0), pointsize=NODE_POINT_SIZE)
                 _add_support_symbol(self.viewer, xyz, scale=0.5)
             else:
-                _add(self.viewer, Point(*xyz), name="Node", color=(0.15, 0.15, 0.15), pointsize=8)
+                _add(self.viewer, Point(*xyz), name="Node", color=(0.15, 0.15, 0.15), pointsize=NODE_POINT_SIZE)
+            if Tag is not None:
+                label_position = (xyz[0] + 0.08, xyz[1] + 0.08, xyz[2] + 0.08)
+                _add(
+                    self.viewer,
+                    Tag(str(node["node_id"]), label_position, height=18, absolute_height=False),
+                    name="NodeLabel",
+                )
 
             for force in node.get("forces", []):
                 vector = [float(value) for value in force.get("vector", [0.0, 0.0, 0.0])]
                 kind = force.get("kind")
                 if kind == "applied":
                     _add_force_arrow(self.viewer, xyz, vector, color=(0.1, 0.35, 0.9), scale=0.6, name="Load")
+                elif kind == "reaction":
+                    _add_force_arrow(self.viewer, xyz, vector, color=(0.05, 0.55, 0.1), scale=0.6, name="SolvedReaction", linewidth=3)
                 elif kind == "temporary":
                     _add_force_arrow(self.viewer, xyz, vector, color=(0.85, 0.15, 0.15), scale=0.5, name="TempForce", linewidth=2.5)
 
@@ -344,33 +469,6 @@ class KernelRunViewer:
             p1 = [float(value) for value in start_node["coordinate"]]
             p2 = [float(value) for value in end_node["coordinate"]]
             _add(self.viewer, Line(Point(*p1), Point(*p2)), name="Member", color=(0.15, 0.15, 0.15), linewidth=3)
-
-        polygon = (payload.get("final_metrics") or {}).get("boundary_force_polygon") or {}
-        for reaction in polygon.get("solved_reactions") or []:
-            point = [float(value) for value in reaction.get("point", [0.0, 0.0, 0.0])]
-            vector = [float(value) for value in reaction.get("vector", [0.0, 0.0, 0.0])]
-            _add_force_arrow(self.viewer, point, vector, color=(0.05, 0.55, 0.1), scale=0.6, name="SolvedReaction", linewidth=3)
-
-        coords = [node["coordinate"] for node in payload["assembly"]["nodes"]]
-        if coords:
-            metrics = _metric_summary(payload)
-            cx = sum(point[0] for point in coords) / len(coords)
-            cy = sum(point[1] for point in coords) / len(coords)
-            cz = sum(point[2] for point in coords) / len(coords)
-            run_label = "Kernel Run {0}/{1}: {2}".format(self.current_index + 1, len(self.run_dirs), payload["run_dir"].name)
-            state_label = "state={0} residual={1}".format(payload["assembly"]["state"], payload["assembly"]["residual_magnitude"])
-            completion_label = "benchmark_complete={0} valid={1} support_connected={2}".format(
-                metrics["benchmark_complete"],
-                metrics["geometrically_valid"],
-                metrics["support_connected"],
-            )
-            invalid_label = "invalid_reasons={0}".format(metrics["invalid_reason_label"])
-            rule_label = "rules: {0}".format(", ".join(step["rule"] for step in payload["trace"][:5]))
-            _safe_text(self.viewer, (cx + 0.5, cy + 0.5, cz + 0.5), run_label, (0.0, 0.0, 0.0))
-            _safe_text(self.viewer, (cx + 0.5, cy + 1.0, cz + 0.5), state_label, (0.1, 0.1, 0.1))
-            _safe_text(self.viewer, (cx + 0.5, cy + 1.5, cz + 0.5), completion_label, (0.1, 0.1, 0.1))
-            _safe_text(self.viewer, (cx + 0.5, cy + 2.0, cz + 0.5), invalid_label, (0.45, 0.05, 0.05))
-            _safe_text(self.viewer, (cx + 0.5, cy + 2.5, cz + 0.5), rule_label, (0.1, 0.1, 0.1))
 
         _frame_scene(self.viewer, payload)
 

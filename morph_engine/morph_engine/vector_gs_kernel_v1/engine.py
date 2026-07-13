@@ -22,6 +22,15 @@ class VectorGSKernelV1:
         if assembly.state == GenerationState.START:
             return self.rules[0].propose(assembly, None, self.rng)
 
+        if self.policy_id == "rule_uniform_random_v1":
+            proposals = []
+            for node in assembly.active_nodes():
+                for rule in self.rules[1:]:
+                    proposals.extend(rule.propose(assembly, node, self.rng))
+            if proposals:
+                return proposals
+            return self.rules[-1].propose(assembly, None, self.rng)
+
         node = self._pick_node(assembly)
         if node is None:
             return self.rules[-1].propose(assembly, None, self.rng)
@@ -37,6 +46,18 @@ class VectorGSKernelV1:
                 for rule in self.rules[1:]:
                     proposals.extend(rule.propose(assembly, other, self.rng))
         return proposals
+
+    def _proposal_probabilities(self, proposals):
+        if not proposals:
+            return []
+        if self.policy_id == "rule_uniform_random_v1":
+            probability = 1.0 / float(len(proposals))
+            return [probability for _ in proposals]
+        if self.policy_id != "rule_weighted_random_v1":
+            raise ValueError("Unsupported kernel policy_id: {0}".format(self.policy_id))
+        weights = [max(1, proposal.weight) for proposal in proposals]
+        total = float(sum(weights))
+        return [weight / total for weight in weights]
 
     def _select_proposal(self, proposals):
         if not proposals:
@@ -66,9 +87,9 @@ class VectorGSKernelV1:
             proposals = self._all_proposals(assembly)
             proposal = self._select_proposal(proposals)
             if proposal is None:
-                assembly.state = GenerationState.END
                 break
             rule = self._rule_for(proposal)
+            assembly_before = assembly.to_data()
             before_nodes = len(assembly.nodes)
             before_members = len(assembly.members)
             assembly = rule.apply(assembly, proposal, self.rng)
@@ -84,6 +105,8 @@ class VectorGSKernelV1:
                     "added_nodes": len(assembly.nodes) - before_nodes,
                     "added_members": len(assembly.members) - before_members,
                     "residual_magnitude": assembly.residual_magnitude(),
+                    "assembly_before": assembly_before,
+                    "assembly_after": assembly.to_data(),
                 }
             )
             if assembly.state == GenerationState.END:

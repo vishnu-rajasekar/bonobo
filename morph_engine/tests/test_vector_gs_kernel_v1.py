@@ -21,6 +21,8 @@ from morph_engine.vector_gs_kernel_v1.rules import CreateNodeRule
 from morph_engine.vector_gs_kernel_v1.rules import ExtendNodeRule
 from morph_engine.vector_gs_kernel_v1.rules import CloseStructureRule
 from morph_engine.vector_gs_kernel_v1.rules import SplitNodeRule
+from morph_engine.vector_gs_kernel_v1.scenarios import make_concurrent_three_force_smoke_scenario
+from morph_engine.vector_gs_kernel_v1.scenarios import make_michell_diversity_cantilever_scenario
 
 
 BOUNDARY = {"min": [-1.0, -1.0, 0.0], "max": [6.0, 6.0, 0.0]}
@@ -90,7 +92,7 @@ def test_default_scenario_initializes_gdgs_boundary_temp_forces():
     assembly = make_default_cantilever_scenario()
 
     assert assembly.state == GenerationState.START
-    assert assembly.metadata["problem_id"] == "michell_three_point_cantilever_v1"
+    assert assembly.metadata["problem_id"] == "concurrent_three_force_smoke_v1"
     assert assembly.metadata["boundary_force_initialization"] == "gdgs_equilibrate_node_v1"
     assert assembly.node("0").coordinate == [0.0, -1.0, 0.0]
     assert assembly.node("1").coordinate == [0.0, 1.0, 0.0]
@@ -111,6 +113,17 @@ def test_default_scenario_initializes_gdgs_boundary_temp_forces():
     assert assembly.metadata["reaction_directions_by_node"]["0"] == pytest.approx([0.9486832980505138, 0.31622776601683794, 0.0])
     assert assembly.metadata["reaction_directions_by_node"]["1"] == pytest.approx([0.9486832980505138, -0.31622776601683794, 0.0])
     assert assembly.metadata["benchmark_geometry"]["concurrency_point"] == [3.0, 0.0, 0.0]
+
+
+def test_smoke_and_diversity_scenarios_have_distinct_reproducible_identities():
+    smoke = make_concurrent_three_force_smoke_scenario()
+    diversity_a = make_michell_diversity_cantilever_scenario()
+    diversity_b = make_michell_diversity_cantilever_scenario()
+
+    assert smoke.metadata["problem_id"] == "concurrent_three_force_smoke_v1"
+    assert diversity_a.metadata["problem_id"] == "michell_diversity_cantilever_v1"
+    assert diversity_a.to_data() == diversity_b.to_data()
+    assert diversity_a.metadata["benchmark_geometry"] == smoke.metadata["benchmark_geometry"]
 
 
 def test_gdgs_two_front_close_consumes_temp_forces_and_ends():
@@ -208,6 +221,39 @@ def test_close_rule_does_not_propose_coincident_intersection():
     assert assembly.state == GenerationState.GO
 
 
+def test_gdgs_progressive_close_selects_nearest_intersection_and_returns_to_go():
+    selected = _active_temp_node("0", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
+    farther = _active_temp_node("1", [2.0, 1.0, 0.0], [0.0, -1.0, 0.0])
+    nearer = _active_temp_node("2", [1.0, 2.0, 0.0], [0.0, -1.0, 0.0])
+    assembly = Assembly([selected, farther, nearer], [], BOUNDARY, state=GenerationState.GO)
+    for _ in range(5):
+        assembly.add_history("PriorRule", [], {}, {})
+    rule = CloseStructureRule()
+
+    proposal = rule.propose(assembly, selected, __import__("random").Random(0))[0]
+
+    assert proposal.target_node_ids == ["0", "2"]
+    assert proposal.params["kind"] == "progressive_intersection"
+    assert proposal.params["point"] == pytest.approx([1.0, 0.0, 0.0])
+
+    rule.apply(assembly, proposal, __import__("random").Random(0))
+
+    assert assembly.state == GenerationState.GO
+    assert len(assembly.members) == 2
+    assert len(assembly.active_nodes()) == 2
+    assert assembly.history[-1].summary == {"progressive_closure_connection": True}
+
+
+def test_gdgs_progressive_close_waits_for_loopcount():
+    node_a = _active_temp_node("a", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
+    node_b = _active_temp_node("b", [1.0, 1.0, 0.0], [0.0, -1.0, 0.0])
+    node_c = _active_temp_node("c", [2.0, 2.0, 0.0], [0.0, -1.0, 0.0])
+    assembly = Assembly([node_a, node_b, node_c], [], BOUNDARY, state=GenerationState.GO)
+    rule = CloseStructureRule()
+
+    assert rule.propose(assembly, node_a, __import__("random").Random(0)) == []
+
+
 def test_connect_two_forces_rejects_self_connection_and_existing_edge():
     node_a = _active_temp_node("a", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
     node_b = _active_temp_node("b", [0.0, 1.0, 0.0], [0.0, -1.0, 0.0])
@@ -223,7 +269,7 @@ def test_connect_two_forces_rejects_self_connection_and_existing_edge():
     assert assembly.to_data() == before
 
 
-def test_connection_segment_rejects_crossing_existing_member():
+def test_connection_segment_allows_crossing_existing_member():
     assembly = Assembly(
         [
             Node("a", [0.0, 0.0, 0.0], NodeType.FLOAT),
@@ -235,7 +281,42 @@ def test_connection_segment_rejects_crossing_existing_member():
         BOUNDARY,
     )
 
-    assert segment_is_admissible(assembly, "c", "d", [0.0, 2.0, 0.0], [2.0, 0.0, 0.0]) is False
+    assert segment_is_admissible(assembly, "c", "d", [0.0, 2.0, 0.0], [2.0, 0.0, 0.0]) is True
+
+
+def test_connection_segment_rejects_collinear_overlap_with_shared_endpoint():
+    assembly = Assembly(
+        [
+            Node("a", [0.0, 0.0, 0.0], NodeType.FLOAT),
+            Node("b", [2.0, 0.0, 0.0], NodeType.FLOAT),
+            Node("c", [3.0, 0.0, 0.0], NodeType.FLOAT),
+        ],
+        [Member("m0", "a", "b")],
+        BOUNDARY,
+    )
+
+    assert segment_is_admissible(assembly, "a", "c", [0.0, 0.0, 0.0], [3.0, 0.0, 0.0]) is False
+
+
+def test_kernel_does_not_mark_unresolved_dead_end_as_end():
+    class StartOnlyRule:
+        name = "StartGeneration"
+
+        def propose(self, assembly, node, rng):
+            if assembly.state == GenerationState.START:
+                return [RuleProposal(self.name, [], {}, 1)]
+            return []
+
+        def apply(self, assembly, proposal, rng):
+            assembly.state = GenerationState.GO
+            return assembly
+
+    assembly = make_default_cantilever_scenario()
+    final, trace = VectorGSKernelV1(rules=[StartOnlyRule()], seed=0).run(assembly, max_steps=4)
+
+    assert [step["rule"] for step in trace] == ["StartGeneration"]
+    assert final.state == GenerationState.GO
+    assert final.active_nodes()
 
 
 def test_run_artifact_records_budget_termination_and_benchmark_metadata(tmp_path):
@@ -269,6 +350,9 @@ def test_kernel_smoke_run_generates_nontrivial_structure():
     assert trace
     assert len(final_assembly.nodes) > 3 or len(final_assembly.members) >= 1
     assert any(step["rule"] != "StartGeneration" for step in trace)
+    assert trace[0]["assembly_before"]["state"] == GenerationState.START
+    assert trace[0]["assembly_after"]["state"] == GenerationState.GO
+    assert trace[-1]["assembly_after"] == final_assembly.to_data()
 
 
 def test_kernel_policy_controls_proposal_selection_mode():
@@ -285,6 +369,53 @@ def test_kernel_policy_controls_proposal_selection_mode():
 
     assert weighted_pick.rule_name == "HeavyRule"
     assert uniform_pick.rule_name == "LightRule"
+
+
+def test_uniform_policy_assigns_equal_probability_and_ignores_rule_weights():
+    proposals = [
+        RuleProposal("CloseStructure", ["0"], {}, 1000),
+        RuleProposal("SplitNode", ["1"], {}, 1),
+        RuleProposal("ExtendNode", ["2"], {}, 25),
+    ]
+    kernel = VectorGSKernelV1(seed=4, policy_id="rule_uniform_random_v1")
+
+    assert kernel._proposal_probabilities(proposals) == pytest.approx([1.0 / 3.0] * 3)
+
+    changed_weights = [
+        RuleProposal(proposal.rule_name, proposal.target_node_ids, proposal.params, 9999 - index)
+        for index, proposal in enumerate(proposals)
+    ]
+    first = VectorGSKernelV1(seed=9, policy_id="rule_uniform_random_v1")._select_proposal(proposals)
+    second = VectorGSKernelV1(seed=9, policy_id="rule_uniform_random_v1")._select_proposal(changed_weights)
+    assert first.rule_name == second.rule_name
+
+
+def test_uniform_policy_exposes_proposals_from_every_active_node():
+    class NodeRule:
+        name = "NodeRule"
+
+        def propose(self, assembly, node, rng):
+            if node is None:
+                return []
+            return [RuleProposal(self.name, [node.node_id], {}, 1)]
+
+    class EndRule:
+        name = "EndGeneration"
+
+        def propose(self, assembly, node, rng):
+            return []
+
+    assembly = make_michell_diversity_cantilever_scenario()
+    assembly.state = GenerationState.GO
+    kernel = VectorGSKernelV1(
+        rules=[EndRule(), NodeRule(), EndRule()],
+        seed=0,
+        policy_id="rule_uniform_random_v1",
+    )
+
+    proposals = kernel._all_proposals(assembly)
+
+    assert {proposal.target_node_ids[0] for proposal in proposals} == {"0", "1", "2"}
 
 
 def test_kernel_benchmark_completion_requires_support_connectivity():

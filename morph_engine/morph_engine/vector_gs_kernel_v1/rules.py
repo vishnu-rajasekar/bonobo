@@ -130,7 +130,18 @@ class ExtendNodeRule(BaseRule):
             return []
         if get_line_of_action(node) is None:
             return []
-        return [RuleProposal(self.name, [node.node_id], {"length": rng.uniform(self.min_length, self.max_length)}, self.weight)]
+        length = rng.uniform(self.min_length, self.max_length)
+        loa = get_line_of_action(node)
+        new_coordinate = add(node.coordinate, scale(loa["direction"], length))
+        if not segment_is_admissible(
+            assembly,
+            node.node_id,
+            "__extend_candidate__",
+            node.coordinate,
+            new_coordinate,
+        ):
+            return []
+        return [RuleProposal(self.name, [node.node_id], {"length": length}, self.weight)]
 
     def apply(self, assembly, proposal, rng):
         node = assembly.node(proposal.target_node_ids[0])
@@ -139,7 +150,17 @@ class ExtendNodeRule(BaseRule):
         if loa is None or temp is None:
             return assembly
         new_coordinate = add(node.coordinate, scale(loa["direction"], proposal.params["length"]))
-        if not boundary_ok(new_coordinate, assembly) or assembly.node_exists_at(new_coordinate):
+        if (
+            not boundary_ok(new_coordinate, assembly)
+            or assembly.node_exists_at(new_coordinate)
+            or not segment_is_admissible(
+                assembly,
+                node.node_id,
+                "__extend_candidate__",
+                node.coordinate,
+                new_coordinate,
+            )
+        ):
             return assembly
         member_force = make_force(node.coordinate, temp.vector, ForceKind.MEMBER, direction=temp.direction, semantic_origin="extend_node")
         node.remove_temp_forces()
@@ -178,19 +199,20 @@ class SplitNodeRule(BaseRule):
             return []
         if get_line_of_action(node) is None:
             return []
-        return [
-            RuleProposal(
-                self.name,
-                [node.node_id],
-                {
-                    "length_a": rng.uniform(self.min_length, self.max_length),
-                    "length_b": rng.uniform(self.min_length, self.max_length),
-                    "angle_a": rng.uniform(self.min_angle, self.max_angle),
-                    "angle_b": -rng.uniform(self.min_angle, self.max_angle),
-                },
-                self.weight,
-            )
-        ]
+        params = {
+            "length_a": rng.uniform(self.min_length, self.max_length),
+            "length_b": rng.uniform(self.min_length, self.max_length),
+            "angle_a": rng.uniform(self.min_angle, self.max_angle),
+            "angle_b": -rng.uniform(self.min_angle, self.max_angle),
+        }
+        loa = get_line_of_action(node)
+        coord_a = add(node.coordinate, scale(rotate_z(loa["direction"], params["angle_a"]), params["length_a"]))
+        coord_b = add(node.coordinate, scale(rotate_z(loa["direction"], params["angle_b"]), params["length_b"]))
+        if not segment_is_admissible(assembly, node.node_id, "__split_candidate_a__", node.coordinate, coord_a):
+            return []
+        if not segment_is_admissible(assembly, node.node_id, "__split_candidate_b__", node.coordinate, coord_b):
+            return []
+        return [RuleProposal(self.name, [node.node_id], params, self.weight)]
 
     def apply(self, assembly, proposal, rng):
         node = assembly.node(proposal.target_node_ids[0])
@@ -208,6 +230,10 @@ class SplitNodeRule(BaseRule):
         if not boundary_ok(coord_a, assembly) or not boundary_ok(coord_b, assembly):
             return assembly
         if assembly.node_exists_at(coord_a) or assembly.node_exists_at(coord_b):
+            return assembly
+        if not segment_is_admissible(assembly, node.node_id, "__split_candidate_a__", node.coordinate, coord_a):
+            return assembly
+        if not segment_is_admissible(assembly, node.node_id, "__split_candidate_b__", node.coordinate, coord_b):
             return assembly
         force_a = make_force(node.coordinate, decomp["vector_a"], ForceKind.MEMBER, direction=temp.direction, semantic_origin="split_node", branch="a")
         force_b = make_force(node.coordinate, decomp["vector_b"], ForceKind.MEMBER, direction=temp.direction, semantic_origin="split_node", branch="b")
@@ -311,10 +337,22 @@ class ExtendAndConnectTwoNodesRule(BaseRule):
                 )
             ]
         support_target = support_link_target(node, assembly)
-        if support_target is not None:
+        if support_target is not None and segment_is_admissible(
+            assembly,
+            node.node_id,
+            support_target["support"].node_id,
+            node.coordinate,
+            support_target["support"].coordinate,
+        ):
             return [RuleProposal(self.name, [node.node_id, support_target["support"].node_id], {"kind": "support"}, self.weight)]
         projection_point = support_projection_target(node, assembly)
-        if projection_point is not None:
+        if projection_point is not None and segment_is_admissible(
+            assembly,
+            node.node_id,
+            "__root_projection_candidate__",
+            node.coordinate,
+            projection_point,
+        ):
             return [RuleProposal(self.name, [node.node_id], {"kind": "root_projection", "point": projection_point}, self.weight)]
         return []
 
@@ -336,7 +374,13 @@ class ExtendAndConnectTwoNodesRule(BaseRule):
         if kind == "support" and len(proposal.target_node_ids) == 2:
             support = assembly.node(proposal.target_node_ids[1])
             temp = get_temp_force(node)
-            if temp is None or assembly.member_between(node.node_id, support.node_id):
+            if temp is None or not segment_is_admissible(
+                assembly,
+                node.node_id,
+                support.node_id,
+                node.coordinate,
+                support.coordinate,
+            ):
                 return assembly
             member_force = make_force(node.coordinate, sub(support.coordinate, node.coordinate), ForceKind.MEMBER, direction=ForceDirection.COMPRESSION, semantic_origin="extend_and_connect_support")
             node.remove_temp_forces()
@@ -349,7 +393,17 @@ class ExtendAndConnectTwoNodesRule(BaseRule):
             return assembly
         if kind == "root_projection":
             point = list(proposal.params["point"])
-            if not boundary_ok(point, assembly) or assembly.node_exists_at(point):
+            if (
+                not boundary_ok(point, assembly)
+                or assembly.node_exists_at(point)
+                or not segment_is_admissible(
+                    assembly,
+                    node.node_id,
+                    "__root_projection_candidate__",
+                    node.coordinate,
+                    point,
+                )
+            ):
                 return assembly
             temp = get_temp_force(node)
             if temp is None:
@@ -370,7 +424,7 @@ class CloseStructureRule(BaseRule):
     name = "CloseStructure"
     weight = 30
 
-    def __init__(self, loopcount=0):
+    def __init__(self, loopcount=4):
         self.loopcount = int(loopcount)
 
     def propose(self, assembly, node, rng):
@@ -395,23 +449,29 @@ class CloseStructureRule(BaseRule):
                     )
                 ]
         if count >= 3:
+            loa_a = get_line_of_action(node)
+            if loa_a is None:
+                return []
+            candidates = []
             for other in active_nodes(assembly):
                 if other.node_id == node.node_id:
                     continue
-                loa_a = get_line_of_action(node)
                 loa_b = get_line_of_action(other)
-                if loa_a is None or loa_b is None:
+                if loa_b is None:
                     continue
                 point = bidirected_ray_intersection(loa_a["point"], loa_a["direction"], loa_b["point"], loa_b["direction"])
                 if point is not None and boundary_ok(point, assembly) and connection_is_non_degenerate(node, other, assembly, point):
-                    return [
-                        RuleProposal(
-                            self.name,
-                            [node.node_id, other.node_id],
-                            {"active_count": count, "point": point},
-                            self.weight,
-                        )
-                    ]
+                    candidates.append((distance(node.coordinate, point), other.node_id, other, point))
+            if candidates:
+                _, _, other, point = min(candidates, key=lambda item: (item[0], item[1]))
+                return [
+                    RuleProposal(
+                        self.name,
+                        [node.node_id, other.node_id],
+                        {"active_count": count, "kind": "progressive_intersection", "point": point},
+                        self.weight,
+                    )
+                ]
         return []
 
     def apply(self, assembly, proposal, rng):
@@ -437,8 +497,13 @@ class CloseStructureRule(BaseRule):
         other = assembly.node(proposal.target_node_ids[1])
         point = proposal.params.get("point")
         if point is not None and connect_two_forces(node, other, assembly, point):
-            assembly.state = GenerationState.CLOSE
-            assembly.add_history(self.name, [node.node_id, other.node_id], proposal.params, {"closure_connection": True})
+            assembly.state = GenerationState.GO
+            assembly.add_history(
+                self.name,
+                [node.node_id, other.node_id],
+                proposal.params,
+                {"progressive_closure_connection": True},
+            )
         return assembly
 
 
