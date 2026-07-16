@@ -1,4 +1,7 @@
 import json
+import runpy
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -19,6 +22,7 @@ def test_run_kernel_episode_is_reproducible_for_same_seed():
     assert episode_a["trace"] == episode_b["trace"]
     assert episode_a["final_metrics"] == episode_b["final_metrics"]
     assert episode_a["assembly"].to_data() == episode_b["assembly"].to_data()
+    assert episode_a["termination_reason"] == episode_b["termination_reason"]
 
 
 def test_export_run_writes_enriched_kernel_payload(tmp_path):
@@ -70,6 +74,34 @@ def test_run_kernel_batch_and_summary_shape(tmp_path):
     assert "support_connected_run_count" in exported["aggregate_metrics"]
     assert "geometrically_valid_run_count" in exported["aggregate_metrics"]
     assert "invalidity_reason_counts" in exported["aggregate_metrics"]
+    assert "termination_reason_counts" in exported["aggregate_metrics"]
+
+
+def test_kernel_cli_exports_step_budget_to_run_and_batch_artifacts(tmp_path, monkeypatch):
+    script_path = Path(__file__).resolve().parents[2] / "scripts" / "run_vector_gs_kernel_v1.py"
+    module = runpy.run_path(str(script_path), run_name="vector_gs_kernel_cli_test")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(script_path),
+            "--runs",
+            "1",
+            "--steps",
+            "3",
+            "--policy-id",
+            "rule_uniform_random_v1",
+            "--output-dir",
+            str(tmp_path),
+        ],
+    )
+
+    module["main"]()
+
+    run_path = next(tmp_path.glob("*_seed_0/kernel_run.json"))
+    summary_path = next(tmp_path.glob("*_batch_summary.json"))
+    assert json.loads(run_path.read_text())["step_budget"] == 3
+    assert json.loads(summary_path.read_text())["step_budget"] == 3
 
 
 def test_run_kernel_episode_threads_policy_id_to_engine(monkeypatch):

@@ -316,6 +316,10 @@ class KernelRunViewer:
         rendered["playback_step_count"] = final_index
         rendered["playback_rule"] = "initial" if step_index == 0 else trace[step_index - 1]["rule"]
         rendered["playback_targets"] = [] if step_index == 0 else list(trace[step_index - 1].get("targets") or [])
+        rendered["playback_selected_node"] = None if step_index == 0 else trace[step_index - 1].get("selected_active_node")
+        rendered["playback_active_before"] = None if step_index == 0 else trace[step_index - 1].get("active_front_count_before")
+        rendered["playback_active_after"] = None if step_index == 0 else trace[step_index - 1].get("active_front_count_after")
+        rendered["playback_ray_combination"] = None if step_index == 0 else trace[step_index - 1].get("params", {}).get("ray_combination")
         if step_index == 0:
             rendered["playback_transition_changed"] = False
             rendered["playback_form_changed"] = False
@@ -390,13 +394,16 @@ class KernelRunViewer:
             invalid_reasons = metrics["invalid_reason_label"]
             targets = ",".join(payload["playback_targets"]) or "none"
             transition_status = "changed" if payload["playback_transition_changed"] else "no-op"
+            ray_combination = payload["playback_ray_combination"] or "n/a"
+            termination_reason = payload.get("termination_reason") or payload["assembly"].get("metadata", {}).get("termination_reason") or "n/a"
             self._info_overlay.setText(
                 "Kernel Run {0}/{1}: {2}\n"
                 "rule state {3}/{4}: {5} nodes={6}\n"
                 "transition={7} form_changed={8}\n"
-                "state={9} residual={10}\n"
-                "benchmark_complete={11} valid={12} support_connected={13}\n"
-                "invalid_reasons={14}".format(
+                "selected_node={9} active_fronts={10}->{11} rays={12}\n"
+                "state={13} residual={14}\n"
+                "benchmark_complete={15} valid={16} support_connected={17}\n"
+                "invalid_reasons={18} termination={19}".format(
                     self.current_index + 1,
                     len(self.run_dirs),
                     payload["run_dir"].name,
@@ -406,12 +413,17 @@ class KernelRunViewer:
                     targets,
                     transition_status,
                     payload["playback_form_changed"],
+                    payload["playback_selected_node"] or "none",
+                    payload["playback_active_before"] if payload["playback_active_before"] is not None else "n/a",
+                    payload["playback_active_after"] if payload["playback_active_after"] is not None else "n/a",
+                    ray_combination,
                     payload["assembly"]["state"],
                     payload["assembly"]["residual_magnitude"],
                     metrics["benchmark_complete"] if payload["playback_is_final"] else "n/a",
                     metrics["geometrically_valid"] if payload["playback_is_final"] else "n/a",
                     metrics["support_connected"] if payload["playback_is_final"] else "n/a",
                     invalid_reasons if payload["playback_is_final"] else "n/a",
+                    termination_reason if payload["playback_is_final"] else "n/a",
                 )
             )
             self._info_overlay.adjustSize()

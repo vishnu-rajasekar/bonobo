@@ -2,6 +2,7 @@ import json
 import pytest
 
 from morph_engine.vector_gs_kernel_v1 import VectorGSKernelV1
+from morph_engine.vector_gs_kernel_v1.engine import GDGS_NODE_RULE_UNIFORM_POLICY_ID
 from morph_engine.vector_gs_kernel_v1 import make_default_cantilever_scenario
 from morph_engine.vector_gs_kernel_v1.model import Assembly
 from morph_engine.vector_gs_kernel_v1.model import Force
@@ -14,11 +15,14 @@ from morph_engine.vector_gs_kernel_v1.model import NodeType
 from morph_engine.vector_gs_kernel_v1.metrics import compute_kernel_metrics
 from morph_engine.vector_gs_kernel_v1.export import export_run
 from morph_engine.vector_gs_kernel_v1.operators import connect_two_forces
+from morph_engine.vector_gs_kernel_v1.operators import closure_ray_candidate
 from morph_engine.vector_gs_kernel_v1.operators import equilibrate_node
 from morph_engine.vector_gs_kernel_v1.operators import segment_is_admissible
+from morph_engine.vector_gs_kernel_v1.operators import structural_completion_reason
 from morph_engine.vector_gs_kernel_v1.rules import RuleProposal
 from morph_engine.vector_gs_kernel_v1.rules import CreateNodeRule
 from morph_engine.vector_gs_kernel_v1.rules import ExtendNodeRule
+from morph_engine.vector_gs_kernel_v1.rules import ExtendAndConnectTwoNodesRule
 from morph_engine.vector_gs_kernel_v1.rules import CloseStructureRule
 from morph_engine.vector_gs_kernel_v1.rules import SplitNodeRule
 from morph_engine.vector_gs_kernel_v1.scenarios import make_concurrent_three_force_smoke_scenario
@@ -61,18 +65,80 @@ def test_extend_node_rule_adds_member_and_node():
     assert len(assembly.members) == 1
 
 
-def test_create_node_does_not_invent_temporary_force_state():
+def test_extend_node_does_not_propose_out_of_bounds_member():
+    assembly = make_default_cantilever_scenario()
+    assembly.state = GenerationState.GO
+    support = assembly.node("0")
+    support.type = NodeType.END
+    rule = ExtendNodeRule(min_length=2.0, max_length=2.0)
+
+    assert rule.propose(assembly, support, __import__("random").Random(0)) == []
+
+
+def test_create_node_propagates_temporary_force_state_and_member():
     assembly = make_default_cantilever_scenario()
     assembly.state = GenerationState.GO
     load = assembly.node("2")
-    rule = CreateNodeRule(min_length=0.5, max_length=0.5, min_angle=0.0, max_angle=0.0)
+    rule = CreateNodeRule(
+        min_length=0.5,
+        max_length=0.5,
+        min_angle=0.0,
+        max_angle=0.0,
+        min_rotation=0.0,
+        max_rotation=0.0,
+    )
     proposal = rule.propose(assembly, load, __import__("random").Random(0))[0]
     rule.apply(assembly, proposal, __import__("random").Random(0))
 
     created = assembly.nodes[-1]
-    assert created.type == NodeType.FLOAT
-    assert created.forces == []
-    assert created.get_temp_force() is None
+    assert created.type == NodeType.END
+    assert len(assembly.members) == 1
+    assert len(created.member_forces()) == 1
+    assert created.get_temp_force() is not None
+    assert created.member_forces()[0].vector == pytest.approx([0.0, -5.0, 0.0])
+    assert created.get_temp_force().vector == pytest.approx([0.0, 5.0, 0.0])
+    assert ExtendNodeRule(min_length=0.25, max_length=0.25).applicable_to(assembly, created)
+    assert assembly.history[-1].params["rotation"] == 0.0
+
+
+def test_create_node_does_not_propose_out_of_bounds_node():
+    assembly = make_default_cantilever_scenario()
+    assembly.state = GenerationState.GO
+    support = assembly.node("0")
+    rule = CreateNodeRule(
+        min_length=2.0,
+        max_length=2.0,
+        min_angle=0.0,
+        max_angle=0.0,
+        min_rotation=0.0,
+        max_rotation=0.0,
+    )
+
+    before = assembly.to_data()
+    assert rule.propose(assembly, support, __import__("random").Random(0)) == []
+    assert assembly.to_data() == before
+
+
+def test_create_node_rotation_controls_collinear_member_direction():
+    assembly = make_default_cantilever_scenario()
+    assembly.state = GenerationState.GO
+    load = assembly.node("2")
+    rule = CreateNodeRule(
+        min_length=0.5,
+        max_length=0.5,
+        min_angle=0.0,
+        max_angle=0.0,
+        min_rotation=1.5707963267948966,
+        max_rotation=1.5707963267948966,
+    )
+    proposal = rule.propose(assembly, load, __import__("random").Random(0))[0]
+    rule.apply(assembly, proposal, __import__("random").Random(0))
+
+    created = assembly.nodes[-1]
+    assert created.coordinate == pytest.approx([2.5, 0.0, 0.0])
+    assert assembly.members[-1].force.vector == pytest.approx([-5.0, 0.0, 0.0])
+    assert created.member_forces()[0].vector == pytest.approx([5.0, 0.0, 0.0])
+    assert created.get_temp_force().vector == pytest.approx([-5.0, 0.0, 0.0])
 
 
 def test_split_preserves_boundary_node_type_and_force():
@@ -86,6 +152,55 @@ def test_split_preserves_boundary_node_type_and_force():
 
     assert support.type == NodeType.SUPPORT
     assert [force.to_data() for force in support.forces if force.kind == ForceKind.REACTION] == reaction
+    assert len(assembly.nodes) == 5
+    assert len(assembly.members) == 2
+    assert support.get_temp_force() is None
+    assert len(support.member_forces()) == 2
+    assert assembly.history[-1].target_node_ids == ["0"]
+
+
+def test_split_does_not_propose_out_of_bounds_branches():
+    assembly = make_default_cantilever_scenario()
+    assembly.state = GenerationState.GO
+    support = assembly.node("0")
+    rule = SplitNodeRule(min_length=2.0, max_length=2.0, min_angle=0.2, max_angle=0.2)
+
+    assert rule.propose(assembly, support, __import__("random").Random(0)) == []
+
+
+def test_extend_and_connect_targets_two_fronts_and_creates_corner():
+    node_a = _active_temp_node("a", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
+    node_b = _active_temp_node("b", [1.0, 1.0, 0.0], [0.0, -1.0, 0.0])
+    assembly = Assembly([node_a, node_b], [], BOUNDARY, state=GenerationState.GO)
+    rule = ExtendAndConnectTwoNodesRule(radius=10.0)
+
+    proposal = rule.propose(assembly, node_a, __import__("random").Random(0))[0]
+
+    assert proposal.target_node_ids == ["a", "b"]
+    assert proposal.params["kind"] == "projection"
+    assert proposal.params["point"] == pytest.approx([1.0, 0.0, 0.0])
+
+    rule.apply(assembly, proposal, __import__("random").Random(0))
+
+    assert len(assembly.nodes) == 3
+    assert len(assembly.members) == 2
+    assert node_a.active is False
+    assert node_b.active is False
+    corner = assembly.nodes[-1]
+    assert corner.type == NodeType.CORNER
+    assert corner.coordinate == pytest.approx([1.0, 0.0, 0.0])
+    assert corner.active is True
+    assert assembly.history[-1].target_node_ids == ["a", "b"]
+    assert assembly.history[-1].summary == {"new_projection_node": corner.node_id}
+
+
+def test_extend_and_connect_does_not_propose_out_of_bounds_intersection():
+    node_a = _active_temp_node("a", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
+    node_b = _active_temp_node("b", [7.0, 1.0, 0.0], [0.0, -1.0, 0.0])
+    assembly = Assembly([node_a, node_b], [], BOUNDARY, state=GenerationState.GO)
+    rule = ExtendAndConnectTwoNodesRule(radius=10.0)
+
+    assert rule.propose(assembly, node_a, __import__("random").Random(0)) == []
 
 
 def test_default_scenario_initializes_gdgs_boundary_temp_forces():
@@ -235,6 +350,8 @@ def test_gdgs_progressive_close_selects_nearest_intersection_and_returns_to_go()
     assert proposal.target_node_ids == ["0", "2"]
     assert proposal.params["kind"] == "progressive_intersection"
     assert proposal.params["point"] == pytest.approx([1.0, 0.0, 0.0])
+    assert proposal.params["ray_combination"] == [1, 1]
+    assert len(proposal.params["candidate_intersections"]) == 8
 
     rule.apply(assembly, proposal, __import__("random").Random(0))
 
@@ -242,6 +359,107 @@ def test_gdgs_progressive_close_selects_nearest_intersection_and_returns_to_go()
     assert len(assembly.members) == 2
     assert len(assembly.active_nodes()) == 2
     assert assembly.history[-1].summary == {"progressive_closure_connection": True}
+
+
+def test_rule6_prefers_first_valid_gdgs_ray_combination_over_global_distance():
+    selected = _active_temp_node("0", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
+    farther_positive = _active_temp_node("1", [4.0, 1.0, 0.0], [0.0, -1.0, 0.0])
+    nearer_opposite = _active_temp_node("2", [1.0, -1.0, 0.0], [0.0, -1.0, 0.0])
+    assembly = Assembly([selected, farther_positive, nearer_opposite], [], BOUNDARY, state=GenerationState.GO)
+    for _ in range(5):
+        assembly.add_history("PriorRule", [], {}, {})
+
+    proposal = CloseStructureRule().propose(assembly, selected, __import__("random").Random(0))[0]
+
+    assert proposal.target_node_ids == ["0", "1"]
+    assert proposal.params["ray_combination"] == [1, 1]
+    assert proposal.params["point"] == pytest.approx([4.0, 0.0, 0.0])
+    nearer_candidate = next(
+        candidate
+        for candidate in proposal.params["candidate_intersections"]
+        if candidate["target_node"] == "2"
+        and candidate["source_ray_sign"] == 1
+        and candidate["target_ray_sign"] == -1
+    )
+    assert nearer_candidate["rejection_reason"] is None
+    assert nearer_candidate["distance_measure"] == pytest.approx(1.0)
+
+
+@pytest.mark.parametrize(
+    "source_coordinate,target_coordinate,source_vector,target_vector,expected_signs",
+    [
+        ([0.0, 0.0, 0.0], [1.0, 1.0, 0.0], [1.0, 0.0, 0.0], [0.0, -1.0, 0.0], (1, 1)),
+        ([0.0, 0.0, 0.0], [1.0, -1.0, 0.0], [1.0, 0.0, 0.0], [0.0, -1.0, 0.0], (1, -1)),
+        ([0.0, 0.0, 0.0], [-1.0, 1.0, 0.0], [1.0, 0.0, 0.0], [0.0, -1.0, 0.0], (-1, 1)),
+        ([0.0, 0.0, 0.0], [-1.0, -1.0, 0.0], [1.0, 0.0, 0.0], [0.0, -1.0, 0.0], (-1, -1)),
+    ],
+)
+def test_rule6_explicit_ray_combinations(
+    source_coordinate,
+    target_coordinate,
+    source_vector,
+    target_vector,
+    expected_signs,
+):
+    source = _active_temp_node("source", source_coordinate, source_vector)
+    target = _active_temp_node("target", target_coordinate, target_vector)
+    assembly = Assembly([source, target], [], {"min": [-2.0, -2.0, 0.0], "max": [2.0, 2.0, 0.0]}, state=GenerationState.GO)
+
+    candidate = closure_ray_candidate(source, target, assembly, *expected_signs)
+
+    assert candidate["rejection_reason"] is None
+    assert candidate["source_ray_sign"] == expected_signs[0]
+    assert candidate["target_ray_sign"] == expected_signs[1]
+    assert candidate["source_ray_parameter"] >= 0.0
+    assert candidate["target_ray_parameter"] >= 0.0
+
+
+def test_rule6_opposite_ray_keeps_force_vector_and_classifies_compression():
+    source = _active_temp_node("source", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
+    target = _active_temp_node("target", [-1.0, 1.0, 0.0], [0.0, -1.0, 0.0])
+    third = _active_temp_node("third", [1.0, 2.0, 0.0], [1.0, 0.0, 0.0])
+    assembly = Assembly([source, target, third], [], {"min": [-2.0, -2.0, 0.0], "max": [2.0, 3.0, 0.0]}, state=GenerationState.GO)
+    for _ in range(5):
+        assembly.add_history("PriorRule", [], {}, {})
+    rule = CloseStructureRule()
+    proposal = rule.propose(assembly, source, __import__("random").Random(0))[0]
+
+    assert proposal.params["ray_combination"] == [-1, 1]
+    original_vector = list(source.get_temp_force().vector)
+    rule.apply(assembly, proposal, __import__("random").Random(0))
+
+    assert source.member_forces()[-1].vector == original_vector
+    assert source.member_forces()[-1].direction == ForceDirection.COMPRESSION
+
+
+def test_rule6_rejects_wrong_ray_sign_with_explicit_reason():
+    source = _active_temp_node("source", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
+    target = _active_temp_node("target", [1.0, 1.0, 0.0], [0.0, -1.0, 0.0])
+    assembly = Assembly([source, target], [], BOUNDARY, state=GenerationState.GO)
+
+    candidate = closure_ray_candidate(source, target, assembly, -1, 1)
+
+    assert candidate["rejection_reason"] == "negative_ray_parameter"
+
+
+def test_rule6_can_reduce_active_fronts_repeatedly():
+    node_a = _active_temp_node("a", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
+    node_b = _active_temp_node("b", [1.0, 1.0, 0.0], [0.0, -1.0, 0.0])
+    node_c = _active_temp_node("c", [2.0, 1.0, 0.0], [0.0, -1.0, 0.0])
+    node_d = _active_temp_node("d", [3.0, 0.0, 0.0], [-1.0, 0.0, 0.0])
+    assembly = Assembly([node_a, node_b, node_c, node_d], [], BOUNDARY, state=GenerationState.GO)
+    for _ in range(5):
+        assembly.add_history("PriorRule", [], {}, {})
+    rule = CloseStructureRule()
+
+    first = rule.propose(assembly, node_a, __import__("random").Random(0))[0]
+    rule.apply(assembly, first, __import__("random").Random(0))
+    assert len(assembly.active_nodes()) == 3
+
+    corner = assembly.nodes[-1]
+    second = rule.propose(assembly, corner, __import__("random").Random(0))[0]
+    rule.apply(assembly, second, __import__("random").Random(0))
+    assert len(assembly.active_nodes()) == 2
 
 
 def test_gdgs_progressive_close_waits_for_loopcount():
@@ -317,6 +535,35 @@ def test_kernel_does_not_mark_unresolved_dead_end_as_end():
     assert [step["rule"] for step in trace] == ["StartGeneration"]
     assert final.state == GenerationState.GO
     assert final.active_nodes()
+    assert final.metadata["termination_reason"] == "no_applicable_rules"
+
+
+def test_end_generation_rejects_unresolved_force_fronts():
+    assembly = make_default_cantilever_scenario()
+    assembly.state = GenerationState.GO
+    rule = __import__(
+        "morph_engine.vector_gs_kernel_v1.rules",
+        fromlist=["EndGenerationRule"],
+    ).EndGenerationRule(max_steps=0)
+    proposal = rule.propose(assembly, None, __import__("random").Random(0))[0]
+
+    rule.apply(assembly, proposal, __import__("random").Random(0))
+
+    assert assembly.state == GenerationState.GO
+    assert assembly.metadata["termination_reason"] == "unresolved_force_fronts"
+
+
+def test_structural_completion_rejects_member_endpoint_force_mismatch():
+    assembly = make_default_cantilever_scenario()
+    assembly.state = GenerationState.GO
+    rule = CloseStructureRule(loopcount=-1)
+    proposal = rule.propose(assembly, assembly.node("2"), __import__("random").Random(0))[0]
+    rule.apply(assembly, proposal, __import__("random").Random(0))
+    assert structural_completion_reason(assembly) is None
+
+    assembly.node("0").member_forces()[0].vector[0] += 1.0
+
+    assert structural_completion_reason(assembly) == "no_valid_closure"
 
 
 def test_run_artifact_records_budget_termination_and_benchmark_metadata(tmp_path):
@@ -353,6 +600,13 @@ def test_kernel_smoke_run_generates_nontrivial_structure():
     assert trace[0]["assembly_before"]["state"] == GenerationState.START
     assert trace[0]["assembly_after"]["state"] == GenerationState.GO
     assert trace[-1]["assembly_after"] == final_assembly.to_data()
+    assert all("selected_active_node" in step for step in trace)
+    assert all("eligible_active_nodes" in step for step in trace)
+    assert all("applicable_rule_families" in step for step in trace)
+    assert all("rule_family_weights" in step for step in trace)
+    assert all("selected_rule_family" in step for step in trace)
+    assert all("active_front_count_before" in step for step in trace)
+    assert all("active_front_count_after" in step for step in trace)
 
 
 def test_kernel_policy_controls_proposal_selection_mode():
@@ -416,6 +670,63 @@ def test_uniform_policy_exposes_proposals_from_every_active_node():
     proposals = kernel._all_proposals(assembly)
 
     assert {proposal.target_node_ids[0] for proposal in proposals} == {"0", "1", "2"}
+
+
+def test_gdgs_policy_selects_uniform_active_node_before_rule_family():
+    class StartRule:
+        name = "StartGeneration"
+        weight = 1
+
+    class NodeRule:
+        name = "NodeRule"
+        weight = 1
+
+        def applicable_to(self, assembly, node):
+            return True
+
+        def propose(self, assembly, node, rng):
+            return [RuleProposal(self.name, [node.node_id], {}, self.weight)]
+
+    class EndRule:
+        name = "EndGeneration"
+        weight = 1
+
+    assembly = make_default_cantilever_scenario()
+    assembly.state = GenerationState.GO
+    assembly.node("2").type = NodeType.FLOAT
+    expected_ids = []
+    selected_ids = []
+    for seed in range(12):
+        expected_rng = __import__("random").Random(seed)
+        expected_ids.append(assembly.active_nodes()[expected_rng.randrange(0, 3)].node_id)
+        kernel = VectorGSKernelV1(
+            rules=[StartRule(), NodeRule(), EndRule()],
+            seed=seed,
+            policy_id=GDGS_NODE_RULE_UNIFORM_POLICY_ID,
+        )
+        proposal, context = kernel._gdgs_node_first_selection(assembly)
+        selected_ids.append(context["selected_active_node"])
+        assert proposal.target_node_ids == [context["selected_active_node"]]
+        assert context["selected_rule_family"] == "NodeRule"
+
+    assert selected_ids == expected_ids
+    assert "2" in selected_ids
+
+
+def test_gdgs_policy_equal_weights_are_uniform_by_rule_family():
+    class Rule:
+        def __init__(self, name, weight=1):
+            self.name = name
+            self.weight = weight
+
+    kernel = VectorGSKernelV1(seed=0, policy_id=GDGS_NODE_RULE_UNIFORM_POLICY_ID)
+    families = [Rule("CreateNode"), Rule("SplitNode"), Rule("CloseStructure")]
+
+    assert kernel._rule_family_probabilities(families) == pytest.approx([1.0 / 3.0] * 3)
+
+
+def test_gdgs_node_first_policy_is_distinct_from_proposal_instance_uniform():
+    assert GDGS_NODE_RULE_UNIFORM_POLICY_ID != "rule_uniform_random_v1"
 
 
 def test_kernel_benchmark_completion_requires_support_connectivity():

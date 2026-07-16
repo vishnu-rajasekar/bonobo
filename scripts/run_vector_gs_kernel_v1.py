@@ -49,6 +49,7 @@ def main():
             record["seed"],
             problem_id=record["problem_id"],
             policy_id=record["policy_id"],
+            step_budget=record["step_budget"],
             final_metrics=record["final_metrics"],
         )
         print(

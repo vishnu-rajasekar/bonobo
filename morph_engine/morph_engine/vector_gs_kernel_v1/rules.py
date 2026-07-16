@@ -1,7 +1,7 @@
 from dataclasses import dataclass
+from math import pi
 
 from .geometry import add
-from .geometry import bidirected_ray_intersection
 from .geometry import directed_ray_intersection
 from .geometry import distance
 from .geometry import rotate_z
@@ -17,6 +17,7 @@ from .operators import active_nodes
 from .operators import assembly_member_between
 from .operators import boundary_ok
 from .operators import closest_link
+from .operators import closure_ray_candidate
 from .operators import connect_two_forces
 from .operators import connection_is_non_degenerate
 from .operators import can_resolve_two_forces
@@ -28,9 +29,8 @@ from .operators import make_force
 from .operators import resolve_two_forces
 from .operators import resolve_three_forces_at_existing_node
 from .operators import segment_is_admissible
+from .operators import structural_completion_reason
 from .operators import three_force_closure_hub
-from .operators import support_link_target
-from .operators import support_projection_target
 from .operators import transfer_member_force
 
 
@@ -49,6 +49,9 @@ class BaseRule:
     def applicable(self, assembly):
         return True
 
+    def applicable_to(self, assembly, node):
+        return node is not None and node.active
+
     def propose(self, assembly, node, rng):
         return []
 
@@ -63,6 +66,9 @@ class StartGenerationRule(BaseRule):
     def applicable(self, assembly):
         return assembly.state == GenerationState.START
 
+    def applicable_to(self, assembly, node):
+        return self.applicable(assembly)
+
     def propose(self, assembly, node, rng):
         return [RuleProposal(self.name, [], {}, self.weight)] if self.applicable(assembly) else []
 
@@ -76,41 +82,107 @@ class CreateNodeRule(BaseRule):
     name = "CreateNode"
     weight = 1
 
-    def __init__(self, min_length=1.5, max_length=3.0, min_angle=-0.17, max_angle=0.17, cutoff=4):
+    def __init__(
+        self,
+        min_length=0.5,
+        max_length=1.5,
+        min_angle=-0.17,
+        max_angle=0.17,
+        min_rotation=-pi,
+        max_rotation=pi,
+        cutoff=4,
+        proposal_attempts=16,
+    ):
         self.min_length = float(min_length)
         self.max_length = float(max_length)
         self.min_angle = float(min_angle)
         self.max_angle = float(max_angle)
+        self.min_rotation = float(min_rotation)
+        self.max_rotation = float(max_rotation)
         self.cutoff = int(cutoff)
+        self.proposal_attempts = int(proposal_attempts)
 
     def propose(self, assembly, node, rng):
         if assembly.state != GenerationState.GO or len(assembly.history) >= self.cutoff or not node.active:
             return []
         if get_line_of_action(node) is None:
             return []
-        length = rng.uniform(self.min_length, self.max_length)
-        angle = rng.uniform(self.min_angle, self.max_angle)
-        return [RuleProposal(self.name, [node.node_id], {"length": length, "angle": angle}, self.weight)]
+        for _ in range(self.proposal_attempts):
+            params = {
+                "length": rng.uniform(self.min_length, self.max_length),
+                "angle": rng.uniform(self.min_angle, self.max_angle),
+                "rotation": rng.uniform(self.min_rotation, self.max_rotation),
+            }
+            if self._candidate(assembly, node, params) is not None:
+                return [RuleProposal(self.name, [node.node_id], params, self.weight)]
+        return []
+
+    def applicable_to(self, assembly, node):
+        return (
+            node is not None
+            and assembly.state == GenerationState.GO
+            and len(assembly.history) < self.cutoff
+            and node.active
+            and get_line_of_action(node) is not None
+        )
+
+    def _candidate(self, assembly, node, params):
+        loa = get_line_of_action(node)
+        temp = get_temp_force(node)
+        if loa is None or temp is None:
+            return None
+        direction = rotate_z(loa["direction"], params["angle"] + params["rotation"])
+        coordinate = add(node.coordinate, scale(direction, params["length"]))
+        if not boundary_ok(coordinate, assembly) or assembly.node_exists_at(coordinate):
+            return None
+        if not segment_is_admissible(
+            assembly,
+            node.node_id,
+            "__create_candidate__",
+            node.coordinate,
+            coordinate,
+        ):
+            return None
+        return {"coordinate": coordinate, "direction": direction, "temp": temp}
 
     def apply(self, assembly, proposal, rng):
         node = assembly.node(proposal.target_node_ids[0])
-        loa = get_line_of_action(node)
-        if loa is None:
+        candidate = self._candidate(assembly, node, proposal.params)
+        if candidate is None:
             return assembly
-        direction = rotate_z(loa["direction"], proposal.params["angle"])
-        new_coordinate = add(node.coordinate, scale(direction, proposal.params["length"]))
-        if not boundary_ok(new_coordinate, assembly) or assembly.node_exists_at(new_coordinate):
-            return assembly
+        new_coordinate = candidate["coordinate"]
+        member_vector = scale(candidate["direction"], candidate["temp"].magnitude)
+        member_force = make_force(
+            node.coordinate,
+            member_vector,
+            ForceKind.MEMBER,
+            direction=ForceDirection.TENSION,
+            semantic_origin="create_node",
+        )
+        node.remove_temp_forces()
+        node.add_force(member_force)
+        equilibrate_node(node)
         new_node = Node(
             node_id=assembly.next_node_id(),
             coordinate=new_coordinate,
-            type=NodeType.FLOAT,
-            forces=[],
+            type=NodeType.END,
+            forces=[transfer_member_force(member_force, new_coordinate)],
             active=True,
             metadata={"semantic_origin": "create_node"},
         )
+        equilibrate_node(new_node)
         assembly.add_node(new_node)
-        assembly.add_history(self.name, [node.node_id], proposal.params, {"new_node": new_node.node_id})
+        assembly.add_member(assembly_member_between(assembly, node.node_id, new_node.node_id, member_force))
+        assembly.add_history(
+            self.name,
+            [node.node_id],
+            proposal.params,
+            {
+                "new_node": new_node.node_id,
+                "member_force_vector": list(member_force.vector),
+                "new_temp_force_vector": list(new_node.get_temp_force().vector),
+            },
+        )
         return assembly
 
 
@@ -118,7 +190,7 @@ class ExtendNodeRule(BaseRule):
     name = "ExtendNode"
     weight = 1
 
-    def __init__(self, min_length=1.5, max_length=3.0, cutoff=8):
+    def __init__(self, min_length=0.5, max_length=1.5, cutoff=8):
         self.min_length = float(min_length)
         self.max_length = float(max_length)
         self.cutoff = int(cutoff)
@@ -131,25 +203,27 @@ class ExtendNodeRule(BaseRule):
         if get_line_of_action(node) is None:
             return []
         length = rng.uniform(self.min_length, self.max_length)
-        loa = get_line_of_action(node)
-        new_coordinate = add(node.coordinate, scale(loa["direction"], length))
-        if not segment_is_admissible(
-            assembly,
-            node.node_id,
-            "__extend_candidate__",
-            node.coordinate,
-            new_coordinate,
-        ):
+        params = {"length": length}
+        if self._candidate(assembly, node, params) is None:
             return []
-        return [RuleProposal(self.name, [node.node_id], {"length": length}, self.weight)]
+        return [RuleProposal(self.name, [node.node_id], params, self.weight)]
 
-    def apply(self, assembly, proposal, rng):
-        node = assembly.node(proposal.target_node_ids[0])
+    def applicable_to(self, assembly, node):
+        return (
+            node is not None
+            and assembly.state == GenerationState.GO
+            and len(assembly.history) < self.cutoff
+            and node.active
+            and node.type in {NodeType.FLOAT, NodeType.END, NodeType.CORNER}
+            and get_line_of_action(node) is not None
+        )
+
+    def _candidate(self, assembly, node, params):
         loa = get_line_of_action(node)
         temp = get_temp_force(node)
         if loa is None or temp is None:
-            return assembly
-        new_coordinate = add(node.coordinate, scale(loa["direction"], proposal.params["length"]))
+            return None
+        new_coordinate = add(node.coordinate, scale(loa["direction"], params["length"]))
         if (
             not boundary_ok(new_coordinate, assembly)
             or assembly.node_exists_at(new_coordinate)
@@ -161,7 +235,16 @@ class ExtendNodeRule(BaseRule):
                 new_coordinate,
             )
         ):
+            return None
+        return {"coordinate": new_coordinate, "temp": temp}
+
+    def apply(self, assembly, proposal, rng):
+        node = assembly.node(proposal.target_node_ids[0])
+        candidate = self._candidate(assembly, node, proposal.params)
+        if candidate is None:
             return assembly
+        new_coordinate = candidate["coordinate"]
+        temp = candidate["temp"]
         member_force = make_force(node.coordinate, temp.vector, ForceKind.MEMBER, direction=temp.direction, semantic_origin="extend_node")
         node.remove_temp_forces()
         node.add_force(member_force)
@@ -183,14 +266,15 @@ class ExtendNodeRule(BaseRule):
 
 class SplitNodeRule(BaseRule):
     name = "SplitNode"
-    weight = 5
+    weight = 1
 
-    def __init__(self, min_length=2.0, max_length=4.5, min_angle=0.17, max_angle=0.52, cutoff=8):
+    def __init__(self, min_length=0.5, max_length=1.5, min_angle=0.17, max_angle=0.52, cutoff=8, proposal_attempts=16):
         self.min_length = float(min_length)
         self.max_length = float(max_length)
         self.min_angle = float(min_angle)
         self.max_angle = float(max_angle)
         self.cutoff = int(cutoff)
+        self.proposal_attempts = int(proposal_attempts)
 
     def propose(self, assembly, node, rng):
         if assembly.state != GenerationState.GO or len(assembly.history) >= self.cutoff or not node.active:
@@ -199,42 +283,63 @@ class SplitNodeRule(BaseRule):
             return []
         if get_line_of_action(node) is None:
             return []
-        params = {
-            "length_a": rng.uniform(self.min_length, self.max_length),
-            "length_b": rng.uniform(self.min_length, self.max_length),
-            "angle_a": rng.uniform(self.min_angle, self.max_angle),
-            "angle_b": -rng.uniform(self.min_angle, self.max_angle),
-        }
-        loa = get_line_of_action(node)
-        coord_a = add(node.coordinate, scale(rotate_z(loa["direction"], params["angle_a"]), params["length_a"]))
-        coord_b = add(node.coordinate, scale(rotate_z(loa["direction"], params["angle_b"]), params["length_b"]))
-        if not segment_is_admissible(assembly, node.node_id, "__split_candidate_a__", node.coordinate, coord_a):
-            return []
-        if not segment_is_admissible(assembly, node.node_id, "__split_candidate_b__", node.coordinate, coord_b):
-            return []
-        return [RuleProposal(self.name, [node.node_id], params, self.weight)]
+        for _ in range(self.proposal_attempts):
+            params = {
+                "length_a": rng.uniform(self.min_length, self.max_length),
+                "length_b": rng.uniform(self.min_length, self.max_length),
+                "angle_a": rng.uniform(self.min_angle, self.max_angle),
+                "angle_b": -rng.uniform(self.min_angle, self.max_angle),
+            }
+            if self._candidate(assembly, node, params) is not None:
+                return [RuleProposal(self.name, [node.node_id], params, self.weight)]
+        return []
 
-    def apply(self, assembly, proposal, rng):
-        node = assembly.node(proposal.target_node_ids[0])
+    def applicable_to(self, assembly, node):
+        return (
+            node is not None
+            and assembly.state == GenerationState.GO
+            and len(assembly.history) < self.cutoff
+            and node.active
+            and node.type in {NodeType.SUPPORT, NodeType.LOAD, NodeType.END, NodeType.CORNER}
+            and get_line_of_action(node) is not None
+        )
+
+    def _candidate(self, assembly, node, params):
         temp = get_temp_force(node)
         loa = get_line_of_action(node)
         if temp is None or loa is None:
-            return assembly
-        dir_a = rotate_z(loa["direction"], proposal.params["angle_a"])
-        dir_b = rotate_z(loa["direction"], proposal.params["angle_b"])
+            return None
+        dir_a = rotate_z(loa["direction"], params["angle_a"])
+        dir_b = rotate_z(loa["direction"], params["angle_b"])
         decomp = decompose_force_along_directions(temp.vector, dir_a, dir_b)
         if decomp is None:
-            return assembly
-        coord_a = add(node.coordinate, scale(dir_a, proposal.params["length_a"]))
-        coord_b = add(node.coordinate, scale(dir_b, proposal.params["length_b"]))
+            return None
+        coord_a = add(node.coordinate, scale(dir_a, params["length_a"]))
+        coord_b = add(node.coordinate, scale(dir_b, params["length_b"]))
         if not boundary_ok(coord_a, assembly) or not boundary_ok(coord_b, assembly):
-            return assembly
+            return None
         if assembly.node_exists_at(coord_a) or assembly.node_exists_at(coord_b):
-            return assembly
+            return None
         if not segment_is_admissible(assembly, node.node_id, "__split_candidate_a__", node.coordinate, coord_a):
-            return assembly
+            return None
         if not segment_is_admissible(assembly, node.node_id, "__split_candidate_b__", node.coordinate, coord_b):
+            return None
+        return {
+            "temp": temp,
+            "decomposition": decomp,
+            "coordinate_a": coord_a,
+            "coordinate_b": coord_b,
+        }
+
+    def apply(self, assembly, proposal, rng):
+        node = assembly.node(proposal.target_node_ids[0])
+        candidate = self._candidate(assembly, node, proposal.params)
+        if candidate is None:
             return assembly
+        temp = candidate["temp"]
+        decomp = candidate["decomposition"]
+        coord_a = candidate["coordinate_a"]
+        coord_b = candidate["coordinate_b"]
         force_a = make_force(node.coordinate, decomp["vector_a"], ForceKind.MEMBER, direction=temp.direction, semantic_origin="split_node", branch="a")
         force_b = make_force(node.coordinate, decomp["vector_b"], ForceKind.MEMBER, direction=temp.direction, semantic_origin="split_node", branch="b")
         node.remove_temp_forces()
@@ -276,6 +381,9 @@ class ConnectTwoNodesRule(BaseRule):
             ):
                 proposals.append(RuleProposal(self.name, [node.node_id, other.node_id], {"factor": self.factor}, self.weight))
         return proposals[:1]
+
+    def applicable_to(self, assembly, node):
+        return node is not None and bool(self.propose(assembly, node, None))
 
     def apply(self, assembly, proposal, rng):
         node1 = assembly.node(proposal.target_node_ids[0])
@@ -326,6 +434,7 @@ class ExtendAndConnectTwoNodesRule(BaseRule):
         if (
             projection is not None
             and projection["distance"] <= self.radius
+            and boundary_ok(projection["point"], assembly)
             and connection_is_non_degenerate(node, projection["other"], assembly, projection["point"])
         ):
             return [
@@ -336,93 +445,38 @@ class ExtendAndConnectTwoNodesRule(BaseRule):
                     self.weight,
                 )
             ]
-        support_target = support_link_target(node, assembly)
-        if support_target is not None and segment_is_admissible(
-            assembly,
-            node.node_id,
-            support_target["support"].node_id,
-            node.coordinate,
-            support_target["support"].coordinate,
-        ):
-            return [RuleProposal(self.name, [node.node_id, support_target["support"].node_id], {"kind": "support"}, self.weight)]
-        projection_point = support_projection_target(node, assembly)
-        if projection_point is not None and segment_is_admissible(
-            assembly,
-            node.node_id,
-            "__root_projection_candidate__",
-            node.coordinate,
-            projection_point,
-        ):
-            return [RuleProposal(self.name, [node.node_id], {"kind": "root_projection", "point": projection_point}, self.weight)]
         return []
 
+    def applicable_to(self, assembly, node):
+        return node is not None and bool(self.propose(assembly, node, None))
+
     def apply(self, assembly, proposal, rng):
-        kind = proposal.params["kind"]
         node = assembly.node(proposal.target_node_ids[0])
-        if kind == "projection" and len(proposal.target_node_ids) == 2:
-            other = assembly.node(proposal.target_node_ids[1])
-            loa_a = get_line_of_action(node)
-            loa_b = get_line_of_action(other)
-            if loa_a is None or loa_b is None:
-                return assembly
-            point = proposal.params.get("point") or directed_ray_intersection(loa_a["point"], loa_a["direction"], loa_b["point"], loa_b["direction"])
-            if point is None or not boundary_ok(point, assembly):
-                return assembly
-            if connect_two_forces(node, other, assembly, point):
-                assembly.add_history(self.name, [node.node_id, other.node_id], proposal.params, {"new_projection_node": True})
+        if proposal.params.get("kind") != "projection" or len(proposal.target_node_ids) != 2:
             return assembly
-        if kind == "support" and len(proposal.target_node_ids) == 2:
-            support = assembly.node(proposal.target_node_ids[1])
-            temp = get_temp_force(node)
-            if temp is None or not segment_is_admissible(
-                assembly,
-                node.node_id,
-                support.node_id,
-                node.coordinate,
-                support.coordinate,
-            ):
-                return assembly
-            member_force = make_force(node.coordinate, sub(support.coordinate, node.coordinate), ForceKind.MEMBER, direction=ForceDirection.COMPRESSION, semantic_origin="extend_and_connect_support")
-            node.remove_temp_forces()
-            node.add_force(member_force)
-            node.active = False
-            support.add_force(transfer_member_force(member_force, support.coordinate))
-            support.active = False
-            assembly.add_member(assembly_member_between(assembly, node.node_id, support.node_id, member_force))
-            assembly.add_history(self.name, [node.node_id, support.node_id], proposal.params, {"support_link": True})
+        other = assembly.node(proposal.target_node_ids[1])
+        loa_a = get_line_of_action(node)
+        loa_b = get_line_of_action(other)
+        if loa_a is None or loa_b is None:
             return assembly
-        if kind == "root_projection":
-            point = list(proposal.params["point"])
-            if (
-                not boundary_ok(point, assembly)
-                or assembly.node_exists_at(point)
-                or not segment_is_admissible(
-                    assembly,
-                    node.node_id,
-                    "__root_projection_candidate__",
-                    node.coordinate,
-                    point,
-                )
-            ):
-                return assembly
-            temp = get_temp_force(node)
-            if temp is None:
-                return assembly
-            member_force = make_force(node.coordinate, temp.vector, ForceKind.MEMBER, direction=temp.direction, semantic_origin="extend_and_connect_projection")
-            node.remove_temp_forces()
-            node.add_force(member_force)
-            node.active = False
-            new_node = Node(assembly.next_node_id(), point, NodeType.FLOAT, [transfer_member_force(member_force, point)], True, {"semantic_origin": "root_projection"})
-            equilibrate_node(new_node)
-            assembly.add_node(new_node)
-            assembly.add_member(assembly_member_between(assembly, node.node_id, new_node.node_id, member_force))
-            assembly.add_history(self.name, [node.node_id], proposal.params, {"new_node": new_node.node_id})
+        point = proposal.params.get("point") or directed_ray_intersection(
+            loa_a["point"], loa_a["direction"], loa_b["point"], loa_b["direction"]
+        )
+        if point is None or not boundary_ok(point, assembly):
+            return assembly
+        if connect_two_forces(node, other, assembly, point):
+            assembly.add_history(
+                self.name,
+                [node.node_id, other.node_id],
+                proposal.params,
+                {"new_projection_node": assembly.nodes[-1].node_id},
+            )
         return assembly
 
 
 class CloseStructureRule(BaseRule):
     name = "CloseStructure"
-    weight = 30
+    weight = 1
 
     def __init__(self, loopcount=4):
         self.loopcount = int(loopcount)
@@ -449,46 +503,73 @@ class CloseStructureRule(BaseRule):
                     )
                 ]
         if count >= 3:
-            loa_a = get_line_of_action(node)
-            if loa_a is None:
-                return []
-            candidates = []
-            for other in active_nodes(assembly):
-                if other.node_id == node.node_id:
-                    continue
-                loa_b = get_line_of_action(other)
-                if loa_b is None:
-                    continue
-                point = bidirected_ray_intersection(loa_a["point"], loa_a["direction"], loa_b["point"], loa_b["direction"])
-                if point is not None and boundary_ok(point, assembly) and connection_is_non_degenerate(node, other, assembly, point):
-                    candidates.append((distance(node.coordinate, point), other.node_id, other, point))
-            if candidates:
-                _, _, other, point = min(candidates, key=lambda item: (item[0], item[1]))
+            records = []
+            ray_combinations = ((1, 1), (1, -1), (-1, 1), (-1, -1))
+            chosen_pair = None
+            for source_sign, target_sign in ray_combinations:
+                combination_candidates = []
+                for other in active_nodes(assembly):
+                    if other.node_id == node.node_id:
+                        continue
+                    record = closure_ray_candidate(node, other, assembly, source_sign, target_sign)
+                    records.append(record)
+                    if record["rejection_reason"] is None:
+                        combination_candidates.append(
+                            (
+                                record["distance_measure"],
+                                other.node_id,
+                                other,
+                                record,
+                            )
+                        )
+                if chosen_pair is None and combination_candidates:
+                    chosen_pair = min(combination_candidates, key=lambda item: (item[0], item[1]))
+            if chosen_pair is not None:
+                _, _, other, chosen = chosen_pair
                 return [
                     RuleProposal(
                         self.name,
                         [node.node_id, other.node_id],
-                        {"active_count": count, "kind": "progressive_intersection", "point": point},
+                        {
+                            "active_count": count,
+                            "kind": "progressive_intersection",
+                            "point": chosen["intersection"],
+                            "ray_combination": [chosen["source_ray_sign"], chosen["target_ray_sign"]],
+                            "candidate_intersections": records,
+                            "chosen_candidate": chosen,
+                        },
                         self.weight,
                     )
                 ]
         return []
 
+    def applicable_to(self, assembly, node):
+        return node is not None and bool(self.propose(assembly, node, None))
+
     def apply(self, assembly, proposal, rng):
         nodes = active_nodes(assembly)
         if len(nodes) == 2:
             if resolve_two_forces(assembly) and not active_nodes(assembly):
-                assembly.state = GenerationState.END
-                assembly.add_history(self.name, [candidate.node_id for candidate in nodes], proposal.params, {"resolved_two_forces": True})
+                reason = structural_completion_reason(assembly)
+                assembly.state = GenerationState.END if reason is None else GenerationState.GO
+                assembly.metadata["termination_reason"] = "benchmark_complete" if reason is None else reason
+                assembly.add_history(
+                    self.name,
+                    [candidate.node_id for candidate in nodes],
+                    proposal.params,
+                    {"resolved_two_forces": True, "completion_rejection_reason": reason},
+                )
             return assembly
         if proposal.params.get("kind") == "reuse_existing_hub":
             if resolve_three_forces_at_existing_node(assembly) and not active_nodes(assembly):
-                assembly.state = GenerationState.END
+                reason = structural_completion_reason(assembly)
+                assembly.state = GenerationState.END if reason is None else GenerationState.GO
+                assembly.metadata["termination_reason"] = "benchmark_complete" if reason is None else reason
                 assembly.add_history(
                     self.name,
                     list(proposal.target_node_ids),
                     proposal.params,
-                    {"resolved_three_forces_at_existing_node": True},
+                    {"resolved_three_forces_at_existing_node": True, "completion_rejection_reason": reason},
                 )
             return assembly
         node = assembly.node(proposal.target_node_ids[0])
@@ -496,8 +577,17 @@ class CloseStructureRule(BaseRule):
             return assembly
         other = assembly.node(proposal.target_node_ids[1])
         point = proposal.params.get("point")
-        if point is not None and connect_two_forces(node, other, assembly, point):
+        ray_combination = proposal.params.get("ray_combination", [1, 1])
+        if point is not None and connect_two_forces(
+            node,
+            other,
+            assembly,
+            point,
+            source_ray_sign=ray_combination[0],
+            target_ray_sign=ray_combination[1],
+        ):
             assembly.state = GenerationState.GO
+            assembly.metadata.pop("termination_reason", None)
             assembly.add_history(
                 self.name,
                 [node.node_id, other.node_id],
@@ -519,9 +609,14 @@ class EndGenerationRule(BaseRule):
             return [RuleProposal(self.name, [], {"max_steps": self.max_steps}, self.weight)]
         return []
 
+    def applicable_to(self, assembly, node):
+        return False
+
     def apply(self, assembly, proposal, rng):
-        assembly.state = GenerationState.END
-        assembly.add_history(self.name, [], proposal.params, {"state": assembly.state})
+        reason = structural_completion_reason(assembly)
+        assembly.state = GenerationState.END if reason is None else GenerationState.GO
+        assembly.metadata["termination_reason"] = "benchmark_complete" if reason is None else reason
+        assembly.add_history(self.name, [], proposal.params, {"state": assembly.state, "completion_rejection_reason": reason})
         return assembly
 
 

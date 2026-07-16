@@ -211,13 +211,78 @@ def connection_is_non_degenerate(node_a, node_b, assembly, intersection, toleran
     return True
 
 
-def connect_two_forces(node_a, node_b, assembly, intersection):
+def closure_ray_candidate(node_a, node_b, assembly, source_ray_sign, target_ray_sign, tolerance=CONNECTION_TOLERANCE):
+    record = {
+        "source_node": node_a.node_id,
+        "target_node": node_b.node_id,
+        "source_ray_sign": int(source_ray_sign),
+        "target_ray_sign": int(target_ray_sign),
+        "intersection": None,
+        "source_ray_parameter": None,
+        "target_ray_parameter": None,
+        "distance_measure": None,
+        "rejection_reason": None,
+    }
+    loa_a = get_line_of_action(node_a)
+    loa_b = get_line_of_action(node_b)
+    if loa_a is None or loa_b is None:
+        record["rejection_reason"] = "missing_line_of_action"
+        return record
+    direction_a = scale(loa_a["direction"], source_ray_sign)
+    direction_b = scale(loa_b["direction"], target_ray_sign)
+    determinant = cross_z(direction_a, direction_b)
+    if abs(determinant) <= tolerance:
+        record["rejection_reason"] = "parallel_rays"
+        return record
+    delta = sub(node_b.coordinate, node_a.coordinate)
+    source_parameter = cross_z(delta, direction_b) / determinant
+    target_parameter = cross_z(delta, direction_a) / determinant
+    record["source_ray_parameter"] = float(source_parameter)
+    record["target_ray_parameter"] = float(target_parameter)
+    if source_parameter < -tolerance or target_parameter < -tolerance:
+        record["rejection_reason"] = "negative_ray_parameter"
+        return record
+    intersection = add(node_a.coordinate, scale(direction_a, source_parameter))
+    record["intersection"] = list(intersection)
+    record["distance_measure"] = float(distance(node_a.coordinate, intersection))
+    if not boundary_ok(intersection, assembly):
+        record["rejection_reason"] = "intersection_outside_bounds"
+        return record
+    if not connection_is_non_degenerate(node_a, node_b, assembly, intersection, tolerance):
+        record["rejection_reason"] = "inadmissible_connection"
+        return record
+    return record
+
+
+def connect_two_forces(node_a, node_b, assembly, intersection, source_ray_sign=1, target_ray_sign=1):
     temp_a = get_temp_force(node_a)
     temp_b = get_temp_force(node_b)
     if temp_a is None or temp_b is None or not connection_is_non_degenerate(node_a, node_b, assembly, intersection):
         return False
-    force_a = make_force(node_a.coordinate, temp_a.vector, ForceKind.MEMBER, direction=temp_a.direction, semantic_origin="connect_two_forces")
-    force_b = make_force(node_b.coordinate, temp_b.vector, ForceKind.MEMBER, direction=temp_b.direction, semantic_origin="connect_two_forces")
+    connector_a = unit(sub(intersection, node_a.coordinate))
+    connector_b = unit(sub(intersection, node_b.coordinate))
+    temp_direction_a = unit(temp_a.vector)
+    temp_direction_b = unit(temp_b.vector)
+    if connector_a is None or connector_b is None or temp_direction_a is None or temp_direction_b is None:
+        return False
+    direction_a = ForceDirection.TENSION if dot(temp_direction_a, connector_a) >= 0.0 else ForceDirection.COMPRESSION
+    direction_b = ForceDirection.TENSION if dot(temp_direction_b, connector_b) >= 0.0 else ForceDirection.COMPRESSION
+    force_a = make_force(
+        node_a.coordinate,
+        temp_a.vector,
+        ForceKind.MEMBER,
+        direction=direction_a,
+        semantic_origin="connect_two_forces",
+        ray_sign=int(source_ray_sign),
+    )
+    force_b = make_force(
+        node_b.coordinate,
+        temp_b.vector,
+        ForceKind.MEMBER,
+        direction=direction_b,
+        semantic_origin="connect_two_forces",
+        ray_sign=int(target_ray_sign),
+    )
     node_a.remove_temp_forces()
     node_b.remove_temp_forces()
     node_a.add_force(force_a)
@@ -404,3 +469,52 @@ def assembly_member_between(assembly, node_a, node_b, force):
 
 def boundary_ok(point, assembly):
     return inside_rect(point, assembly.boundary)
+
+
+def structural_completion_reason(assembly, tolerance=CONNECTION_TOLERANCE):
+    unresolved = [
+        node.node_id
+        for node in assembly.nodes
+        if node.active or get_temp_force(node) is not None
+    ]
+    if unresolved:
+        return "unresolved_force_fronts"
+
+    for node in assembly.nodes:
+        total = [0.0, 0.0, 0.0]
+        for force in node.forces:
+            if force.kind != ForceKind.TEMPORARY:
+                total = add(total, force.vector)
+        if magnitude(total) > tolerance:
+            return "no_valid_closure"
+
+    for member in assembly.members:
+        start = assembly.node(member.start_node)
+        end = assembly.node(member.end_node)
+        axis = unit(sub(end.coordinate, start.coordinate))
+        if axis is None or member.force is None:
+            return "no_valid_closure"
+        force_direction = unit(member.force.vector)
+        if force_direction is None or abs(abs(dot(axis, force_direction)) - 1.0) > tolerance:
+            return "no_valid_closure"
+        start_match = any(
+            force.kind == ForceKind.MEMBER and magnitude(sub(force.vector, member.force.vector)) <= tolerance
+            for force in start.forces
+        )
+        end_match = any(
+            force.kind == ForceKind.MEMBER and magnitude(add(force.vector, member.force.vector)) <= tolerance
+            for force in end.forces
+        )
+        if not start_match or not end_match:
+            return "no_valid_closure"
+
+    from .metrics import compute_kernel_metrics
+
+    metrics = compute_kernel_metrics(assembly)
+    if not metrics["support_connectivity"]["support_connected"]:
+        return "no_valid_closure"
+    if not metrics["benchmark_validity"]["geometrically_valid"]:
+        return "geometrically_invalid"
+    if not metrics["benchmark_complete"]:
+        return "no_valid_closure"
+    return None

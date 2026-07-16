@@ -1,12 +1,13 @@
 from copy import deepcopy
 from collections import Counter
 
+from .engine import GDGS_NODE_RULE_UNIFORM_POLICY_ID
 from .engine import VectorGSKernelV1
 from .metrics import compute_kernel_metrics
 from .scenarios import make_default_cantilever_scenario
 
 
-DEFAULT_POLICY_ID = "rule_weighted_random_v1"
+DEFAULT_POLICY_ID = GDGS_NODE_RULE_UNIFORM_POLICY_ID
 
 
 def run_kernel_episode(
@@ -32,6 +33,7 @@ def run_kernel_episode(
         "scenario_name": scenario_name,
         "seed": int(seed),
         "step_budget": int(max_steps),
+        "termination_reason": final_assembly.metadata.get("termination_reason"),
         "assembly": deepcopy(final_assembly),
         "trace": list(trace),
         "final_metrics": final_metrics,
@@ -51,6 +53,7 @@ def _aggregate_batch_metrics(records):
             "geometrically_valid_run_count": 0,
             "benchmark_complete_run_count": 0,
             "invalidity_reason_counts": {},
+            "termination_reason_counts": {},
         }
 
     run_count = len(records)
@@ -65,6 +68,7 @@ def _aggregate_batch_metrics(records):
         if record["final_metrics"].get("benchmark_validity", {}).get("geometrically_valid")
     )
     invalidity_reason_counts = Counter()
+    termination_reason_counts = Counter(record.get("termination_reason") or "unknown" for record in records)
     for record in records:
         invalidity_reason_counts.update(
             record["final_metrics"].get("benchmark_validity", {}).get("invalid_reasons", [])
@@ -86,6 +90,7 @@ def _aggregate_batch_metrics(records):
         "geometrically_valid_run_count": geometrically_valid,
         "benchmark_complete_run_count": benchmark_completed,
         "invalidity_reason_counts": dict(sorted(invalidity_reason_counts.items())),
+        "termination_reason_counts": dict(sorted(termination_reason_counts.items())),
     }
 
 
