@@ -43,6 +43,12 @@ RUNS_SOURCE_DIRS = (
 )
 PRIMARY_RUNS_SOURCE_DIR = RUNS_SOURCE_DIRS[0]
 NODE_POINT_SIZE = 15.0
+TENSION_COLOR = (0.78, 0.24, 0.30)
+COMPRESSION_COLOR = (0.08, 0.30, 0.47)
+LOAD_COLOR = (0.00, 0.65, 0.84)
+REACTION_COLOR = (0.00, 0.62, 0.45)
+TEMPORARY_COLOR = (0.90, 0.62, 0.00)
+UNKNOWN_MEMBER_COLOR = (0.48, 0.48, 0.48)
 
 
 def _vector_magnitude(vec3):
@@ -320,6 +326,23 @@ class KernelRunViewer:
         rendered["playback_active_before"] = None if step_index == 0 else trace[step_index - 1].get("active_front_count_before")
         rendered["playback_active_after"] = None if step_index == 0 else trace[step_index - 1].get("active_front_count_after")
         rendered["playback_ray_combination"] = None if step_index == 0 else trace[step_index - 1].get("params", {}).get("ray_combination")
+        transition = None if step_index == 0 else trace[step_index - 1]
+        rendered["playback_phase_before"] = (
+            rendered["assembly"].get("state") if transition is None else transition.get("phase_before")
+        )
+        rendered["playback_phase_after"] = (
+            rendered["assembly"].get("state") if transition is None else transition.get("phase_after")
+        )
+        rendered["playback_phase_transition_reason"] = (
+            None if transition is None else transition.get("phase_transition_reason")
+        )
+        visible_trace = trace[:step_index]
+        rendered["playback_growth_step_count"] = sum(
+            1 for item in visible_trace if item.get("phase_before") == "grow" and item.get("rule")
+        )
+        rendered["playback_closure_step_count"] = sum(
+            1 for item in visible_trace if item.get("phase_before") == "close" and item.get("rule")
+        )
         if step_index == 0:
             rendered["playback_transition_changed"] = False
             rendered["playback_form_changed"] = False
@@ -401,9 +424,10 @@ class KernelRunViewer:
                 "rule state {3}/{4}: {5} nodes={6}\n"
                 "transition={7} form_changed={8}\n"
                 "selected_node={9} active_fronts={10}->{11} rays={12}\n"
-                "state={13} residual={14}\n"
-                "benchmark_complete={15} valid={16} support_connected={17}\n"
-                "invalid_reasons={18} termination={19}".format(
+                "phase={13}->{14} reason={15} growth={16} closure={17}\n"
+                "state={18} residual={19}\n"
+                "benchmark_complete={20} valid={21} support_connected={22}\n"
+                "invalid_reasons={23} termination={24}".format(
                     self.current_index + 1,
                     len(self.run_dirs),
                     payload["run_dir"].name,
@@ -417,6 +441,11 @@ class KernelRunViewer:
                     payload["playback_active_before"] if payload["playback_active_before"] is not None else "n/a",
                     payload["playback_active_after"] if payload["playback_active_after"] is not None else "n/a",
                     ray_combination,
+                    payload["playback_phase_before"],
+                    payload["playback_phase_after"],
+                    payload["playback_phase_transition_reason"] or "n/a",
+                    payload["playback_growth_step_count"],
+                    payload["playback_closure_step_count"],
                     payload["assembly"]["state"],
                     payload["assembly"]["residual_magnitude"],
                     metrics["benchmark_complete"] if payload["playback_is_final"] else "n/a",
@@ -467,11 +496,11 @@ class KernelRunViewer:
                 vector = [float(value) for value in force.get("vector", [0.0, 0.0, 0.0])]
                 kind = force.get("kind")
                 if kind == "applied":
-                    _add_force_arrow(self.viewer, xyz, vector, color=(0.1, 0.35, 0.9), scale=0.6, name="Load")
+                    _add_force_arrow(self.viewer, xyz, vector, color=LOAD_COLOR, scale=0.6, name="Load")
                 elif kind == "reaction":
-                    _add_force_arrow(self.viewer, xyz, vector, color=(0.05, 0.55, 0.1), scale=0.6, name="SolvedReaction", linewidth=3)
+                    _add_force_arrow(self.viewer, xyz, vector, color=REACTION_COLOR, scale=0.6, name="SolvedReaction", linewidth=3)
                 elif kind == "temporary":
-                    _add_force_arrow(self.viewer, xyz, vector, color=(0.85, 0.15, 0.15), scale=0.5, name="TempForce", linewidth=2.5)
+                    _add_force_arrow(self.viewer, xyz, vector, color=TEMPORARY_COLOR, scale=0.5, name="TempForce", linewidth=2.5)
 
         for member in payload["assembly"]["members"]:
             start_node = node_by_id.get(member["start_node"])
@@ -480,7 +509,17 @@ class KernelRunViewer:
                 continue
             p1 = [float(value) for value in start_node["coordinate"]]
             p2 = [float(value) for value in end_node["coordinate"]]
-            _add(self.viewer, Line(Point(*p1), Point(*p2)), name="Member", color=(0.15, 0.15, 0.15), linewidth=3)
+            force_class = member.get("force_class")
+            if force_class is None:
+                direction = (member.get("force") or {}).get("direction")
+                force_class = "tension" if direction == 1 else "compression" if direction == -1 else "unknown"
+            if force_class == "tension":
+                color, linewidth, name = TENSION_COLOR, 1.5, "TensionMember"
+            elif force_class == "compression":
+                color, linewidth, name = COMPRESSION_COLOR, 4.5, "CompressionMember"
+            else:
+                color, linewidth, name = UNKNOWN_MEMBER_COLOR, 2.5, "UnclassifiedMember"
+            _add(self.viewer, Line(Point(*p1), Point(*p2)), name=name, color=color, linewidth=linewidth)
 
         _frame_scene(self.viewer, payload)
 

@@ -34,6 +34,32 @@ from .operators import three_force_closure_hub
 from .operators import transfer_member_force
 
 
+INITIALIZATION_FAMILY = "initialization"
+CREATION_FAMILY = "creation"
+MODIFICATION_FAMILY = "modification"
+CONNECTIVITY_FAMILY = "connectivity"
+CLOSURE_FAMILY = "closure"
+VERIFICATION_FAMILY = "verification"
+
+VERIFY_PHASE = "verify"
+INCOMPLETE_PHASE = "incomplete"
+
+RULE_FAMILIES = {
+    "StartGeneration": INITIALIZATION_FAMILY,
+    "CreateNode": CREATION_FAMILY,
+    "SplitNode": CREATION_FAMILY,
+    "ExtendNode": MODIFICATION_FAMILY,
+    "ConnectTwoNodes": CONNECTIVITY_FAMILY,
+    "ExtendAndConnectTwoNodes": CONNECTIVITY_FAMILY,
+    "CloseStructure": CLOSURE_FAMILY,
+    "EndGeneration": VERIFICATION_FAMILY,
+}
+
+
+def rule_family(rule):
+    return getattr(rule, "family", RULE_FAMILIES.get(rule.name))
+
+
 @dataclass
 class RuleProposal:
     rule_name: str
@@ -61,6 +87,7 @@ class BaseRule:
 
 class StartGenerationRule(BaseRule):
     name = "StartGeneration"
+    family = INITIALIZATION_FAMILY
     weight = 1
 
     def applicable(self, assembly):
@@ -80,6 +107,7 @@ class StartGenerationRule(BaseRule):
 
 class CreateNodeRule(BaseRule):
     name = "CreateNode"
+    family = CREATION_FAMILY
     weight = 1
 
     def __init__(
@@ -188,6 +216,7 @@ class CreateNodeRule(BaseRule):
 
 class ExtendNodeRule(BaseRule):
     name = "ExtendNode"
+    family = MODIFICATION_FAMILY
     weight = 1
 
     def __init__(self, min_length=0.5, max_length=1.5, cutoff=8):
@@ -266,6 +295,7 @@ class ExtendNodeRule(BaseRule):
 
 class SplitNodeRule(BaseRule):
     name = "SplitNode"
+    family = CREATION_FAMILY
     weight = 1
 
     def __init__(self, min_length=0.5, max_length=1.5, min_angle=0.17, max_angle=0.52, cutoff=8, proposal_attempts=16):
@@ -360,6 +390,7 @@ class SplitNodeRule(BaseRule):
 
 class ConnectTwoNodesRule(BaseRule):
     name = "ConnectTwoNodes"
+    family = CONNECTIVITY_FAMILY
     weight = 1
 
     def __init__(self, radius=10.0, factor=0.5):
@@ -422,6 +453,7 @@ class ConnectTwoNodesRule(BaseRule):
 
 class ExtendAndConnectTwoNodesRule(BaseRule):
     name = "ExtendAndConnectTwoNodes"
+    family = CONNECTIVITY_FAMILY
     weight = 1
 
     def __init__(self, radius=10.0):
@@ -476,15 +508,16 @@ class ExtendAndConnectTwoNodesRule(BaseRule):
 
 class CloseStructureRule(BaseRule):
     name = "CloseStructure"
+    family = CLOSURE_FAMILY
     weight = 1
 
     def __init__(self, loopcount=4):
         self.loopcount = int(loopcount)
 
     def propose(self, assembly, node, rng):
-        if len(assembly.history) <= self.loopcount:
+        if assembly.state != GenerationState.CLOSE:
             return []
-        if not node.active:
+        if node is None or not node.active:
             return []
         count = len(active_nodes(assembly))
         if count == 2:
@@ -493,7 +526,7 @@ class CloseStructureRule(BaseRule):
             return []
         if count == 3:
             hub = three_force_closure_hub(assembly)
-            if hub is not None:
+            if hub is not None and node.node_id == hub.node_id:
                 return [
                     RuleProposal(
                         self.name,
@@ -550,26 +583,20 @@ class CloseStructureRule(BaseRule):
         nodes = active_nodes(assembly)
         if len(nodes) == 2:
             if resolve_two_forces(assembly) and not active_nodes(assembly):
-                reason = structural_completion_reason(assembly)
-                assembly.state = GenerationState.END if reason is None else GenerationState.GO
-                assembly.metadata["termination_reason"] = "benchmark_complete" if reason is None else reason
                 assembly.add_history(
                     self.name,
                     [candidate.node_id for candidate in nodes],
                     proposal.params,
-                    {"resolved_two_forces": True, "completion_rejection_reason": reason},
+                    {"resolved_two_forces": True},
                 )
             return assembly
         if proposal.params.get("kind") == "reuse_existing_hub":
             if resolve_three_forces_at_existing_node(assembly) and not active_nodes(assembly):
-                reason = structural_completion_reason(assembly)
-                assembly.state = GenerationState.END if reason is None else GenerationState.GO
-                assembly.metadata["termination_reason"] = "benchmark_complete" if reason is None else reason
                 assembly.add_history(
                     self.name,
                     list(proposal.target_node_ids),
                     proposal.params,
-                    {"resolved_three_forces_at_existing_node": True, "completion_rejection_reason": reason},
+                    {"resolved_three_forces_at_existing_node": True},
                 )
             return assembly
         node = assembly.node(proposal.target_node_ids[0])
@@ -586,8 +613,6 @@ class CloseStructureRule(BaseRule):
             source_ray_sign=ray_combination[0],
             target_ray_sign=ray_combination[1],
         ):
-            assembly.state = GenerationState.GO
-            assembly.metadata.pop("termination_reason", None)
             assembly.add_history(
                 self.name,
                 [node.node_id, other.node_id],
@@ -599,13 +624,14 @@ class CloseStructureRule(BaseRule):
 
 class EndGenerationRule(BaseRule):
     name = "EndGeneration"
+    family = VERIFICATION_FAMILY
     weight = 1
 
     def __init__(self, max_steps=20):
         self.max_steps = int(max_steps)
 
     def propose(self, assembly, node, rng):
-        if len(assembly.history) >= self.max_steps or not active_nodes(assembly):
+        if assembly.state == VERIFY_PHASE:
             return [RuleProposal(self.name, [], {"max_steps": self.max_steps}, self.weight)]
         return []
 
@@ -614,8 +640,18 @@ class EndGenerationRule(BaseRule):
 
     def apply(self, assembly, proposal, rng):
         reason = structural_completion_reason(assembly)
-        assembly.state = GenerationState.END if reason is None else GenerationState.GO
-        assembly.metadata["termination_reason"] = "benchmark_complete" if reason is None else reason
+        if reason is None:
+            assembly.state = GenerationState.END
+            assembly.metadata["termination_reason"] = "completed"
+            assembly.metadata["verification_transition_reason"] = "verification_passed"
+        else:
+            assembly.state = INCOMPLETE_PHASE
+            assembly.metadata["termination_reason"] = (
+                reason
+                if reason in {"unresolved_force_fronts", "geometrically_invalid"}
+                else "structurally_invalid"
+            )
+            assembly.metadata["verification_transition_reason"] = reason
         assembly.add_history(self.name, [], proposal.params, {"state": assembly.state, "completion_rejection_reason": reason})
         return assembly
 

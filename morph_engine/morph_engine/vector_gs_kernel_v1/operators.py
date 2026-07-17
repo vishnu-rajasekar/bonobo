@@ -33,6 +33,20 @@ def _segments_overlap(p1, p2, q1, q2, tolerance):
     return right - left > tolerance
 
 
+def _segments_cross(p1, p2, q1, q2, tolerance):
+    """Return True only for a proper interior intersection."""
+    def orientation(a, b, c):
+        return cross_z(sub(b, a), sub(c, a))
+
+    o1 = orientation(p1, p2, q1)
+    o2 = orientation(p1, p2, q2)
+    o3 = orientation(q1, q2, p1)
+    o4 = orientation(q1, q2, p2)
+    if any(abs(value) <= tolerance for value in (o1, o2, o3, o4)):
+        return False
+    return (o1 > 0.0) != (o2 > 0.0) and (o3 > 0.0) != (o4 > 0.0)
+
+
 def segment_is_admissible(assembly, start_node_id, end_node_id, start, end, tolerance=CONNECTION_TOLERANCE):
     if start_node_id == end_node_id or distance(start, end) <= tolerance:
         return False
@@ -42,6 +56,8 @@ def segment_is_admissible(assembly, start_node_id, end_node_id, start, end, tole
         member_start = assembly.node(member.start_node).coordinate
         member_end = assembly.node(member.end_node).coordinate
         if _segments_overlap(start, end, member_start, member_end, tolerance):
+            return False
+        if _segments_cross(start, end, member_start, member_end, tolerance):
             return False
     return True
 
@@ -451,8 +467,26 @@ def assembly_member_between(assembly, node_a, node_b, force):
         return existing
     from .model import Member
 
+    member_id = assembly.next_member_id()
+    force.related_member = member_id
+
+    # Attach the generated member identity to the equal-and-opposite endpoint
+    # force records. This is evidence metadata only; no rule or policy reads it.
+    expected_vectors = {
+        str(node_a): list(force.vector),
+        str(node_b): scale(force.vector, -1.0),
+    }
+    for node_id, expected in expected_vectors.items():
+        for endpoint_force in reversed(assembly.node(node_id).member_forces()):
+            if endpoint_force.related_member is not None:
+                continue
+            delta = sub(endpoint_force.vector, expected)
+            if magnitude(delta) <= CONNECTION_TOLERANCE:
+                endpoint_force.related_member = member_id
+                break
+
     return Member(
-        member_id=assembly.next_member_id(),
+        member_id=member_id,
         start_node=str(node_a),
         end_node=str(node_b),
         force=Force(
@@ -460,7 +494,7 @@ def assembly_member_between(assembly, node_a, node_b, force):
             vector=list(force.vector),
             kind=force.kind,
             direction=force.direction,
-            related_member=force.related_member,
+            related_member=member_id,
             metadata=dict(force.metadata),
         ),
         metadata=dict(force.metadata),
@@ -471,7 +505,76 @@ def boundary_ok(point, assembly):
     return inside_rect(point, assembly.boundary)
 
 
+def _has_load_to_support_path(assembly):
+    """Return structural load-path admissibility without evaluator scoring."""
+    support_ids = {node.node_id for node in assembly.nodes if node.type == NodeType.SUPPORT}
+    load_ids = [node.node_id for node in assembly.nodes if node.type == NodeType.LOAD]
+    if not support_ids or not load_ids:
+        return False
+
+    adjacency = {node.node_id: set() for node in assembly.nodes}
+    for member in assembly.members:
+        adjacency.setdefault(member.start_node, set()).add(member.end_node)
+        adjacency.setdefault(member.end_node, set()).add(member.start_node)
+
+    for load_id in load_ids:
+        queue = [load_id]
+        seen = {load_id}
+        while queue:
+            current = queue.pop(0)
+            if current in support_ids:
+                return True
+            for neighbor in sorted(adjacency.get(current, ())):
+                if neighbor not in seen:
+                    seen.add(neighbor)
+                    queue.append(neighbor)
+    return False
+
+
+def _assembly_geometry_is_admissible(assembly, tolerance):
+    for node in assembly.nodes:
+        if not inside_rect(node.coordinate, assembly.boundary):
+            return False
+
+    for index, node in enumerate(assembly.nodes):
+        if any(distance(node.coordinate, other.coordinate) <= tolerance for other in assembly.nodes[index + 1 :]):
+            return False
+
+    member_pairs = set()
+    for member in assembly.members:
+        pair = tuple(sorted((member.start_node, member.end_node)))
+        if pair in member_pairs:
+            return False
+        member_pairs.add(pair)
+        start = assembly.node(member.start_node).coordinate
+        end = assembly.node(member.end_node).coordinate
+        if distance(start, end) <= tolerance:
+            return False
+
+    for index, member_a in enumerate(assembly.members):
+        p1 = assembly.node(member_a.start_node).coordinate
+        p2 = assembly.node(member_a.end_node).coordinate
+        endpoints_a = {member_a.start_node, member_a.end_node}
+        for member_b in assembly.members[index + 1 :]:
+            if endpoints_a & {member_b.start_node, member_b.end_node}:
+                continue
+            q1 = assembly.node(member_b.start_node).coordinate
+            q2 = assembly.node(member_b.end_node).coordinate
+            if _segments_overlap(p1, p2, q1, q2, tolerance):
+                return False
+            if _segments_cross(p1, p2, q1, q2, tolerance):
+                return False
+    return True
+
+
 def structural_completion_reason(assembly, tolerance=CONNECTION_TOLERANCE):
+    """Return method-level admissibility only; never consume evaluator metrics.
+
+    Verification is intentionally limited to structural semantics that must
+    hold for every policy: resolved fronts, nodal equilibrium, axial
+    action-reaction, a load-to-support path, and backend geometric
+    admissibility. Benchmark scores and design objectives remain observational.
+    """
     unresolved = [
         node.node_id
         for node in assembly.nodes
@@ -508,13 +611,8 @@ def structural_completion_reason(assembly, tolerance=CONNECTION_TOLERANCE):
         if not start_match or not end_match:
             return "no_valid_closure"
 
-    from .metrics import compute_kernel_metrics
-
-    metrics = compute_kernel_metrics(assembly)
-    if not metrics["support_connectivity"]["support_connected"]:
+    if not _has_load_to_support_path(assembly):
         return "no_valid_closure"
-    if not metrics["benchmark_validity"]["geometrically_valid"]:
+    if not _assembly_geometry_is_admissible(assembly, tolerance):
         return "geometrically_invalid"
-    if not metrics["benchmark_complete"]:
-        return "no_valid_closure"
     return None

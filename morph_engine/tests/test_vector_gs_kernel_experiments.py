@@ -51,6 +51,8 @@ def test_export_run_writes_enriched_kernel_payload(tmp_path):
     assert "accepted_step_count" in payload["final_metrics"]
     assert "support_connectivity" in payload["final_metrics"]
     assert "boundary_force_polygon" in payload["final_metrics"]
+    assert "member_force_diagnostics" in payload["final_metrics"]
+    assert payload["final_metrics"]["member_force_diagnostics"]["classification_is_policy_input"] is False
     assert payload["final_metrics"]["boundary_force_polygon"]["externally_balanced"] is True
 
 
@@ -65,6 +67,7 @@ def test_run_kernel_batch_and_summary_shape(tmp_path):
     assert exported["seeds"] == [0, 1]
     assert exported["seed_count"] == 2
     assert exported["step_budget"] == 8
+    assert exported["growth_limit"] == 4
     assert len(exported["runs"]) == 2
     assert all(record["step_budget"] == 8 for record in exported["runs"])
     assert "aggregate_metrics" in exported
@@ -75,6 +78,17 @@ def test_run_kernel_batch_and_summary_shape(tmp_path):
     assert "geometrically_valid_run_count" in exported["aggregate_metrics"]
     assert "invalidity_reason_counts" in exported["aggregate_metrics"]
     assert "termination_reason_counts" in exported["aggregate_metrics"]
+    assert "mean_growth_steps" in exported["aggregate_metrics"]
+    assert "mean_closure_steps" in exported["aggregate_metrics"]
+    assert "closure_start_step_distribution" in exported["aggregate_metrics"]
+    assert "phase_transition_counts" in exported["aggregate_metrics"]
+    assert "member_force_classification_valid_run_count" in exported["aggregate_metrics"]
+    assert "total_tension_member_count" in exported["aggregate_metrics"]
+    assert "total_compression_member_count" in exported["aggregate_metrics"]
+    assert "total_unknown_member_count" in exported["aggregate_metrics"]
+    assert all("final_phase" in record for record in exported["runs"])
+    assert all("growth_step_count" in record for record in exported["runs"])
+    assert all("closure_step_count" in record for record in exported["runs"])
 
 
 def test_kernel_cli_exports_step_budget_to_run_and_batch_artifacts(tmp_path, monkeypatch):
@@ -89,6 +103,8 @@ def test_kernel_cli_exports_step_budget_to_run_and_batch_artifacts(tmp_path, mon
             "1",
             "--steps",
             "3",
+            "--growth-limit",
+            "1",
             "--policy-id",
             "rule_uniform_random_v1",
             "--output-dir",
@@ -100,17 +116,21 @@ def test_kernel_cli_exports_step_budget_to_run_and_batch_artifacts(tmp_path, mon
 
     run_path = next(tmp_path.glob("*_seed_0/kernel_run.json"))
     summary_path = next(tmp_path.glob("*_batch_summary.json"))
-    assert json.loads(run_path.read_text())["step_budget"] == 3
+    run_payload = json.loads(run_path.read_text())
+    assert run_payload["step_budget"] == 3
+    assert run_payload["termination_reason"] == "step_budget_exhausted"
     assert json.loads(summary_path.read_text())["step_budget"] == 3
+    assert json.loads(summary_path.read_text())["growth_limit"] == 1
 
 
 def test_run_kernel_episode_threads_policy_id_to_engine(monkeypatch):
     captured = {}
 
     class StubKernel:
-        def __init__(self, *, seed, policy_id):
+        def __init__(self, *, seed, policy_id, growth_limit):
             captured["seed"] = seed
             captured["policy_id"] = policy_id
+            self.growth_limit = 4 if growth_limit is None else growth_limit
 
         def run(self, assembly, max_steps):
             captured["max_steps"] = max_steps

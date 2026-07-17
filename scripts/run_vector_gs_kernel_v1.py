@@ -20,6 +20,12 @@ def main():
     parser = argparse.ArgumentParser(description="Run the standalone vector graphic statics kernel.")
     parser.add_argument("--runs", type=int, default=3, help="Number of seeded episodes to run.")
     parser.add_argument("--steps", type=int, default=12, help="Maximum steps per episode.")
+    parser.add_argument(
+        "--growth-limit",
+        type=int,
+        default=None,
+        help="Accepted growth-rule count before the deterministic closure phase.",
+    )
     parser.add_argument("--policy-id", default=DEFAULT_POLICY_ID, help="Policy label recorded in kernel artifacts.")
     parser.add_argument("--problem-id", default=None, help="Problem id recorded in kernel artifacts.")
     parser.add_argument(
@@ -37,6 +43,7 @@ def main():
         max_steps=int(args.steps),
         problem_id=args.problem_id,
         policy_id=args.policy_id,
+        growth_limit=args.growth_limit,
     )
 
     for record in payload["runs"]:
@@ -50,6 +57,7 @@ def main():
             problem_id=record["problem_id"],
             policy_id=record["policy_id"],
             step_budget=record["step_budget"],
+            termination_reason=record["termination_reason"],
             final_metrics=record["final_metrics"],
         )
         print(
@@ -63,6 +71,10 @@ def main():
                 "member_count": len(record["assembly"].members),
                 "residual_magnitude": record["final_metrics"]["final_residual_magnitude"],
                 "rule_sequence": [step["rule"] for step in record["trace"]],
+                "final_phase": record["final_phase"],
+                "termination_reason": record["termination_reason"],
+                "growth_step_count": record["growth_step_count"],
+                "closure_step_count": record["closure_step_count"],
             }
         )
 

@@ -19,6 +19,15 @@ class ForceDirection:
     TENSION = 1
 
 
+def force_direction_label(direction):
+    """Return the canonical axial-force class for a signed direction."""
+    if direction == ForceDirection.TENSION:
+        return "tension"
+    if direction == ForceDirection.COMPRESSION:
+        return "compression"
+    return "unknown"
+
+
 class NodeType:
     SUPPORT = "support"
     LOAD = "load"
@@ -114,12 +123,33 @@ class Member:
     force: Force | None = None
     metadata: dict = field(default_factory=dict)
 
+    @property
+    def force_class(self):
+        if self.force is None or self.force.kind != ForceKind.MEMBER:
+            return "unknown"
+        return force_direction_label(self.force.direction)
+
+    @property
+    def signed_axial_force(self):
+        if self.force_class == "unknown":
+            return None
+        return float(self.force.direction) * float(self.force.magnitude)
+
     def to_data(self):
+        classification_source = None
+        if self.force is not None:
+            classification_source = self.force.metadata.get("classification_source")
+            if classification_source is None:
+                classification_source = self.force.metadata.get("semantic_origin", "force_direction")
         return {
             "member_id": self.member_id,
             "start_node": self.start_node,
             "end_node": self.end_node,
             "force": None if self.force is None else self.force.to_data(),
+            "force_class": self.force_class,
+            "force_magnitude": None if self.force is None else float(self.force.magnitude),
+            "signed_axial_force": self.signed_axial_force,
+            "classification_source": classification_source,
             "metadata": dict(self.metadata),
         }
 

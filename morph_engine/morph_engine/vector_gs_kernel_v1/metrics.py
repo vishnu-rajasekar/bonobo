@@ -5,7 +5,9 @@ from .geometry import inside_rect
 from .geometry import magnitude
 from .geometry import unit
 from .model import ForceKind
+from .model import ForceDirection
 from .model import NodeType
+from .model import force_direction_label
 
 
 DEFAULT_TOLERANCE = 1e-9
@@ -355,6 +357,132 @@ def compute_kernel_validity(assembly, tolerance=DEFAULT_TOLERANCE):
     }
 
 
+def _vectors_close(a, b, tolerance):
+    return magnitude([float(a[index]) - float(b[index]) for index in range(3)]) <= tolerance
+
+
+def _endpoint_member_force(node, member_id, expected_vector, tolerance):
+    linked = [force for force in node.member_forces() if force.related_member == member_id]
+    candidates = linked or [
+        force for force in node.member_forces() if _vectors_close(force.vector, expected_vector, tolerance)
+    ]
+    if len(candidates) != 1:
+        return None, "missing" if not candidates else "ambiguous"
+    return candidates[0], "linked" if linked else "vector_match"
+
+
+def compute_member_force_diagnostics(assembly, tolerance=DEFAULT_TOLERANCE):
+    """Validate signed axial classifications without constraining generation.
+
+    The diagnostic checks that a member force is axial, that endpoint force
+    records are equal and opposite, and that all three records carry the same
+    tension/compression class. It is deliberately observational: policies and
+    grammar admissibility do not consume these values.
+    """
+    nodes = _node_by_id(assembly)
+    records = []
+    counts = Counter()
+    for member in assembly.members:
+        force = member.force
+        force_class = "unknown" if force is None else force_direction_label(force.direction)
+        counts[force_class] += 1
+        reasons = []
+        magnitude_value = None if force is None else float(force.magnitude)
+        signed_value = None
+        start_force = None
+        end_force = None
+        start_match = "missing"
+        end_match = "missing"
+
+        if force is None or force.kind != ForceKind.MEMBER:
+            reasons.append("missing_member_force")
+        elif force.direction not in (ForceDirection.COMPRESSION, ForceDirection.TENSION):
+            reasons.append("unknown_force_direction")
+        else:
+            signed_value = float(force.direction) * magnitude_value
+            start = nodes.get(member.start_node)
+            end = nodes.get(member.end_node)
+            if start is None or end is None:
+                reasons.append("missing_endpoint_node")
+            else:
+                axis = [
+                    float(end.coordinate[index]) - float(start.coordinate[index])
+                    for index in range(3)
+                ]
+                axis_magnitude = magnitude(axis)
+                if axis_magnitude <= tolerance or magnitude_value <= tolerance:
+                    reasons.append("non_axial_or_zero_force")
+                else:
+                    cross = magnitude(
+                        [
+                            axis[1] * force.vector[2] - axis[2] * force.vector[1],
+                            axis[2] * force.vector[0] - axis[0] * force.vector[2],
+                            axis[0] * force.vector[1] - axis[1] * force.vector[0],
+                        ]
+                    )
+                    if cross > tolerance * axis_magnitude * magnitude_value:
+                        reasons.append("force_not_collinear_with_member")
+
+                start_force, start_match = _endpoint_member_force(
+                    start, member.member_id, force.vector, tolerance
+                )
+                end_force, end_match = _endpoint_member_force(
+                    end,
+                    member.member_id,
+                    [-float(value) for value in force.vector],
+                    tolerance,
+                )
+                if start_force is None:
+                    reasons.append("start_endpoint_force_{0}".format(start_match))
+                elif not _vectors_close(start_force.vector, force.vector, tolerance):
+                    reasons.append("start_endpoint_vector_mismatch")
+                if end_force is None:
+                    reasons.append("end_endpoint_force_{0}".format(end_match))
+                elif not _vectors_close(
+                    end_force.vector, [-float(value) for value in force.vector], tolerance
+                ):
+                    reasons.append("end_endpoint_vector_mismatch")
+                endpoint_classes = [
+                    force_direction_label(item.direction)
+                    for item in (start_force, end_force)
+                    if item is not None
+                ]
+                if any(item != force_class for item in endpoint_classes):
+                    reasons.append("endpoint_class_mismatch")
+
+        records.append(
+            {
+                "member_id": member.member_id,
+                "force_class": force_class,
+                "force_magnitude": magnitude_value,
+                "signed_axial_force": signed_value,
+                "classification_source": None
+                if force is None
+                else force.metadata.get(
+                    "classification_source",
+                    force.metadata.get("semantic_origin", "force_direction"),
+                ),
+                "classification_valid": not reasons,
+                "validation_reasons": reasons,
+                "start_endpoint_match": start_match,
+                "end_endpoint_match": end_match,
+            }
+        )
+
+    invalid_count = sum(1 for record in records if not record["classification_valid"])
+    return {
+        "sign_convention": "tension_positive_compression_negative",
+        "classification_is_policy_input": False,
+        "member_count": len(records),
+        "tension_count": counts["tension"],
+        "compression_count": counts["compression"],
+        "unknown_count": counts["unknown"],
+        "invalid_classification_count": invalid_count,
+        "all_classifications_valid": invalid_count == 0,
+        "members": records,
+    }
+
+
 def compute_kernel_metrics(assembly, trace=None):
     trace = trace or []
     member_lengths = _member_lengths(assembly)
@@ -364,6 +492,7 @@ def compute_kernel_metrics(assembly, trace=None):
     equilibrium_reached = residual_magnitude <= DEFAULT_TOLERANCE
     validity = compute_kernel_validity(assembly)
     boundary_force_polygon = _boundary_force_polygon(assembly)
+    member_force_diagnostics = compute_member_force_diagnostics(assembly)
     benchmark_complete = equilibrium_reached and support["support_connected"] and validity["geometrically_valid"]
 
     return {
@@ -383,6 +512,7 @@ def compute_kernel_metrics(assembly, trace=None):
         "equilibrium_reached": equilibrium_reached,
         "benchmark_complete": benchmark_complete,
         "boundary_force_polygon": boundary_force_polygon,
+        "member_force_diagnostics": member_force_diagnostics,
         "benchmark_validity": validity,
         "rule_counts": dict(rule_counts),
     }

@@ -3,6 +3,8 @@ import pytest
 
 from morph_engine.vector_gs_kernel_v1 import VectorGSKernelV1
 from morph_engine.vector_gs_kernel_v1.engine import GDGS_NODE_RULE_UNIFORM_POLICY_ID
+from morph_engine.vector_gs_kernel_v1.engine import INCOMPLETE_PHASE
+from morph_engine.vector_gs_kernel_v1.engine import VERIFY_PHASE
 from morph_engine.vector_gs_kernel_v1 import make_default_cantilever_scenario
 from morph_engine.vector_gs_kernel_v1.model import Assembly
 from morph_engine.vector_gs_kernel_v1.model import Force
@@ -20,10 +22,13 @@ from morph_engine.vector_gs_kernel_v1.operators import equilibrate_node
 from morph_engine.vector_gs_kernel_v1.operators import segment_is_admissible
 from morph_engine.vector_gs_kernel_v1.operators import structural_completion_reason
 from morph_engine.vector_gs_kernel_v1.rules import RuleProposal
+from morph_engine.vector_gs_kernel_v1.rules import ConnectTwoNodesRule
 from morph_engine.vector_gs_kernel_v1.rules import CreateNodeRule
 from morph_engine.vector_gs_kernel_v1.rules import ExtendNodeRule
 from morph_engine.vector_gs_kernel_v1.rules import ExtendAndConnectTwoNodesRule
 from morph_engine.vector_gs_kernel_v1.rules import CloseStructureRule
+from morph_engine.vector_gs_kernel_v1.rules import CONNECTIVITY_FAMILY
+from morph_engine.vector_gs_kernel_v1.rules import EndGenerationRule
 from morph_engine.vector_gs_kernel_v1.rules import SplitNodeRule
 from morph_engine.vector_gs_kernel_v1.scenarios import make_concurrent_three_force_smoke_scenario
 from morph_engine.vector_gs_kernel_v1.scenarios import make_michell_diversity_cantilever_scenario
@@ -49,6 +54,104 @@ def test_equilibrate_node_adds_temp_force():
     temp = node.get_temp_force()
     assert temp is not None
     assert temp.vector == [-1.0, -1.0, 0.0]
+
+
+@pytest.mark.parametrize(
+    "direction,expected_class,expected_signed",
+    [
+        (ForceDirection.TENSION, "tension", 2.0),
+        (ForceDirection.COMPRESSION, "compression", -2.0),
+    ],
+)
+def test_member_serialization_exposes_signed_axial_class(direction, expected_class, expected_signed):
+    member = Member(
+        "m0",
+        "a",
+        "b",
+        Force(
+            [0.0, 0.0, 0.0],
+            [2.0, 0.0, 0.0],
+            ForceKind.MEMBER,
+            direction=direction,
+            related_member="m0",
+            metadata={"semantic_origin": "phase_0b_test"},
+        ),
+    )
+
+    payload = member.to_data()
+
+    assert payload["force_class"] == expected_class
+    assert payload["force_magnitude"] == 2.0
+    assert payload["signed_axial_force"] == expected_signed
+    assert payload["classification_source"] == "phase_0b_test"
+
+
+def test_member_force_diagnostics_validate_equal_and_opposite_endpoint_records():
+    direction = ForceDirection.TENSION
+    node_a = Node(
+        "a",
+        [0.0, 0.0, 0.0],
+        NodeType.FLOAT,
+        [Force([0.0, 0.0, 0.0], [2.0, 0.0, 0.0], ForceKind.MEMBER, direction, "m0")],
+        False,
+    )
+    node_b = Node(
+        "b",
+        [4.0, 0.0, 0.0],
+        NodeType.FLOAT,
+        [Force([4.0, 0.0, 0.0], [-2.0, 0.0, 0.0], ForceKind.MEMBER, direction, "m0")],
+        False,
+    )
+    member_force = Force(
+        [0.0, 0.0, 0.0],
+        [2.0, 0.0, 0.0],
+        ForceKind.MEMBER,
+        direction,
+        "m0",
+        {"classification_source": "test_fixture"},
+    )
+    assembly = Assembly([node_a, node_b], [Member("m0", "a", "b", member_force)], BOUNDARY)
+
+    diagnostics = compute_kernel_metrics(assembly)["member_force_diagnostics"]
+
+    assert diagnostics["sign_convention"] == "tension_positive_compression_negative"
+    assert diagnostics["classification_is_policy_input"] is False
+    assert diagnostics["tension_count"] == 1
+    assert diagnostics["compression_count"] == 0
+    assert diagnostics["all_classifications_valid"] is True
+    assert diagnostics["members"][0]["classification_valid"] is True
+    assert diagnostics["members"][0]["signed_axial_force"] == 2.0
+
+
+def test_member_force_diagnostics_report_endpoint_class_mismatch():
+    node_a = Node(
+        "a",
+        [0.0, 0.0, 0.0],
+        NodeType.FLOAT,
+        [Force([0.0, 0.0, 0.0], [1.0, 0.0, 0.0], ForceKind.MEMBER, ForceDirection.TENSION, "m0")],
+        False,
+    )
+    node_b = Node(
+        "b",
+        [1.0, 0.0, 0.0],
+        NodeType.FLOAT,
+        [Force([1.0, 0.0, 0.0], [-1.0, 0.0, 0.0], ForceKind.MEMBER, ForceDirection.COMPRESSION, "m0")],
+        False,
+    )
+    member = Member(
+        "m0",
+        "a",
+        "b",
+        Force([0.0, 0.0, 0.0], [1.0, 0.0, 0.0], ForceKind.MEMBER, ForceDirection.TENSION, "m0"),
+    )
+
+    diagnostics = compute_kernel_metrics(Assembly([node_a, node_b], [member], BOUNDARY))[
+        "member_force_diagnostics"
+    ]
+
+    assert diagnostics["all_classifications_valid"] is False
+    assert diagnostics["invalid_classification_count"] == 1
+    assert "endpoint_class_mismatch" in diagnostics["members"][0]["validation_reasons"]
 
 
 def test_extend_node_rule_adds_member_and_node():
@@ -241,7 +344,7 @@ def test_smoke_and_diversity_scenarios_have_distinct_reproducible_identities():
     assert diversity_a.metadata["benchmark_geometry"] == smoke.metadata["benchmark_geometry"]
 
 
-def test_gdgs_two_front_close_consumes_temp_forces_and_ends():
+def test_gdgs_two_front_close_consumes_temp_forces_and_remains_in_close():
     support = Node(
         "support",
         [0.0, 0.0, 0.0],
@@ -262,13 +365,13 @@ def test_gdgs_two_front_close_consumes_temp_forces_and_ends():
         ],
         True,
     )
-    assembly = Assembly([support, load], [], BOUNDARY, state=GenerationState.GO)
+    assembly = Assembly([support, load], [], BOUNDARY, state=GenerationState.CLOSE)
     rule = CloseStructureRule(loopcount=-1)
     proposal = RuleProposal(rule.name, [support.node_id], {"active_count": 2}, rule.weight)
 
     rule.apply(assembly, proposal, __import__("random").Random(0))
 
-    assert assembly.state == GenerationState.END
+    assert assembly.state == GenerationState.CLOSE
     assert len(assembly.members) == 1
     assert support.get_temp_force() is None
     assert load.get_temp_force() is None
@@ -279,16 +382,16 @@ def test_gdgs_two_front_close_consumes_temp_forces_and_ends():
     assert metrics["benchmark_validity"]["zero_length_member_count"] == 0
 
 
-def test_michell_three_force_close_reuses_load_node_and_ends_validly():
+def test_michell_three_force_close_reuses_load_node_and_awaits_verification():
     assembly = make_default_cantilever_scenario()
-    assembly.state = GenerationState.GO
+    assembly.state = GenerationState.CLOSE
     rule = CloseStructureRule(loopcount=-1)
     proposal = rule.propose(assembly, assembly.node("2"), __import__("random").Random(0))[0]
 
     assert proposal.params["kind"] == "reuse_existing_hub"
     rule.apply(assembly, proposal, __import__("random").Random(0))
 
-    assert assembly.state == GenerationState.END
+    assert assembly.state == GenerationState.CLOSE
     assert len(assembly.nodes) == 3
     assert len(assembly.members) == 2
     assert {tuple(sorted((member.start_node, member.end_node))) for member in assembly.members} == {
@@ -329,18 +432,18 @@ def test_close_rule_does_not_propose_coincident_intersection():
     node_a = _active_temp_node("a", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
     node_b = _active_temp_node("b", [0.0, 1.0, 0.0], [0.0, -1.0, 0.0])
     node_c = _active_temp_node("c", [0.0, 2.0, 0.0], [1.0, 0.0, 0.0])
-    assembly = Assembly([node_a, node_b, node_c], [], BOUNDARY, state=GenerationState.GO)
+    assembly = Assembly([node_a, node_b, node_c], [], BOUNDARY, state=GenerationState.CLOSE)
     rule = CloseStructureRule(loopcount=-1)
 
     assert rule.propose(assembly, node_a, __import__("random").Random(0)) == []
-    assert assembly.state == GenerationState.GO
+    assert assembly.state == GenerationState.CLOSE
 
 
-def test_gdgs_progressive_close_selects_nearest_intersection_and_returns_to_go():
+def test_gdgs_progressive_close_selects_nearest_intersection_and_remains_in_close():
     selected = _active_temp_node("0", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
     farther = _active_temp_node("1", [2.0, 1.0, 0.0], [0.0, -1.0, 0.0])
     nearer = _active_temp_node("2", [1.0, 2.0, 0.0], [0.0, -1.0, 0.0])
-    assembly = Assembly([selected, farther, nearer], [], BOUNDARY, state=GenerationState.GO)
+    assembly = Assembly([selected, farther, nearer], [], BOUNDARY, state=GenerationState.CLOSE)
     for _ in range(5):
         assembly.add_history("PriorRule", [], {}, {})
     rule = CloseStructureRule()
@@ -355,7 +458,7 @@ def test_gdgs_progressive_close_selects_nearest_intersection_and_returns_to_go()
 
     rule.apply(assembly, proposal, __import__("random").Random(0))
 
-    assert assembly.state == GenerationState.GO
+    assert assembly.state == GenerationState.CLOSE
     assert len(assembly.members) == 2
     assert len(assembly.active_nodes()) == 2
     assert assembly.history[-1].summary == {"progressive_closure_connection": True}
@@ -365,7 +468,7 @@ def test_rule6_prefers_first_valid_gdgs_ray_combination_over_global_distance():
     selected = _active_temp_node("0", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
     farther_positive = _active_temp_node("1", [4.0, 1.0, 0.0], [0.0, -1.0, 0.0])
     nearer_opposite = _active_temp_node("2", [1.0, -1.0, 0.0], [0.0, -1.0, 0.0])
-    assembly = Assembly([selected, farther_positive, nearer_opposite], [], BOUNDARY, state=GenerationState.GO)
+    assembly = Assembly([selected, farther_positive, nearer_opposite], [], BOUNDARY, state=GenerationState.CLOSE)
     for _ in range(5):
         assembly.add_history("PriorRule", [], {}, {})
 
@@ -418,7 +521,7 @@ def test_rule6_opposite_ray_keeps_force_vector_and_classifies_compression():
     source = _active_temp_node("source", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
     target = _active_temp_node("target", [-1.0, 1.0, 0.0], [0.0, -1.0, 0.0])
     third = _active_temp_node("third", [1.0, 2.0, 0.0], [1.0, 0.0, 0.0])
-    assembly = Assembly([source, target, third], [], {"min": [-2.0, -2.0, 0.0], "max": [2.0, 3.0, 0.0]}, state=GenerationState.GO)
+    assembly = Assembly([source, target, third], [], {"min": [-2.0, -2.0, 0.0], "max": [2.0, 3.0, 0.0]}, state=GenerationState.CLOSE)
     for _ in range(5):
         assembly.add_history("PriorRule", [], {}, {})
     rule = CloseStructureRule()
@@ -447,7 +550,7 @@ def test_rule6_can_reduce_active_fronts_repeatedly():
     node_b = _active_temp_node("b", [1.0, 1.0, 0.0], [0.0, -1.0, 0.0])
     node_c = _active_temp_node("c", [2.0, 1.0, 0.0], [0.0, -1.0, 0.0])
     node_d = _active_temp_node("d", [3.0, 0.0, 0.0], [-1.0, 0.0, 0.0])
-    assembly = Assembly([node_a, node_b, node_c, node_d], [], BOUNDARY, state=GenerationState.GO)
+    assembly = Assembly([node_a, node_b, node_c, node_d], [], BOUNDARY, state=GenerationState.CLOSE)
     for _ in range(5):
         assembly.add_history("PriorRule", [], {}, {})
     rule = CloseStructureRule()
@@ -462,7 +565,7 @@ def test_rule6_can_reduce_active_fronts_repeatedly():
     assert len(assembly.active_nodes()) == 2
 
 
-def test_gdgs_progressive_close_waits_for_loopcount():
+def test_close_structure_is_not_admissible_during_grow():
     node_a = _active_temp_node("a", [0.0, 0.0, 0.0], [1.0, 0.0, 0.0])
     node_b = _active_temp_node("b", [1.0, 1.0, 0.0], [0.0, -1.0, 0.0])
     node_c = _active_temp_node("c", [2.0, 2.0, 0.0], [0.0, -1.0, 0.0])
@@ -487,7 +590,7 @@ def test_connect_two_forces_rejects_self_connection_and_existing_edge():
     assert assembly.to_data() == before
 
 
-def test_connection_segment_allows_crossing_existing_member():
+def test_connection_segment_rejects_crossing_existing_member_without_mutation():
     assembly = Assembly(
         [
             Node("a", [0.0, 0.0, 0.0], NodeType.FLOAT),
@@ -498,8 +601,36 @@ def test_connection_segment_allows_crossing_existing_member():
         [Member("m0", "a", "b")],
         BOUNDARY,
     )
+    before = assembly.to_data()
 
-    assert segment_is_admissible(assembly, "c", "d", [0.0, 2.0, 0.0], [2.0, 0.0, 0.0]) is True
+    assert segment_is_admissible(assembly, "c", "d", [0.0, 2.0, 0.0], [2.0, 0.0, 0.0]) is False
+    assert assembly.to_data() == before
+
+
+def test_connect_rule_filters_crossing_proposal_without_canonical_state_mutation():
+    node_c = _active_temp_node("c", [0.0, 2.0, 0.0], [1.0, -1.0, 0.0])
+    node_d = _active_temp_node("d", [2.0, 0.0, 0.0], [-1.0, 1.0, 0.0])
+    assembly = Assembly(
+        [
+            Node("a", [0.0, 0.0, 0.0], NodeType.FLOAT),
+            Node("b", [2.0, 2.0, 0.0], NodeType.FLOAT),
+            node_c,
+            node_d,
+        ],
+        [Member("m0", "a", "b")],
+        BOUNDARY,
+        state=GenerationState.GO,
+    )
+    before = assembly.to_data()
+
+    proposals = ConnectTwoNodesRule(radius=10.0).propose(
+        assembly,
+        node_c,
+        __import__("random").Random(0),
+    )
+
+    assert proposals == []
+    assert assembly.to_data() == before
 
 
 def test_connection_segment_rejects_collinear_overlap_with_shared_endpoint():
@@ -532,30 +663,27 @@ def test_kernel_does_not_mark_unresolved_dead_end_as_end():
     assembly = make_default_cantilever_scenario()
     final, trace = VectorGSKernelV1(rules=[StartOnlyRule()], seed=0).run(assembly, max_steps=4)
 
-    assert [step["rule"] for step in trace] == ["StartGeneration"]
-    assert final.state == GenerationState.GO
+    assert [step["rule"] for step in trace] == ["StartGeneration", None]
+    assert final.state == INCOMPLETE_PHASE
     assert final.active_nodes()
-    assert final.metadata["termination_reason"] == "no_applicable_rules"
+    assert final.metadata["termination_reason"] == "no_applicable_growth_rules"
 
 
 def test_end_generation_rejects_unresolved_force_fronts():
     assembly = make_default_cantilever_scenario()
-    assembly.state = GenerationState.GO
-    rule = __import__(
-        "morph_engine.vector_gs_kernel_v1.rules",
-        fromlist=["EndGenerationRule"],
-    ).EndGenerationRule(max_steps=0)
+    assembly.state = VERIFY_PHASE
+    rule = EndGenerationRule(max_steps=0)
     proposal = rule.propose(assembly, None, __import__("random").Random(0))[0]
 
     rule.apply(assembly, proposal, __import__("random").Random(0))
 
-    assert assembly.state == GenerationState.GO
+    assert assembly.state == INCOMPLETE_PHASE
     assert assembly.metadata["termination_reason"] == "unresolved_force_fronts"
 
 
 def test_structural_completion_rejects_member_endpoint_force_mismatch():
     assembly = make_default_cantilever_scenario()
-    assembly.state = GenerationState.GO
+    assembly.state = GenerationState.CLOSE
     rule = CloseStructureRule(loopcount=-1)
     proposal = rule.propose(assembly, assembly.node("2"), __import__("random").Random(0))[0]
     rule.apply(assembly, proposal, __import__("random").Random(0))
@@ -647,6 +775,7 @@ def test_uniform_policy_assigns_equal_probability_and_ignores_rule_weights():
 def test_uniform_policy_exposes_proposals_from_every_active_node():
     class NodeRule:
         name = "NodeRule"
+        family = CONNECTIVITY_FAMILY
 
         def propose(self, assembly, node, rng):
             if node is None:
@@ -680,6 +809,7 @@ def test_gdgs_policy_selects_uniform_active_node_before_rule_family():
     class NodeRule:
         name = "NodeRule"
         weight = 1
+        family = CONNECTIVITY_FAMILY
 
         def applicable_to(self, assembly, node):
             return True
@@ -713,6 +843,50 @@ def test_gdgs_policy_selects_uniform_active_node_before_rule_family():
     assert "2" in selected_ids
 
 
+def test_gdgs_policy_excludes_empty_family_and_selects_feasible_proposal_without_mutation():
+    class EmptyRule:
+        name = "EmptyRule"
+        weight = 1
+        family = CONNECTIVITY_FAMILY
+
+        def applicable_to(self, assembly, node):
+            return True
+
+        def propose(self, assembly, node, rng):
+            return []
+
+    class FeasibleRule:
+        name = "FeasibleRule"
+        weight = 1
+        family = CONNECTIVITY_FAMILY
+
+        def applicable_to(self, assembly, node):
+            return node.node_id == "0"
+
+        def propose(self, assembly, node, rng):
+            if node.node_id != "0":
+                return []
+            return [RuleProposal(self.name, [node.node_id], {"feasible": True}, self.weight)]
+
+    assembly = make_default_cantilever_scenario()
+    assembly.state = GenerationState.GO
+    before = assembly.to_data()
+    kernel = VectorGSKernelV1(
+        rules=[EmptyRule(), FeasibleRule()],
+        seed=0,
+        policy_id=GDGS_NODE_RULE_UNIFORM_POLICY_ID,
+    )
+
+    proposal, context = kernel._gdgs_node_first_selection(assembly)
+
+    assert proposal.rule_name == "FeasibleRule"
+    assert proposal.target_node_ids == ["0"]
+    assert context["eligible_active_nodes"] == ["0"]
+    assert context["applicable_rule_families"] == ["FeasibleRule"]
+    assert context["selected_rule_family"] == "FeasibleRule"
+    assert assembly.to_data() == before
+
+
 def test_gdgs_policy_equal_weights_are_uniform_by_rule_family():
     class Rule:
         def __init__(self, name, weight=1):
@@ -727,6 +901,144 @@ def test_gdgs_policy_equal_weights_are_uniform_by_rule_family():
 
 def test_gdgs_node_first_policy_is_distinct_from_proposal_instance_uniform():
     assert GDGS_NODE_RULE_UNIFORM_POLICY_ID != "rule_uniform_random_v1"
+
+
+@pytest.mark.parametrize(
+    "state,expected_rules",
+    [
+        (GenerationState.START, {"StartGeneration"}),
+        (
+            GenerationState.GO,
+            {
+                "CreateNode",
+                "ExtendNode",
+                "SplitNode",
+                "ConnectTwoNodes",
+                "ExtendAndConnectTwoNodes",
+            },
+        ),
+        (GenerationState.CLOSE, {"CloseStructure"}),
+        (VERIFY_PHASE, {"EndGeneration"}),
+        (GenerationState.END, set()),
+        (INCOMPLETE_PHASE, set()),
+    ],
+)
+def test_phase_admissibility_filters_rule_families_before_selection(state, expected_rules):
+    assembly = make_default_cantilever_scenario()
+    assembly.state = state
+    kernel = VectorGSKernelV1(seed=0)
+
+    assert {rule.name for rule in kernel._rules_for_phase(assembly)} == expected_rules
+
+
+def test_phase_machine_completes_after_growth_and_progressive_closure():
+    assembly = make_default_cantilever_scenario()
+    final, trace = VectorGSKernelV1(
+        seed=21,
+        policy_id=GDGS_NODE_RULE_UNIFORM_POLICY_ID,
+        growth_limit=4,
+    ).run(assembly, max_steps=30)
+
+    transitions = [
+        (step["phase_before"], step["phase_after"], step["phase_transition_reason"])
+        for step in trace
+        if step["phase_before"] != step["phase_after"]
+    ]
+    assert transitions == [
+        ("start", "grow", "initialized"),
+        ("grow", "close", "growth_limit_reached"),
+        ("close", "verify", "force_fronts_resolved"),
+        ("verify", "end", "verification_passed"),
+    ]
+    assert final.state == GenerationState.END
+    assert final.metadata["termination_reason"] == "completed"
+    assert final.metadata["growth_step_count"] == 4
+    assert final.metadata["closure_step_count"] == 2
+    assert all(step["rule"] != "CloseStructure" for step in trace if step["phase_before"] == "grow")
+    assert all(
+        step["rule"] in {None, "CloseStructure"}
+        for step in trace
+        if step["phase_before"] == "close"
+    )
+    assert trace[-1]["assembly_after"] == final.to_data()
+
+
+def test_phase_machine_reports_no_valid_closure_without_returning_to_grow():
+    assembly = make_default_cantilever_scenario()
+    final, trace = VectorGSKernelV1(
+        seed=10,
+        policy_id=GDGS_NODE_RULE_UNIFORM_POLICY_ID,
+        growth_limit=4,
+    ).run(assembly, max_steps=30)
+
+    assert final.state == INCOMPLETE_PHASE
+    assert final.metadata["termination_reason"] == "no_valid_closure"
+    assert (trace[-1]["phase_before"], trace[-1]["phase_after"]) == ("close", "incomplete")
+    close_started = next(index for index, step in enumerate(trace) if step["phase_after"] == "close")
+    assert all(step["phase_after"] != "grow" for step in trace[close_started:])
+
+
+def test_phase_machine_filters_crossing_closure_before_verification():
+    assembly = make_default_cantilever_scenario()
+    final, trace = VectorGSKernelV1(
+        seed=19,
+        policy_id=GDGS_NODE_RULE_UNIFORM_POLICY_ID,
+        growth_limit=4,
+    ).run(assembly, max_steps=30)
+
+    assert final.state == INCOMPLETE_PHASE
+    assert final.metadata["termination_reason"] == "no_valid_closure"
+    assert trace[-1]["phase_before"] == "close"
+    assert trace[-1]["phase_after"] == "incomplete"
+    assert trace[-1]["rule"] is None
+    assert all(step["phase_before"] != "verify" for step in trace)
+
+
+def test_phase_machine_is_deterministic_for_same_seed_and_limits():
+    first, first_trace = VectorGSKernelV1(
+        seed=4,
+        policy_id=GDGS_NODE_RULE_UNIFORM_POLICY_ID,
+        growth_limit=4,
+    ).run(make_default_cantilever_scenario(), max_steps=30)
+    second, second_trace = VectorGSKernelV1(
+        seed=4,
+        policy_id=GDGS_NODE_RULE_UNIFORM_POLICY_ID,
+        growth_limit=4,
+    ).run(make_default_cantilever_scenario(), max_steps=30)
+
+    assert first_trace == second_trace
+    assert first.to_data() == second.to_data()
+
+
+def test_phase_machine_verification_is_independent_of_evaluator(monkeypatch):
+    import morph_engine.vector_gs_kernel_v1.metrics as metrics_module
+
+    def evaluator_must_not_run_during_generation(*args, **kwargs):
+        raise AssertionError("generation verification consumed evaluator metrics")
+
+    monkeypatch.setattr(metrics_module, "compute_kernel_metrics", evaluator_must_not_run_during_generation)
+
+    final, trace = VectorGSKernelV1(
+        seed=21,
+        policy_id=GDGS_NODE_RULE_UNIFORM_POLICY_ID,
+        growth_limit=4,
+    ).run(make_default_cantilever_scenario(), max_steps=30)
+
+    assert final.state == GenerationState.END
+    assert trace[-1]["phase_before"] == "verify"
+    assert trace[-1]["phase_after"] == "end"
+    assert trace[-1]["phase_transition_reason"] == "verification_passed"
+
+
+def test_step_budget_exhaustion_is_distinct_and_terminal():
+    final, trace = VectorGSKernelV1(seed=0, growth_limit=4).run(
+        make_default_cantilever_scenario(),
+        max_steps=1,
+    )
+
+    assert final.state == INCOMPLETE_PHASE
+    assert final.metadata["termination_reason"] == "step_budget_exhausted"
+    assert trace[-1]["phase_transition_reason"] == "step_budget_exhausted"
 
 
 def test_kernel_benchmark_completion_requires_support_connectivity():
