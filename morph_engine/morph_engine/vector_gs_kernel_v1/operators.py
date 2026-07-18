@@ -237,6 +237,7 @@ def closure_ray_candidate(node_a, node_b, assembly, source_ray_sign, target_ray_
         "source_ray_parameter": None,
         "target_ray_parameter": None,
         "distance_measure": None,
+        "existing_hub_node": None,
         "rejection_reason": None,
     }
     loa_a = get_line_of_action(node_a)
@@ -263,6 +264,42 @@ def closure_ray_candidate(node_a, node_b, assembly, source_ray_sign, target_ray_
     record["distance_measure"] = float(distance(node_a.coordinate, intersection))
     if not boundary_ok(intersection, assembly):
         record["rejection_reason"] = "intersection_outside_bounds"
+        return record
+    existing_hub = next(
+        (
+            node
+            for node in assembly.nodes
+            if distance(node.coordinate, intersection) <= tolerance
+        ),
+        None,
+    )
+    if existing_hub is not None:
+        if existing_hub.node_id in {node_a.node_id, node_b.node_id}:
+            record["rejection_reason"] = "degenerate_existing_endpoint"
+            return record
+        if (
+            assembly.member_between(node_a.node_id, existing_hub.node_id) is not None
+            or assembly.member_between(node_b.node_id, existing_hub.node_id) is not None
+            or not segment_is_admissible(
+                assembly,
+                node_a.node_id,
+                existing_hub.node_id,
+                node_a.coordinate,
+                existing_hub.coordinate,
+                tolerance,
+            )
+            or not segment_is_admissible(
+                assembly,
+                node_b.node_id,
+                existing_hub.node_id,
+                node_b.coordinate,
+                existing_hub.coordinate,
+                tolerance,
+            )
+        ):
+            record["rejection_reason"] = "inadmissible_existing_hub_connection"
+            return record
+        record["existing_hub_node"] = existing_hub.node_id
         return record
     if not connection_is_non_degenerate(node_a, node_b, assembly, intersection, tolerance):
         record["rejection_reason"] = "inadmissible_connection"
@@ -315,6 +352,87 @@ def connect_two_forces(node_a, node_b, assembly, intersection, source_ray_sign=1
     assembly.add_node(new_node)
     assembly.add_member(assembly_member_between(assembly, node_a.node_id, new_node.node_id, force_a))
     assembly.add_member(assembly_member_between(assembly, node_b.node_id, new_node.node_id, force_b))
+    return True
+
+
+def connect_two_forces_at_existing_hub(
+    node_a,
+    node_b,
+    hub,
+    assembly,
+    source_ray_sign=1,
+    target_ray_sign=1,
+):
+    """Resolve two active fronts into an existing third node."""
+    if hub.node_id in {node_a.node_id, node_b.node_id}:
+        return False
+    temp_a = get_temp_force(node_a)
+    temp_b = get_temp_force(node_b)
+    if temp_a is None or temp_b is None:
+        return False
+    candidate = closure_ray_candidate(
+        node_a,
+        node_b,
+        assembly,
+        source_ray_sign,
+        target_ray_sign,
+    )
+    if candidate.get("existing_hub_node") != hub.node_id or candidate["rejection_reason"] is not None:
+        return False
+
+    connector_a = unit(sub(hub.coordinate, node_a.coordinate))
+    connector_b = unit(sub(hub.coordinate, node_b.coordinate))
+    temp_direction_a = unit(temp_a.vector)
+    temp_direction_b = unit(temp_b.vector)
+    direction_a = (
+        ForceDirection.TENSION
+        if dot(temp_direction_a, connector_a) >= 0.0
+        else ForceDirection.COMPRESSION
+    )
+    direction_b = (
+        ForceDirection.TENSION
+        if dot(temp_direction_b, connector_b) >= 0.0
+        else ForceDirection.COMPRESSION
+    )
+    force_a = make_force(
+        node_a.coordinate,
+        temp_a.vector,
+        ForceKind.MEMBER,
+        direction=direction_a,
+        semantic_origin="connect_two_forces_at_existing_hub",
+        ray_sign=int(source_ray_sign),
+    )
+    force_b = make_force(
+        node_b.coordinate,
+        temp_b.vector,
+        ForceKind.MEMBER,
+        direction=direction_b,
+        semantic_origin="connect_two_forces_at_existing_hub",
+        ray_sign=int(target_ray_sign),
+    )
+    node_a.remove_temp_forces()
+    node_b.remove_temp_forces()
+    node_a.add_force(force_a)
+    node_b.add_force(force_b)
+    node_a.active = False
+    node_b.active = False
+    rearrange_forces(node_a)
+    rearrange_forces(node_b)
+
+    hub.remove_temp_forces()
+    hub.add_force(transfer_member_force(force_a, hub.coordinate))
+    hub.add_force(transfer_member_force(force_b, hub.coordinate))
+    equilibrate_node(hub)
+    assembly.add_member(
+        assembly_member_between(
+            assembly, node_a.node_id, hub.node_id, force_a
+        )
+    )
+    assembly.add_member(
+        assembly_member_between(
+            assembly, node_b.node_id, hub.node_id, force_b
+        )
+    )
     return True
 
 

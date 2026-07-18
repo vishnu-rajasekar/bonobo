@@ -18,13 +18,19 @@ def run_kernel_episode(
     problem_id=None,
     policy_id=DEFAULT_POLICY_ID,
     growth_limit=None,
+    rule_parameter_configuration=None,
 ):
     scenario_builder = scenario_builder or make_default_cantilever_scenario
     assembly = scenario_builder()
     scenario_name = assembly.metadata.get("scenario_name", "kernel_scenario")
     resolved_problem_id = problem_id or scenario_name
 
-    kernel = VectorGSKernelV1(seed=int(seed), policy_id=policy_id, growth_limit=growth_limit)
+    kernel = VectorGSKernelV1(
+        seed=int(seed),
+        policy_id=policy_id,
+        growth_limit=growth_limit,
+        rule_parameter_configuration=rule_parameter_configuration,
+    )
     final_assembly, trace = kernel.run(assembly, max_steps=int(max_steps))
     final_metrics = compute_kernel_metrics(final_assembly, trace=trace)
 
@@ -35,6 +41,12 @@ def run_kernel_episode(
         "seed": int(seed),
         "step_budget": int(max_steps),
         "growth_limit": kernel.growth_limit,
+        "reaction_angle_configuration": deepcopy(
+            final_assembly.metadata.get("reaction_angle_configuration")
+        ),
+        "rule_parameter_configuration": deepcopy(
+            final_assembly.metadata.get("rule_parameter_configuration")
+        ),
         "growth_step_count": final_assembly.metadata.get("growth_step_count", 0),
         "closure_step_count": final_assembly.metadata.get("closure_step_count", 0),
         "closure_started_at_step": final_assembly.metadata.get("closure_started_at_step"),
@@ -146,6 +158,7 @@ def run_kernel_batch(
     problem_id=None,
     policy_id=DEFAULT_POLICY_ID,
     growth_limit=None,
+    rule_parameter_configuration=None,
 ):
     records = [
         run_kernel_episode(
@@ -155,6 +168,7 @@ def run_kernel_batch(
             problem_id=problem_id,
             policy_id=policy_id,
             growth_limit=growth_limit,
+            rule_parameter_configuration=rule_parameter_configuration,
         )
         for seed in list(seeds)
     ]
@@ -166,6 +180,12 @@ def run_kernel_batch(
         "seed_count": len(records),
         "step_budget": int(max_steps),
         "growth_limit": records[0]["growth_limit"] if records else growth_limit,
+        "reaction_angle_configuration": (
+            records[0]["reaction_angle_configuration"] if records else None
+        ),
+        "rule_parameter_configuration": (
+            records[0]["rule_parameter_configuration"] if records else None
+        ),
         "runs": records,
         "aggregate_metrics": _aggregate_batch_metrics(records),
     }

@@ -19,6 +19,7 @@ from .operators import boundary_ok
 from .operators import closest_link
 from .operators import closure_ray_candidate
 from .operators import connect_two_forces
+from .operators import connect_two_forces_at_existing_hub
 from .operators import connection_is_non_degenerate
 from .operators import can_resolve_two_forces
 from .operators import decompose_force_along_directions
@@ -66,6 +67,65 @@ class RuleProposal:
     target_node_ids: list[str]
     params: dict
     weight: int
+
+
+@dataclass(frozen=True)
+class RuleParameterConfiguration:
+    """Serializable local bounds; configuration is not policy state."""
+
+    configuration_id: str = "reference_v1"
+    min_length: float = 0.5
+    max_length: float = 1.5
+    create_min_angle: float = -0.17
+    create_max_angle: float = 0.17
+    create_min_rotation: float = -pi
+    create_max_rotation: float = pi
+    split_min_angle: float = 0.17
+    split_max_angle: float = 0.52
+    create_growth_step_limit: int = 4
+    extend_growth_step_limit: int = 8
+    split_growth_step_limit: int = 8
+    proposal_attempts: int = 16
+
+    def __post_init__(self):
+        if self.min_length <= 0.0 or self.max_length < self.min_length:
+            raise ValueError("member-length bounds must be positive and ordered")
+        if self.create_max_angle < self.create_min_angle:
+            raise ValueError("create-angle bounds must be ordered")
+        if self.create_max_rotation < self.create_min_rotation:
+            raise ValueError("create-rotation bounds must be ordered")
+        if self.split_min_angle <= 0.0 or self.split_max_angle < self.split_min_angle:
+            raise ValueError("split-angle bounds must be positive and ordered")
+        if min(
+            self.create_growth_step_limit,
+            self.extend_growth_step_limit,
+            self.split_growth_step_limit,
+        ) < 0 or self.proposal_attempts < 1:
+            raise ValueError("growth-step limits and proposal attempts must be valid")
+
+    def to_data(self):
+        return {
+            "configuration_id": self.configuration_id,
+            "min_length": float(self.min_length),
+            "max_length": float(self.max_length),
+            "create_min_angle": float(self.create_min_angle),
+            "create_max_angle": float(self.create_max_angle),
+            "create_min_rotation": float(self.create_min_rotation),
+            "create_max_rotation": float(self.create_max_rotation),
+            "split_min_angle": float(self.split_min_angle),
+            "split_max_angle": float(self.split_max_angle),
+            "create_growth_step_limit": int(self.create_growth_step_limit),
+            "extend_growth_step_limit": int(self.extend_growth_step_limit),
+            "split_growth_step_limit": int(self.split_growth_step_limit),
+            "proposal_attempts": int(self.proposal_attempts),
+        }
+
+
+def accepted_growth_count(assembly):
+    """Use the canonical growth counter, with a compatibility fallback."""
+    if "growth_step_count" in assembly.metadata:
+        return int(assembly.metadata["growth_step_count"])
+    return max(0, len(assembly.history) - 1)
 
 
 class BaseRule:
@@ -131,7 +191,7 @@ class CreateNodeRule(BaseRule):
         self.proposal_attempts = int(proposal_attempts)
 
     def propose(self, assembly, node, rng):
-        if assembly.state != GenerationState.GO or len(assembly.history) >= self.cutoff or not node.active:
+        if assembly.state != GenerationState.GO or accepted_growth_count(assembly) >= self.cutoff or not node.active:
             return []
         if get_line_of_action(node) is None:
             return []
@@ -149,7 +209,7 @@ class CreateNodeRule(BaseRule):
         return (
             node is not None
             and assembly.state == GenerationState.GO
-            and len(assembly.history) < self.cutoff
+            and accepted_growth_count(assembly) < self.cutoff
             and node.active
             and get_line_of_action(node) is not None
         )
@@ -225,7 +285,7 @@ class ExtendNodeRule(BaseRule):
         self.cutoff = int(cutoff)
 
     def propose(self, assembly, node, rng):
-        if assembly.state != GenerationState.GO or len(assembly.history) >= self.cutoff or not node.active:
+        if assembly.state != GenerationState.GO or accepted_growth_count(assembly) >= self.cutoff or not node.active:
             return []
         if node.type not in {NodeType.FLOAT, NodeType.END, NodeType.CORNER}:
             return []
@@ -241,7 +301,7 @@ class ExtendNodeRule(BaseRule):
         return (
             node is not None
             and assembly.state == GenerationState.GO
-            and len(assembly.history) < self.cutoff
+            and accepted_growth_count(assembly) < self.cutoff
             and node.active
             and node.type in {NodeType.FLOAT, NodeType.END, NodeType.CORNER}
             and get_line_of_action(node) is not None
@@ -307,7 +367,7 @@ class SplitNodeRule(BaseRule):
         self.proposal_attempts = int(proposal_attempts)
 
     def propose(self, assembly, node, rng):
-        if assembly.state != GenerationState.GO or len(assembly.history) >= self.cutoff or not node.active:
+        if assembly.state != GenerationState.GO or accepted_growth_count(assembly) >= self.cutoff or not node.active:
             return []
         if node.type not in {NodeType.SUPPORT, NodeType.LOAD, NodeType.END, NodeType.CORNER}:
             return []
@@ -328,7 +388,7 @@ class SplitNodeRule(BaseRule):
         return (
             node is not None
             and assembly.state == GenerationState.GO
-            and len(assembly.history) < self.cutoff
+            and accepted_growth_count(assembly) < self.cutoff
             and node.active
             and node.type in {NodeType.SUPPORT, NodeType.LOAD, NodeType.END, NodeType.CORNER}
             and get_line_of_action(node) is not None
@@ -514,6 +574,58 @@ class CloseStructureRule(BaseRule):
     def __init__(self, loopcount=4):
         self.loopcount = int(loopcount)
 
+    def diagnose(self, assembly):
+        """Explain an empty closure proposal set without mutating state."""
+        nodes = active_nodes(assembly)
+        count = len(nodes)
+        if count < 2:
+            return {
+                "active_count": count,
+                "diagnostic_reason": "insufficient_active_fronts",
+                "candidate_intersections": [],
+            }
+        if count == 2:
+            resolvable = can_resolve_two_forces(assembly)
+            return {
+                "active_count": count,
+                "diagnostic_reason": (
+                    "two_force_resolution_available"
+                    if resolvable
+                    else "two_force_resolution_unavailable"
+                ),
+                "candidate_intersections": [],
+            }
+        records = []
+        for node in nodes:
+            for other in nodes:
+                if other.node_id == node.node_id:
+                    continue
+                for source_sign, target_sign in (
+                    (1, 1),
+                    (1, -1),
+                    (-1, 1),
+                    (-1, -1),
+                ):
+                    records.append(
+                        closure_ray_candidate(
+                            node,
+                            other,
+                            assembly,
+                            source_sign,
+                            target_sign,
+                        )
+                    )
+        rejection_counts = {}
+        for record in records:
+            reason = record["rejection_reason"] or "admissible_candidate"
+            rejection_counts[reason] = rejection_counts.get(reason, 0) + 1
+        return {
+            "active_count": count,
+            "diagnostic_reason": "no_admissible_closure_proposal",
+            "candidate_intersections": records,
+            "rejection_counts": dict(sorted(rejection_counts.items())),
+        }
+
     def propose(self, assembly, node, rng):
         if assembly.state != GenerationState.CLOSE:
             return []
@@ -605,19 +717,36 @@ class CloseStructureRule(BaseRule):
         other = assembly.node(proposal.target_node_ids[1])
         point = proposal.params.get("point")
         ray_combination = proposal.params.get("ray_combination", [1, 1])
-        if point is not None and connect_two_forces(
-            node,
-            other,
-            assembly,
-            point,
-            source_ray_sign=ray_combination[0],
-            target_ray_sign=ray_combination[1],
-        ):
+        chosen = proposal.params.get("chosen_candidate", {})
+        hub_id = chosen.get("existing_hub_node")
+        connected = False
+        if hub_id is not None:
+            connected = connect_two_forces_at_existing_hub(
+                node,
+                other,
+                assembly.node(hub_id),
+                assembly,
+                source_ray_sign=ray_combination[0],
+                target_ray_sign=ray_combination[1],
+            )
+        elif point is not None:
+            connected = connect_two_forces(
+                node,
+                other,
+                assembly,
+                point,
+                source_ray_sign=ray_combination[0],
+                target_ray_sign=ray_combination[1],
+            )
+        if connected:
+            summary = {"progressive_closure_connection": True}
+            if hub_id is not None:
+                summary["existing_hub_node"] = hub_id
             assembly.add_history(
                 self.name,
                 [node.node_id, other.node_id],
                 proposal.params,
-                {"progressive_closure_connection": True},
+                summary,
             )
         return assembly
 
@@ -656,12 +785,33 @@ class EndGenerationRule(BaseRule):
         return assembly
 
 
-def default_rules():
+def default_rules(configuration=None):
+    configuration = configuration or RuleParameterConfiguration()
     return [
         StartGenerationRule(),
-        CreateNodeRule(),
-        ExtendNodeRule(),
-        SplitNodeRule(),
+        CreateNodeRule(
+            min_length=configuration.min_length,
+            max_length=configuration.max_length,
+            min_angle=configuration.create_min_angle,
+            max_angle=configuration.create_max_angle,
+            min_rotation=configuration.create_min_rotation,
+            max_rotation=configuration.create_max_rotation,
+            cutoff=configuration.create_growth_step_limit,
+            proposal_attempts=configuration.proposal_attempts,
+        ),
+        ExtendNodeRule(
+            min_length=configuration.min_length,
+            max_length=configuration.max_length,
+            cutoff=configuration.extend_growth_step_limit,
+        ),
+        SplitNodeRule(
+            min_length=configuration.min_length,
+            max_length=configuration.max_length,
+            min_angle=configuration.split_min_angle,
+            max_angle=configuration.split_max_angle,
+            cutoff=configuration.split_growth_step_limit,
+            proposal_attempts=configuration.proposal_attempts,
+        ),
         ConnectTwoNodesRule(),
         ExtendAndConnectTwoNodesRule(),
         CloseStructureRule(),

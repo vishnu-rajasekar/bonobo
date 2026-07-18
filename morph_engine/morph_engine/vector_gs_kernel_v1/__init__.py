@@ -8,7 +8,9 @@ from .model import Member
 from .model import Node
 from .model import NodeType
 from .rules import default_rules
+from .rules import RuleParameterConfiguration
 from .scenarios import make_default_cantilever_scenario
+from .scenarios import ReactionAngleConfiguration
 
 __all__ = [
     "Assembly",
@@ -19,6 +21,8 @@ __all__ = [
     "Member",
     "Node",
     "NodeType",
+    "ReactionAngleConfiguration",
+    "RuleParameterConfiguration",
     "VectorGSKernelV1",
     "default_rules",
     "make_default_cantilever_scenario",

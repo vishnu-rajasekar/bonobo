@@ -17,14 +17,17 @@ from morph_engine.vector_gs_kernel_v1.model import NodeType
 from morph_engine.vector_gs_kernel_v1.metrics import compute_kernel_metrics
 from morph_engine.vector_gs_kernel_v1.export import export_run
 from morph_engine.vector_gs_kernel_v1.operators import connect_two_forces
+from morph_engine.vector_gs_kernel_v1.operators import connect_two_forces_at_existing_hub
 from morph_engine.vector_gs_kernel_v1.operators import closure_ray_candidate
 from morph_engine.vector_gs_kernel_v1.operators import equilibrate_node
 from morph_engine.vector_gs_kernel_v1.operators import segment_is_admissible
 from morph_engine.vector_gs_kernel_v1.operators import structural_completion_reason
 from morph_engine.vector_gs_kernel_v1.rules import RuleProposal
+from morph_engine.vector_gs_kernel_v1.rules import RuleParameterConfiguration
 from morph_engine.vector_gs_kernel_v1.rules import ConnectTwoNodesRule
 from morph_engine.vector_gs_kernel_v1.rules import CreateNodeRule
 from morph_engine.vector_gs_kernel_v1.rules import ExtendNodeRule
+from morph_engine.vector_gs_kernel_v1.rules import StartGenerationRule
 from morph_engine.vector_gs_kernel_v1.rules import ExtendAndConnectTwoNodesRule
 from morph_engine.vector_gs_kernel_v1.rules import CloseStructureRule
 from morph_engine.vector_gs_kernel_v1.rules import CONNECTIVITY_FAMILY
@@ -32,6 +35,7 @@ from morph_engine.vector_gs_kernel_v1.rules import EndGenerationRule
 from morph_engine.vector_gs_kernel_v1.rules import SplitNodeRule
 from morph_engine.vector_gs_kernel_v1.scenarios import make_concurrent_three_force_smoke_scenario
 from morph_engine.vector_gs_kernel_v1.scenarios import make_michell_diversity_cantilever_scenario
+from morph_engine.vector_gs_kernel_v1.scenarios import ReactionAngleConfiguration
 
 
 BOUNDARY = {"min": [-1.0, -1.0, 0.0], "max": [6.0, 6.0, 0.0]}
@@ -54,6 +58,32 @@ def test_equilibrate_node_adds_temp_force():
     temp = node.get_temp_force()
     assert temp is not None
     assert temp.vector == [-1.0, -1.0, 0.0]
+
+
+def test_reaction_angle_configuration_preserves_external_equilibrium_and_provenance():
+    configuration = ReactionAngleConfiguration(
+        configuration_id="test_27deg",
+        lower_support_angle_degrees=27.0,
+    )
+    assembly = make_default_cantilever_scenario(configuration)
+    metrics = compute_kernel_metrics(assembly)
+
+    assert metrics["boundary_force_polygon"]["externally_balanced"] is True
+    assert assembly.metadata["reaction_angle_configuration"]["configuration_id"] == "test_27deg"
+    assert assembly.metadata["benchmark_geometry"]["concurrency_point"][0] == 3.0
+    assert assembly.metadata["benchmark_geometry"]["concurrency_point"] != [3.0, 0.0, 0.0]
+
+
+def test_smoke_and_diversity_scenarios_are_geometrically_distinct_and_reproducible():
+    smoke = make_concurrent_three_force_smoke_scenario()
+    diversity_a = make_michell_diversity_cantilever_scenario()
+    diversity_b = make_michell_diversity_cantilever_scenario()
+
+    assert (
+        smoke.metadata["benchmark_geometry"]["concurrency_point"]
+        != diversity_a.metadata["benchmark_geometry"]["concurrency_point"]
+    )
+    assert diversity_a.to_data() == diversity_b.to_data()
 
 
 @pytest.mark.parametrize(
@@ -166,6 +196,45 @@ def test_extend_node_rule_adds_member_and_node():
 
     assert len(assembly.nodes) == 4
     assert len(assembly.members) == 1
+
+
+def test_rule_parameter_configuration_is_recorded_and_uses_growth_counter():
+    configuration = RuleParameterConfiguration(
+        configuration_id="bounded_rotation_test",
+        create_min_rotation=-0.25,
+        create_max_rotation=0.25,
+        create_growth_step_limit=4,
+    )
+    assembly = make_default_cantilever_scenario()
+    assembly.state = GenerationState.GO
+    assembly.metadata["growth_step_count"] = 3
+    rule = CreateNodeRule(cutoff=4)
+
+    assert rule.applicable_to(assembly, assembly.node("0")) is True
+
+    final, _ = VectorGSKernelV1(
+        seed=0,
+        growth_limit=1,
+        rule_parameter_configuration=configuration,
+    ).run(make_default_cantilever_scenario(), max_steps=10)
+    assert (
+        final.metadata["rule_parameter_configuration"]["configuration_id"]
+        == "bounded_rotation_test"
+    )
+
+
+def test_custom_rules_have_explicit_provenance_and_reject_parameter_claims():
+    custom_rule = StartGenerationRule()
+    kernel = VectorGSKernelV1(rules=[custom_rule], seed=0)
+    final, _ = kernel.run(make_default_cantilever_scenario(), max_steps=1)
+
+    assert final.metadata["rule_source"] == "custom_rules"
+    assert final.metadata["rule_parameter_configuration"] is None
+    with pytest.raises(ValueError, match="custom rules"):
+        VectorGSKernelV1(
+            rules=[custom_rule],
+            rule_parameter_configuration=RuleParameterConfiguration(),
+        )
 
 
 def test_extend_node_does_not_propose_out_of_bounds_member():
@@ -341,7 +410,7 @@ def test_smoke_and_diversity_scenarios_have_distinct_reproducible_identities():
     assert smoke.metadata["problem_id"] == "concurrent_three_force_smoke_v1"
     assert diversity_a.metadata["problem_id"] == "michell_diversity_cantilever_v1"
     assert diversity_a.to_data() == diversity_b.to_data()
-    assert diversity_a.metadata["benchmark_geometry"] == smoke.metadata["benchmark_geometry"]
+    assert diversity_a.metadata["benchmark_geometry"] != smoke.metadata["benchmark_geometry"]
 
 
 def test_gdgs_two_front_close_consumes_temp_forces_and_remains_in_close():
@@ -380,6 +449,112 @@ def test_gdgs_two_front_close_consumes_temp_forces_and_remains_in_close():
     metrics = compute_kernel_metrics(assembly)
     assert metrics["benchmark_validity"]["duplicate_node_count"] == 0
     assert metrics["benchmark_validity"]["zero_length_member_count"] == 0
+
+
+def test_progressive_closure_can_reuse_existing_third_node():
+    node_a = _active_temp_node("a", [0.0, 0.0, 0.0], [1.0, 1.0, 0.0])
+    node_b = _active_temp_node("b", [2.0, 0.0, 0.0], [-1.0, 1.0, 0.0])
+    hub = Node("hub", [1.0, 1.0, 0.0], NodeType.FLOAT, active=False)
+    assembly = Assembly(
+        [node_a, node_b, hub],
+        [],
+        {"min": [-1.0, -1.0, 0.0], "max": [3.0, 2.0, 0.0]},
+        state=GenerationState.CLOSE,
+    )
+
+    candidate = closure_ray_candidate(node_a, node_b, assembly, 1, 1)
+
+    assert candidate["rejection_reason"] is None
+    assert candidate["existing_hub_node"] == "hub"
+    assert connect_two_forces_at_existing_hub(
+        node_a, node_b, hub, assembly, 1, 1
+    )
+    assert not node_a.active
+    assert not node_b.active
+    assert hub.active
+    assert len(assembly.members) == 2
+    assert {member.end_node for member in assembly.members} == {"hub"}
+
+
+def test_existing_hub_closure_preserves_forces_and_endpoint_equilibrium():
+    node_a = Node(
+        "a",
+        [0.0, 0.0, 0.0],
+        NodeType.FLOAT,
+        forces=[
+            Force([0.0, 0.0, 0.0], [-1.0, -1.0, 0.0], ForceKind.APPLIED),
+            Force([0.0, 0.0, 0.0], [1.0, 1.0, 0.0], ForceKind.TEMPORARY),
+        ],
+        active=True,
+    )
+    node_b = Node(
+        "b",
+        [2.0, 0.0, 0.0],
+        NodeType.FLOAT,
+        forces=[
+            Force([2.0, 0.0, 0.0], [1.0, -1.0, 0.0], ForceKind.APPLIED),
+            Force([2.0, 0.0, 0.0], [-1.0, 1.0, 0.0], ForceKind.TEMPORARY),
+        ],
+        active=True,
+    )
+    hub = Node(
+        "hub",
+        [1.0, 1.0, 0.0],
+        NodeType.LOAD,
+        forces=[
+            Force([1.0, 1.0, 0.0], [0.0, 4.0, 0.0], ForceKind.APPLIED),
+            Force([1.0, 1.0, 0.0], [0.0, -1.0, 0.0], ForceKind.REACTION),
+            Force(
+                [1.0, 1.0, 0.0],
+                [0.0, -1.0, 0.0],
+                ForceKind.MEMBER,
+                related_member="m0",
+            ),
+            Force([1.0, 1.0, 0.0], [0.0, -2.0, 0.0], ForceKind.TEMPORARY),
+        ],
+        active=True,
+    )
+    existing = Node("existing", [1.0, 2.0, 0.0], NodeType.FLOAT, active=False)
+    assembly = Assembly(
+        [node_a, node_b, hub, existing],
+        [Member("m0", "hub", "existing", force=hub.member_forces()[0])],
+        {"min": [-1.0, -1.0, 0.0], "max": [3.0, 3.0, 0.0]},
+        state=GenerationState.CLOSE,
+    )
+    preserved = [
+        (force.kind, list(force.vector), force.related_member)
+        for force in hub.forces
+        if force.kind != ForceKind.TEMPORARY
+    ]
+
+    assert connect_two_forces_at_existing_hub(
+        node_a, node_b, hub, assembly, 1, 1
+    )
+
+    after_non_temporary = [
+        (force.kind, list(force.vector), force.related_member)
+        for force in hub.forces
+        if force.kind != ForceKind.TEMPORARY
+    ]
+    assert all(force_record in after_non_temporary for force_record in preserved)
+    assert hub.get_temp_force() is None
+    assert hub.active is False
+    for node in (node_a, node_b, hub):
+        assert node.local_resultant() == pytest.approx([0.0, 0.0, 0.0])
+    for member in assembly.members[1:]:
+        start_force = next(
+            force
+            for force in assembly.node(member.start_node).member_forces()
+            if force.related_member == member.member_id
+        )
+        end_force = next(
+            force
+            for force in assembly.node(member.end_node).member_forces()
+            if force.related_member == member.member_id
+        )
+        assert end_force.vector == pytest.approx(
+            [-component for component in start_force.vector]
+        )
 
 
 def test_michell_three_force_close_reuses_load_node_and_awaits_verification():
@@ -934,7 +1109,7 @@ def test_phase_admissibility_filters_rule_families_before_selection(state, expec
 def test_phase_machine_completes_after_growth_and_progressive_closure():
     assembly = make_default_cantilever_scenario()
     final, trace = VectorGSKernelV1(
-        seed=21,
+        seed=48,
         policy_id=GDGS_NODE_RULE_UNIFORM_POLICY_ID,
         growth_limit=4,
     ).run(assembly, max_steps=30)
@@ -953,7 +1128,7 @@ def test_phase_machine_completes_after_growth_and_progressive_closure():
     assert final.state == GenerationState.END
     assert final.metadata["termination_reason"] == "completed"
     assert final.metadata["growth_step_count"] == 4
-    assert final.metadata["closure_step_count"] == 2
+    assert final.metadata["closure_step_count"] == 3
     assert all(step["rule"] != "CloseStructure" for step in trace if step["phase_before"] == "grow")
     assert all(
         step["rule"] in {None, "CloseStructure"}
@@ -976,6 +1151,9 @@ def test_phase_machine_reports_no_valid_closure_without_returning_to_grow():
     assert (trace[-1]["phase_before"], trace[-1]["phase_after"]) == ("close", "incomplete")
     close_started = next(index for index, step in enumerate(trace) if step["phase_after"] == "close")
     assert all(step["phase_after"] != "grow" for step in trace[close_started:])
+    diagnostics = trace[-1]["params"]["closure_diagnostics"]
+    assert diagnostics["diagnostic_reason"]
+    assert "candidate_intersections" in diagnostics
 
 
 def test_phase_machine_filters_crossing_closure_before_verification():
@@ -1019,7 +1197,7 @@ def test_phase_machine_verification_is_independent_of_evaluator(monkeypatch):
     monkeypatch.setattr(metrics_module, "compute_kernel_metrics", evaluator_must_not_run_during_generation)
 
     final, trace = VectorGSKernelV1(
-        seed=21,
+        seed=48,
         policy_id=GDGS_NODE_RULE_UNIFORM_POLICY_ID,
         growth_limit=4,
     ).run(make_default_cantilever_scenario(), max_steps=30)

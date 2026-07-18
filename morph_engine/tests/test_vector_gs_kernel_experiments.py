@@ -127,9 +127,17 @@ def test_run_kernel_episode_threads_policy_id_to_engine(monkeypatch):
     captured = {}
 
     class StubKernel:
-        def __init__(self, *, seed, policy_id, growth_limit):
+        def __init__(
+            self,
+            *,
+            seed,
+            policy_id,
+            growth_limit,
+            rule_parameter_configuration,
+        ):
             captured["seed"] = seed
             captured["policy_id"] = policy_id
+            captured["rule_parameter_configuration"] = rule_parameter_configuration
             self.growth_limit = 4 if growth_limit is None else growth_limit
 
         def run(self, assembly, max_steps):
@@ -140,7 +148,12 @@ def test_run_kernel_episode_threads_policy_id_to_engine(monkeypatch):
 
     episode = run_kernel_episode(seed=3, max_steps=5, policy_id="rule_uniform_random_v1")
 
-    assert captured == {"seed": 3, "policy_id": "rule_uniform_random_v1", "max_steps": 5}
+    assert captured == {
+        "seed": 3,
+        "policy_id": "rule_uniform_random_v1",
+        "rule_parameter_configuration": None,
+        "max_steps": 5,
+    }
     assert episode["policy_id"] == "rule_uniform_random_v1"
 
 

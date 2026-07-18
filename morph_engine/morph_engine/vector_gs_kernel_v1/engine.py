@@ -9,6 +9,7 @@ from .rules import INITIALIZATION_FAMILY
 from .rules import MODIFICATION_FAMILY
 from .rules import VERIFICATION_FAMILY
 from .rules import default_rules
+from .rules import RuleParameterConfiguration
 from .rules import rule_family
 
 
@@ -31,8 +32,29 @@ def semantic_phase(state):
 
 
 class VectorGSKernelV1:
-    def __init__(self, rules=None, seed=0, policy_id="rule_weighted_random_v1", growth_limit=None):
-        self.rules = rules or default_rules()
+    def __init__(
+        self,
+        rules=None,
+        seed=0,
+        policy_id="rule_weighted_random_v1",
+        growth_limit=None,
+        rule_parameter_configuration=None,
+    ):
+        if rules is not None and rule_parameter_configuration is not None:
+            raise ValueError(
+                "custom rules and rule_parameter_configuration cannot be supplied together"
+            )
+        self.rule_parameter_configuration = (
+            None
+            if rules is not None
+            else (rule_parameter_configuration or RuleParameterConfiguration())
+        )
+        self.rules = (
+            list(rules)
+            if rules is not None
+            else default_rules(self.rule_parameter_configuration)
+        )
+        self.rule_source = "custom_rules" if rules is not None else "configured_default_rules"
         self.rng = random.Random(seed)
         self.policy_id = str(policy_id)
         self.growth_limit = self._resolve_growth_limit(growth_limit)
@@ -254,10 +276,15 @@ class VectorGSKernelV1:
         temporary_before=None,
         before_nodes=None,
         before_members=None,
+        transition_params=None,
     ):
         selection = selection or self._selection_context()
         proposal_targets = [] if proposal is None else list(proposal.target_node_ids)
-        proposal_params = {} if proposal is None else dict(proposal.params)
+        proposal_params = (
+            dict(transition_params or {})
+            if proposal is None
+            else dict(proposal.params)
+        )
         active_before = len(assembly.active_nodes()) if active_before is None else active_before
         temporary_before = self._temporary_front_count(assembly) if temporary_before is None else temporary_before
         before_nodes = len(assembly.nodes) if before_nodes is None else before_nodes
@@ -289,7 +316,15 @@ class VectorGSKernelV1:
             }
         )
 
-    def _automatic_transition(self, trace, assembly, state, reason, termination_reason=None):
+    def _automatic_transition(
+        self,
+        trace,
+        assembly,
+        state,
+        reason,
+        termination_reason=None,
+        transition_params=None,
+    ):
         phase_before = assembly.state
         assembly_before = assembly.to_data()
         assembly.state = state
@@ -302,6 +337,7 @@ class VectorGSKernelV1:
             assembly_before=assembly_before,
             phase_transition_reason=reason,
             termination_reason=termination_reason,
+            transition_params=transition_params,
         )
 
     def run(self, assembly, max_steps=20):
@@ -311,6 +347,13 @@ class VectorGSKernelV1:
         closure_step_count = 0
         assembly.metadata["growth_limit"] = self.growth_limit
         assembly.metadata["step_budget"] = int(max_steps)
+        assembly.metadata["growth_step_count"] = growth_step_count
+        assembly.metadata["rule_source"] = self.rule_source
+        assembly.metadata["rule_parameter_configuration"] = (
+            None
+            if self.rule_parameter_configuration is None
+            else self.rule_parameter_configuration.to_data()
+        )
 
         while operation_count < int(max_steps) and assembly.state not in _TERMINAL_PHASES:
             if assembly.state == GROW_PHASE and growth_step_count >= self.growth_limit:
@@ -346,12 +389,26 @@ class VectorGSKernelV1:
 
             if proposal is None:
                 if assembly.state == GenerationState.CLOSE:
+                    close_rule = next(
+                        (
+                            rule
+                            for rule in self._rules_for_phase(assembly)
+                            if rule.name == "CloseStructure"
+                        ),
+                        None,
+                    )
+                    diagnostics = (
+                        close_rule.diagnose(assembly)
+                        if close_rule is not None
+                        else {"diagnostic_reason": "closure_rule_missing"}
+                    )
                     self._automatic_transition(
                         trace,
                         assembly,
                         INCOMPLETE_PHASE,
                         "no_valid_closure",
                         "no_valid_closure",
+                        transition_params={"closure_diagnostics": diagnostics},
                     )
                 elif assembly.state == GROW_PHASE:
                     self._automatic_transition(
@@ -382,6 +439,7 @@ class VectorGSKernelV1:
             operation_count += 1
             if phase_before == GROW_PHASE:
                 growth_step_count += 1
+                assembly.metadata["growth_step_count"] = growth_step_count
             elif phase_before == GenerationState.CLOSE:
                 closure_step_count += 1
             self._append_transition(
