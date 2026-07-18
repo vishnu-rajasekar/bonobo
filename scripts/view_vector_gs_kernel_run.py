@@ -1,3 +1,4 @@
+import argparse
 import json
 import sys
 from fnmatch import fnmatch
@@ -42,6 +43,7 @@ RUNS_SOURCE_DIRS = (
     ("experiments", "vector_gs_kernel_v1_runs_benchmark_hardened", "uniform"),
 )
 PRIMARY_RUNS_SOURCE_DIR = RUNS_SOURCE_DIRS[0]
+DEFAULT_REVIEW_ROOT = Path.home() / "Desktop" / "DEV" / "bonobo_review"
 NODE_POINT_SIZE = 15.0
 TENSION_COLOR = (0.78, 0.24, 0.30)
 COMPRESSION_COLOR = (0.08, 0.30, 0.47)
@@ -115,10 +117,54 @@ def _latest_group(run_dirs):
     return sorted([run_dir for run_dir in run_dirs if _run_group_key(run_dir) == latest_key])
 
 
-def _load_kernel_runs(repo_root):
+def _latest_readiness_runs_dir(review_root=DEFAULT_REVIEW_ROOT):
+    if not review_root.exists():
+        return None
+    candidates = []
+    for evidence_dir in review_root.glob("semantic_readiness_*"):
+        readiness = evidence_dir / "READINESS.json"
+        runs_dir = evidence_dir / "runs"
+        if readiness.is_file() and runs_dir.is_dir():
+            candidates.append((readiness.stat().st_mtime, evidence_dir.name, runs_dir))
+    if not candidates:
+        return None
+    return max(candidates, key=lambda item: (item[0], item[1]))[2]
+
+
+def _load_kernel_runs(
+    repo_root,
+    runs_dir=None,
+    selector=None,
+    prefer_readiness=True,
+):
     run_dirs = []
-    selector = None if RUNS_SOURCE_SELECTOR in (None, "", "None") else str(RUNS_SOURCE_SELECTOR)
+    selector = (
+        RUNS_SOURCE_SELECTOR
+        if selector is None
+        else selector
+    )
+    selector = None if selector in (None, "", "None") else str(selector)
     searched_roots = []
+
+    if runs_dir is not None:
+        explicit_dir = Path(runs_dir).expanduser().resolve()
+        searched_roots.append(str(explicit_dir))
+        explicit_runs = _kernel_run_dirs(explicit_dir, selector=selector)
+        if explicit_runs:
+            return sorted(explicit_runs)
+        raise FileNotFoundError(
+            "No kernel run directories with kernel_run.json found in explicit path: {0}".format(
+                explicit_dir
+            )
+        )
+
+    if selector is None and prefer_readiness:
+        readiness_dir = _latest_readiness_runs_dir()
+        if readiness_dir is not None:
+            searched_roots.append(str(readiness_dir))
+            readiness_runs = _kernel_run_dirs(readiness_dir)
+            if readiness_runs:
+                return sorted(readiness_runs)
 
     if selector is None:
         primary_dir = repo_root.joinpath(*PRIMARY_RUNS_SOURCE_DIR)
@@ -524,9 +570,44 @@ class KernelRunViewer:
         _frame_scene(self.viewer, payload)
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        description="Browse exported VectorGS kernel runs and their rule steps."
+    )
+    parser.add_argument(
+        "--runs-dir",
+        type=Path,
+        help="Explicit directory whose immediate child folders contain kernel_run.json.",
+    )
+    parser.add_argument(
+        "--selector",
+        help="Optional shell-style run-directory name filter.",
+    )
+    parser.add_argument(
+        "--primary-only",
+        action="store_true",
+        help="Ignore external semantic-readiness evidence and use repository experiment runs.",
+    )
+    parser.add_argument(
+        "--list-only",
+        action="store_true",
+        help="Print the resolved run directories without opening the GUI.",
+    )
+    args = parser.parse_args(argv)
     repo_root = Path(__file__).resolve().parent.parent
-    run_dirs = _load_kernel_runs(repo_root)
+    run_dirs = _load_kernel_runs(
+        repo_root,
+        runs_dir=args.runs_dir,
+        selector=args.selector,
+        prefer_readiness=not args.primary_only,
+    )
+
+    print("resolved_run_count:", len(run_dirs), flush=True)
+    print("resolved_runs_root:", run_dirs[0].parent, flush=True)
+    if args.list_only:
+        for run_dir in run_dirs:
+            print(run_dir)
+        return 0
 
     if Viewer is None:
         print("viewer_error: compas_viewer import failed: {0}".format(VIEWER_IMPORT_ERROR), file=sys.stderr)
